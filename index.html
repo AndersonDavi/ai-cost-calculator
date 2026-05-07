@@ -1926,22 +1926,25 @@ function applyCurrency(currency) {
 }
 
 async function fetchLiveRates() {
-  // Intenta rates.json estático primero (GitHub Pages: 0 requests externos)
-  try {
-    const res = await fetch('/rates.json');
-    if (res.ok) {
-      const data = await res.json();
-      state.trm    = data.copUsd;
-      state.eurUsd = data.eurUsd;
-      state.mxnUsd = data.mxnUsd;
-      const cache = { copUsd: data.copUsd, eurUsd: data.eurUsd, mxnUsd: data.mxnUsd, updatedAt: data.date };
-      try { localStorage.setItem('ai-trm', JSON.stringify(cache)); } catch(e) {}
-      updateRatesDate();
-      calculate();
-      return;
-    }
-  } catch(_) {}
-  // Fallback: llamar frankfurter.dev directamente (dev local / iframe)
+  // 1. Rama data (GitHub Pages: main limpio, rates en rama separada)
+  const RAW_RATES = 'https://raw.githubusercontent.com/AndersonDavi/ai-cost-calculator/data/rates.json';
+  for (const url of [RAW_RATES, '/rates.json']) {
+    try {
+      const res = await fetch(url);
+      if (res.ok) {
+        const data = await res.json();
+        state.trm    = data.copUsd;
+        state.eurUsd = data.eurUsd;
+        state.mxnUsd = data.mxnUsd;
+        const cache = { copUsd: data.copUsd, eurUsd: data.eurUsd, mxnUsd: data.mxnUsd, updatedAt: data.date };
+        try { localStorage.setItem('ai-trm', JSON.stringify(cache)); } catch(e) {}
+        updateRatesDate();
+        calculate();
+        return;
+      }
+    } catch(_) {}
+  }
+  // 2. Fallback: llamar frankfurter.dev directamente (dev local / iframe)
   try {
     const [copRes, eurRes, mxnRes] = await Promise.all([
       fetch('https://api.frankfurter.dev/v2/rate/COP/USD'),
