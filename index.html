@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Calculadora pro · OpenCode Go vs Claude Code vs Codex</title>
+<title>Calculadora pro Â· OpenCode Go vs Claude Code vs Codex</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -543,7 +543,7 @@ input[type="range"] {
 }
 
 .feature-note .panel-title::after {
-  content: ' ▸';
+  content: ' â–¸';
   font-size: 0.7rem;
   transition: transform 0.2s ease;
   display: inline-block;
@@ -1223,19 +1223,19 @@ input[type="range"] {
       <div>
         <h1>Costear <span>coding agents</span> sin humo.</h1>
         <p>
-          Esta versión ya no mira solo OpenCode Go. Ahora estima carga real de trabajo para OpenCode Go,
+          Esta versiÃ³n ya no mira solo OpenCode Go. Ahora estima carga real de trabajo para OpenCode Go,
           Claude Code y Codex de GPT, con presets de <strong>debug</strong>, <strong>features</strong>,
-          <strong>diseño</strong>, <strong>infraestructura</strong> y <strong>seguridad</strong>.
-          La comparación mezcla precios oficiales, límites publicados y una lectura práctica de cuándo conviene
-          suscripción vs API.
+          <strong>diseÃ±o</strong>, <strong>infraestructura</strong> y <strong>seguridad</strong>.
+          La comparaciÃ³n mezcla precios oficiales, lÃ­mites publicados y una lectura prÃ¡ctica de cuÃ¡ndo conviene
+          suscripciÃ³n vs API.
         </p>
       </div>
       <aside class="hero-side">
-        <h2>Qué sí responde</h2>
+        <h2>QuÃ© sÃ­ responde</h2>
         <ul>
-          <li><strong>Cuánto costaría tu mes</strong> si trabajas con un modelo concreto y una carga parecida a un SaaS real.</li>
+          <li><strong>CuÃ¡nto costarÃ­a tu mes</strong> si trabajas con un modelo concreto y una carga parecida a un SaaS real.</li>
           <li><strong>Si OpenCode Go aguanta o no</strong> tus ventanas de 5 horas, semana y mes.</li>
-          <li><strong>Qué stack sale más lógico</strong> para diseño, bug fixing, features largas, infra y seguridad.</li>
+          <li><strong>QuÃ© stack sale mÃ¡s lÃ³gico</strong> para diseÃ±o, bug fixing, features largas, infra y seguridad.</li>
         </ul>
       </aside>
     </div>
@@ -1249,7 +1249,7 @@ input[type="range"] {
         <div class="panel-title">Mostrar en</div>
         <div class="preset-grid" id="currencyGrid"></div>
         <div class="hint-card" style="margin-top:10px">
-          <p><strong id="rateLabel">Tasa</strong> <span id="rateValue">—</span></p>
+          <p><strong id="rateLabel">Tasa</strong> <span id="rateValue">â€”</span></p>
           <p style="margin-top:4px;font-size:0.78rem;color:var(--muted-2)" id="rateDate"></p>
         </div>
       </div>
@@ -1263,7 +1263,7 @@ input[type="range"] {
         <div class="panel-title">Intensidad de uso</div>
         <div class="preset-grid" id="usageGrid"></div>
         <div class="hint-card">
-          <p><strong>Regla rápida:</strong> `11 req/prompt` no es poco. Para chat o consultas suele ser alto; para debugging fuerte, refactors o agent mode sí puede ser completamente normal.</p>
+          <p><strong>Regla rÃ¡pida:</strong> `11 req/prompt` no es poco. Para chat o consultas suele ser alto; para debugging fuerte, refactors o agent mode sÃ­ puede ser completamente normal.</p>
         </div>
       </div>
 
@@ -1272,7 +1272,7 @@ input[type="range"] {
 
         <div class="field">
           <div class="field-row">
-            <label for="hoursPerDay">Horas activas por día</label>
+            <label for="hoursPerDay">Horas activas por dÃ­a</label>
             <output id="hoursPerDayOut"></output>
           </div>
           <input id="hoursPerDay" type="range" min="1" max="10" step="1">
@@ -1280,7 +1280,7 @@ input[type="range"] {
 
         <div class="field">
           <div class="field-row">
-            <label for="daysPerMonth">Días de trabajo al mes</label>
+            <label for="daysPerMonth">DÃ­as de trabajo al mes</label>
             <output id="daysPerMonthOut"></output>
           </div>
           <input id="daysPerMonth" type="range" min="8" max="26" step="1">
@@ -1336,38 +1336,38 @@ input[type="range"] {
     <main>
       <section class="metrics-grid">
         <article class="kpi">
-          <div class="label">Requests al día</div>
+          <div class="label">Requests al dÃ­a</div>
           <div class="value" id="reqDay"></div>
           <div class="sub">Prompts tuyos x loops internos del agente.</div>
         </article>
         <article class="kpi">
           <div class="label">Requests al mes</div>
           <div class="value" id="reqMonth"></div>
-          <div class="sub">La unidad más útil para comparar OpenCode Go vs API.</div>
+          <div class="sub">La unidad mÃ¡s Ãºtil para comparar OpenCode Go vs API.</div>
         </article>
         <article class="kpi">
           <div class="label">Input total / mes</div>
           <div class="value" id="inputMonth"></div>
-          <div class="sub">Suma input fresco + caché. El caché pesa mucho en agentes largos.</div>
+          <div class="sub">Suma input fresco + cachÃ©. El cachÃ© pesa mucho en agentes largos.</div>
         </article>
         <article class="kpi">
           <div class="label">Output total / mes</div>
           <div class="value" id="outputMonth"></div>
-          <div class="sub">Te pega más duro en modelos premium tipo Opus o GPT-5.5.</div>
+          <div class="sub">Te pega mÃ¡s duro en modelos premium tipo Opus o GPT-5.5.</div>
         </article>
       </section>
 
       <nav class="sticky-nav" id="stickyNav">
-        <button class="active" data-scroll="goCard"><img src="../../assets/ai-costs/opencode-dark.svg" height="16" style="vertical-align:middle;margin-right:5px">OpenCode Go</button>
-        <button data-scroll="claudeCard"><img src="../../assets/ai-costs/claude-ai-icon.svg" height="16" style="vertical-align:middle;margin-right:5px">Claude Code</button>
-        <button data-scroll="codexCard"><img src="../../assets/ai-costs/codex_dark.svg" height="16" style="vertical-align:middle;margin-right:5px">Codex</button>
+        <button class="active" data-scroll="goCard"><img src="assets/opencode-dark.svg" height="16" style="vertical-align:middle;margin-right:5px">OpenCode Go</button>
+        <button data-scroll="claudeCard"><img src="assets/claude-ai-icon.svg" height="16" style="vertical-align:middle;margin-right:5px">Claude Code</button>
+        <button data-scroll="codexCard"><img src="assets/codex_dark.svg" height="16" style="vertical-align:middle;margin-right:5px">Codex</button>
       </nav>
 
       <section class="provider-stack">
         <article class="provider-card" id="goCard">
           <div class="provider-head">
             <div class="provider-title">
-              <img src="../../assets/ai-costs/opencode-dark.svg" height="32" style="flex-shrink:0">
+              <img src="assets/opencode-dark.svg" height="32" style="flex-shrink:0">
               <div>
                 <h3>OpenCode Go</h3>
                 <p>Modelo abierto barato, cuota fija de entrada y techo duro por ventanas de uso. Bueno cuando quieres volumen y flexibilidad multmodelo sin irte a Claude/OpenAI.</p>
@@ -1377,10 +1377,10 @@ input[type="range"] {
               <div class="panel-title">Plan base</div>
               <div class="plan-table">
                 <div class="plan-tr header"><span class="ptd name">Plan</span><span class="ptd usd">USD</span><span class="ptd converted" data-col="converted">COP</span></div>
-                <div class="plan-tr"><span class="ptd name">Suscripción</span><span class="ptd usd"><strong data-usd="10">$10</strong>/mes</span><span class="ptd converted"><strong data-usd="10"></strong></span></div>
+                <div class="plan-tr"><span class="ptd name">SuscripciÃ³n</span><span class="ptd usd"><strong data-usd="10">$10</strong>/mes</span><span class="ptd converted"><strong data-usd="10"></strong></span></div>
                 <div class="plan-tr"><span class="ptd name">Primer mes</span><span class="ptd usd"><strong data-usd="5">$5</strong></span><span class="ptd converted"><strong data-usd="5"></strong></span></div>
               </div>
-              <div class="plan-footer">OpenCode Go subsidia tu suscripción de $10/mes con límites de consumo de $60/mes, $30/semana y $12 por ventana de 5h. El modelo determina cuántos requests entran en esos límites.</div>
+              <div class="plan-footer">OpenCode Go subsidia tu suscripciÃ³n de $10/mes con lÃ­mites de consumo de $60/mes, $30/semana y $12 por ventana de 5h. El modelo determina cuÃ¡ntos requests entran en esos lÃ­mites.</div>
             </aside>
           </div>
           <div class="provider-body">
@@ -1404,7 +1404,7 @@ input[type="range"] {
               <div class="metric-box">
                 <div class="label">Break-even vs API</div>
                 <div class="value" id="goBreakeven"></div>
-                <div class="sub">Desde aquí el fijo de $10 casi siempre gana.</div>
+                <div class="sub">Desde aquÃ­ el fijo de $10 casi siempre gana.</div>
               </div>
             </div>
             <div class="progress-wrap">
@@ -1418,7 +1418,7 @@ input[type="range"] {
               </div>
               <div class="progress-row">
                 <div class="progress-head">
-                  <span>Límite semanal</span>
+                  <span>LÃ­mite semanal</span>
                   <span id="goWeekPct"></span>
                 </div>
                 <div class="bar"><span id="goWeekBar" style="background:#91d17a"></span></div>
@@ -1426,7 +1426,7 @@ input[type="range"] {
               </div>
               <div class="progress-row">
                 <div class="progress-head">
-                  <span>Límite mensual</span>
+                  <span>LÃ­mite mensual</span>
                   <span id="goMonthPct"></span>
                 </div>
                 <div class="bar"><span id="goMonthBar" style="background:#7be6b1"></span></div>
@@ -1441,21 +1441,21 @@ input[type="range"] {
         <article class="provider-card" id="claudeCard">
           <div class="provider-head">
             <div class="provider-title">
-              <img src="../../assets/ai-costs/claude-ai-icon.svg" height="32" style="flex-shrink:0">
+              <img src="assets/claude-ai-icon.svg" height="32" style="flex-shrink:0">
               <div>
                 <h3>Claude Code</h3>
-                <p>Muy fuerte para reasoning largo, revisión de código y trabajo con contexto pesado. La versión suscripción tiene límites blandos por sesión/semana; con API pagas por token y no te frena con un techo duro por prompt.</p>
+                <p>Muy fuerte para reasoning largo, revisiÃ³n de cÃ³digo y trabajo con contexto pesado. La versiÃ³n suscripciÃ³n tiene lÃ­mites blandos por sesiÃ³n/semana; con API pagas por token y no te frena con un techo duro por prompt.</p>
               </div>
             </div>
             <aside class="provider-side">
-              <div class="panel-title">Planes individuales <span class="tag info">2× límites 5h</span></div>
+              <div class="panel-title">Planes individuales <span class="tag info">2Ã— lÃ­mites 5h</span></div>
               <div class="plan-table">
                 <div class="plan-tr header"><span class="ptd name">Plan</span><span class="ptd usd">USD</span><span class="ptd converted" data-col="converted">COP</span></div>
                 <div class="plan-tr"><span class="ptd name">Pro</span><span class="ptd usd"><strong data-usd="20">$20</strong>/mes</span><span class="ptd converted"><strong data-usd="20"></strong></span></div>
                 <div class="plan-tr"><span class="ptd name">Max 5x</span><span class="ptd usd"><strong data-usd="100">$100</strong></span><span class="ptd converted"><strong data-usd="100"></strong></span></div>
                 <div class="plan-tr"><span class="ptd name">Max 20x</span><span class="ptd usd"><strong data-usd="200">$200</strong></span><span class="ptd converted"><strong data-usd="200"></strong></span></div>
               </div>
-              <div class="plan-footer">Capacidad estimada a partir del límite publicado de tokens por ventana de 5h (Pro 88K · Max 5x 176K · Max 20x 440K). El cuello de botella en suscripciones es el output: solo se cuentan output tokens contra el límite de ventana (el input, aunque alto, no agota la cuota). <strong>Si entras con API key, es pay as you go sin techo de ventana.</strong></div>
+              <div class="plan-footer">Capacidad estimada a partir del lÃ­mite publicado de tokens por ventana de 5h (Pro 88K Â· Max 5x 176K Â· Max 20x 440K). El cuello de botella en suscripciones es el output: solo se cuentan output tokens contra el lÃ­mite de ventana (el input, aunque alto, no agota la cuota). <strong>Si entras con API key, es pay as you go sin techo de ventana.</strong></div>
             </aside>
           </div>
           <div class="provider-body">
@@ -1464,7 +1464,7 @@ input[type="range"] {
               <div class="metric-box">
                 <div class="label">Costo API / request</div>
                 <div class="value" id="claudeReqCost"></div>
-                <div class="sub">Input + caché + output con el perfil actual.</div>
+                <div class="sub">Input + cachÃ© + output con el perfil actual.</div>
               </div>
               <div class="metric-box">
                 <div class="label">Costo API / mes</div>
@@ -1474,12 +1474,12 @@ input[type="range"] {
               <div class="metric-box">
                 <div class="label">Plan suficiente</div>
                 <div class="value" id="claudePlanHint"></div>
-                <div class="sub" id="claudePlanSub">Solo orientación. Claude no publica un tope simple por tokens para Pro/Max.</div>
+                <div class="sub" id="claudePlanSub">Solo orientaciÃ³n. Claude no publica un tope simple por tokens para Pro/Max.</div>
               </div>
               <div class="metric-box">
-                <div class="label">Costo día activo</div>
+                <div class="label">Costo dÃ­a activo</div>
                 <div class="value" id="claudeDayCost"></div>
-                <div class="sub">Útil para contrastar con sesiones pesadas de arquitectura o seguridad.</div>
+                <div class="sub">Ãštil para contrastar con sesiones pesadas de arquitectura o seguridad.</div>
               </div>
             </div>
             <div id="claudeCapacity" class="capacity-block"></div>
@@ -1491,10 +1491,10 @@ input[type="range"] {
         <article class="provider-card" id="codexCard">
           <div class="provider-head">
             <div class="provider-title">
-              <img src="../../assets/ai-costs/codex_dark.svg" height="32" style="flex-shrink:0">
+              <img src="assets/codex_dark.svg" height="32" style="flex-shrink:0">
               <div>
                 <h3>Codex de GPT</h3>
-                <p>El más fuerte cuando quieres mezclar coding, búsqueda, artefactos, herramientas y trabajo profesional amplio. Tiene dos lecturas: el producto incluido en ChatGPT y el costo fino por tokens/credits si lo mides como API/Codex.</p>
+                <p>El mÃ¡s fuerte cuando quieres mezclar coding, bÃºsqueda, artefactos, herramientas y trabajo profesional amplio. Tiene dos lecturas: el producto incluido en ChatGPT y el costo fino por tokens/credits si lo mides como API/Codex.</p>
               </div>
             </div>
             <aside class="provider-side">
@@ -1505,7 +1505,7 @@ input[type="range"] {
                 <div class="plan-tr"><span class="ptd name">Pro</span><span class="ptd usd"><strong data-usd="100">$100</strong></span><span class="ptd converted"><strong data-usd="100"></strong></span></div>
                 <div class="plan-tr"><span class="ptd name">Pro</span><span class="ptd usd"><strong data-usd="200">$200</strong></span><span class="ptd converted"><strong data-usd="200"></strong></span></div>
               </div>
-              <div class="plan-footer">Capacidad estimada a partir del límite de tokens por ventana de 5h (Plus 86K · Pro $100 344K · Pro $200 688K). Solo se cuentan output tokens contra el límite; modelos más pesados (GPT-5.5) consumen más cuota que los ligeros (GPT-5.4 mini). <strong>Con API key es pay as you go sin techo de ventana.</strong></div>
+              <div class="plan-footer">Capacidad estimada a partir del lÃ­mite de tokens por ventana de 5h (Plus 86K Â· Pro $100 344K Â· Pro $200 688K). Solo se cuentan output tokens contra el lÃ­mite; modelos mÃ¡s pesados (GPT-5.5) consumen mÃ¡s cuota que los ligeros (GPT-5.4 mini). <strong>Con API key es pay as you go sin techo de ventana.</strong></div>
             </aside>
           </div>
           <div class="provider-body">
@@ -1522,14 +1522,14 @@ input[type="range"] {
                 <div class="sub" id="codexMonthCostCop"></div>
               </div>
               <div class="metric-box">
-                <div class="label">Créditos / mes</div>
+                <div class="label">CrÃ©ditos / mes</div>
                 <div class="value" id="codexCredits"></div>
                 <div class="sub">Usando la rate card oficial de Codex para el modelo.</div>
               </div>
               <div class="metric-box">
                 <div class="label">Plan sugerido</div>
                 <div class="value" id="codexPlanHint"></div>
-                <div class="sub" id="codexPlanSub">La guía real depende del uso y del modo rápido, no solo de dólares.</div>
+                <div class="sub" id="codexPlanSub">La guÃ­a real depende del uso y del modo rÃ¡pido, no solo de dÃ³lares.</div>
               </div>
             </div>
             <div id="codexCapacity" class="capacity-block"></div>
@@ -1543,10 +1543,10 @@ input[type="range"] {
         <aside class="note">
           <div class="panel-title">Notas que importan</div>
           <ul>
-            <li><strong>OpenCode Go</strong> es el más fácil de modelar porque sí publica ventanas claras en dólares y una tabla de requests por modelo.</li>
-            <li><strong>Claude Code suscripción</strong> y <strong>Codex en ChatGPT</strong> no equivalen a una bolsa de tokens pública simple. Aquí se muestran umbrales prácticos, no una promesa contractual.</li>
-            <li><strong>Claude vía API</strong> gana claridad financiera: pagas por token y no te corta por plan, pero en tareas largas Opus se dispara muy rápido.</li>
-            <li><strong>Codex</strong> suele ser el más versátil para mezclar coding con flujos más amplios. Para puro volumen barato, normalmente pierde contra OpenCode Go.</li>
+            <li><strong>OpenCode Go</strong> es el mÃ¡s fÃ¡cil de modelar porque sÃ­ publica ventanas claras en dÃ³lares y una tabla de requests por modelo.</li>
+            <li><strong>Claude Code suscripciÃ³n</strong> y <strong>Codex en ChatGPT</strong> no equivalen a una bolsa de tokens pÃºblica simple. AquÃ­ se muestran umbrales prÃ¡cticos, no una promesa contractual.</li>
+            <li><strong>Claude vÃ­a API</strong> gana claridad financiera: pagas por token y no te corta por plan, pero en tareas largas Opus se dispara muy rÃ¡pido.</li>
+            <li><strong>Codex</strong> suele ser el mÃ¡s versÃ¡til para mezclar coding con flujos mÃ¡s amplios. Para puro volumen barato, normalmente pierde contra OpenCode Go.</li>
           </ul>
         </aside>
       </section>
@@ -1554,23 +1554,23 @@ input[type="range"] {
       <section class="benchmark-section">
         <div class="panel-title">Benchmarks</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 18px;margin-bottom:12px;color:var(--muted-2);font-size:0.82rem;line-height:1.55">
-          <span><strong style="color:var(--muted)">SWE-bench V</strong> → % issues GitHub resueltos (código real)</span>
-          <span><strong style="color:var(--muted)">SWE-bench Pro</strong> → Multi-lenguaje, scaffold estándar, más justo</span>
-          <span><strong style="color:var(--muted)">GPQA Diamond</strong> → Razonamiento nivel PhD, propósito general</span>
-          <span><strong style="color:var(--muted)">Terminal-Bench</strong> → Tareas de terminal, debugging, infra</span>
-          <span><strong style="color:var(--muted)">Costo blended</strong> → Promedio input+output $/1M tokens</span>
+          <span><strong style="color:var(--muted)">SWE-bench V</strong> â†’ % issues GitHub resueltos (cÃ³digo real)</span>
+          <span><strong style="color:var(--muted)">SWE-bench Pro</strong> â†’ Multi-lenguaje, scaffold estÃ¡ndar, mÃ¡s justo</span>
+          <span><strong style="color:var(--muted)">GPQA Diamond</strong> â†’ Razonamiento nivel PhD, propÃ³sito general</span>
+          <span><strong style="color:var(--muted)">Terminal-Bench</strong> â†’ Tareas de terminal, debugging, infra</span>
+          <span><strong style="color:var(--muted)">Costo blended</strong> â†’ Promedio input+output $/1M tokens</span>
         </div>
         <p style="color:var(--muted);font-size:0.82rem;line-height:1.55;margin-bottom:12px">
-          Scores sobre 13 modelos. † = estimados. Fuente: AkitaOnRails, DataCamp, BuildFastWithAI (mayo 2026).
+          Scores sobre 13 modelos. â€  = estimados. Fuente: AkitaOnRails, DataCamp, BuildFastWithAI (mayo 2026).
         </p>
         <div id="benchmarkTable"></div>
-        <div id="benchmarkChart"><div style="text-align:center;padding:80px 0;color:var(--muted-2);font-size:0.92rem" id="chartFallback">Cargando gráfico…</div></div>
+        <div id="benchmarkChart"><div style="text-align:center;padding:80px 0;color:var(--muted-2);font-size:0.92rem" id="chartFallback">Cargando grÃ¡ficoâ€¦</div></div>
         <div id="chartChips" style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:4px"></div>
         <div id="chartChipsFamilies" style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:12px"></div>
 
-        <div class="panel-title" style="margin-top:4px">Dónde brilla cada uno</div>
+        <div class="panel-title" style="margin-top:4px">DÃ³nde brilla cada uno</div>
         <p style="color:var(--muted);font-size:0.92rem;line-height:1.55;margin-bottom:12px">
-          Para cada escenario, el modelo con mejor puntaje en el benchmark relevante y la opción con mejor relación costo/rendimiento.
+          Para cada escenario, el modelo con mejor puntaje en el benchmark relevante y la opciÃ³n con mejor relaciÃ³n costo/rendimiento.
         </p>
         <div class="scenario-grid" id="scenarioGrid"></div>
       </section>
@@ -1578,10 +1578,10 @@ input[type="range"] {
       <section class="sources-section">
         <div class="panel-title">Fuentes</div>
         <ul>
-          <li><strong>OpenCode Go</strong> — Límites oficiales publicados en opencode.ai <span class="tag info">5 may 2026</span></li>
-          <li><strong>Claude Code</strong> — Precios API de Anthropic (anthropic.com/pricing) y suscripciones (anthropic.com) <span class="tag info">5 may 2026</span></li>
-          <li><strong>Codex / GPT</strong> — Precios API de OpenAI (openai.com/pricing) y planes ChatGPT (openai.com/chatgpt) <span class="tag info">5 may 2026</span></li>
-          <li><strong>TRM</strong> — Tasas obtenidas de <code>api.frankfurter.dev</code>. Última consulta: <span id="ratesDate">5 may 2026</span></li>
+          <li><strong>OpenCode Go</strong> â€” LÃ­mites oficiales publicados en opencode.ai <span class="tag info">5 may 2026</span></li>
+          <li><strong>Claude Code</strong> â€” Precios API de Anthropic (anthropic.com/pricing) y suscripciones (anthropic.com) <span class="tag info">5 may 2026</span></li>
+          <li><strong>Codex / GPT</strong> â€” Precios API de OpenAI (openai.com/pricing) y planes ChatGPT (openai.com/chatgpt) <span class="tag info">5 may 2026</span></li>
+          <li><strong>TRM</strong> â€” Tasas obtenidas de <code>api.frankfurter.dev</code>. Ãšltima consulta: <span id="ratesDate">5 may 2026</span></li>
           <li>Logos de proveedores obtenidos de <a href="https://svgl.app" style="color:var(--codex);text-decoration:none">svgl.app</a></li>
           <li class="full">Los valores pueden desactualizarse. Verifica siempre contra la fuente oficial antes de tomar decisiones financieras.</li>
         </ul>
@@ -1636,7 +1636,7 @@ const presets = {
   },
   feature: {
     name: "Feature SaaS",
-    summary: "Cambios backend + frontend + revisión de flujo.",
+    summary: "Cambios backend + frontend + revisiÃ³n de flujo.",
     hoursPerDay: 5,
     daysPerMonth: 20,
     promptsPerHour: 8,
@@ -1649,8 +1649,8 @@ const presets = {
     codexModel: "gpt53codex"
   },
   design: {
-    name: "Diseño / UX",
-    summary: "Más iteración visual, menos infra pesada.",
+    name: "DiseÃ±o / UX",
+    summary: "MÃ¡s iteraciÃ³n visual, menos infra pesada.",
     hoursPerDay: 4,
     daysPerMonth: 18,
     promptsPerHour: 10,
@@ -1664,7 +1664,7 @@ const presets = {
   },
   infra: {
     name: "Infra / DevOps",
-    summary: "Más contexto, logs, scripts, diagnóstico y loops.",
+    summary: "MÃ¡s contexto, logs, scripts, diagnÃ³stico y loops.",
     hoursPerDay: 5,
     daysPerMonth: 20,
     promptsPerHour: 7,
@@ -1677,7 +1677,7 @@ const presets = {
     codexModel: "gpt54"
   },
   security: {
-    name: "Seguridad / auditoría",
+    name: "Seguridad / auditorÃ­a",
     summary: "Mucho contexto, razonamiento y trazabilidad.",
     hoursPerDay: 4,
     daysPerMonth: 18,
@@ -1695,7 +1695,7 @@ const presets = {
 const usageProfiles = {
   chat: {
     name: "Chat / consulta",
-    summary: "Preguntas rápidas, menos tool use, más conversación.",
+    summary: "Preguntas rÃ¡pidas, menos tool use, mÃ¡s conversaciÃ³n.",
     hoursPerDay: 4,
     daysPerMonth: 22,
     promptsPerHour: 6,
@@ -1703,7 +1703,7 @@ const usageProfiles = {
   },
   normal: {
     name: "Coding normal",
-    summary: "Trabajo serio diario con mezcla de lectura, edición y validación.",
+    summary: "Trabajo serio diario con mezcla de lectura, ediciÃ³n y validaciÃ³n.",
     hoursPerDay: 8,
     daysPerMonth: 26,
     promptsPerHour: 10,
@@ -1711,7 +1711,7 @@ const usageProfiles = {
   },
   intense: {
     name: "Debug intensivo",
-    summary: "Bugs, refactors, varios archivos y loops más pesados.",
+    summary: "Bugs, refactors, varios archivos y loops mÃ¡s pesados.",
     hoursPerDay: 9,
     daysPerMonth: 26,
     promptsPerHour: 12,
@@ -1723,9 +1723,9 @@ const goModels = {
   deepseekFlash: { name: "DeepSeek V4 Flash", req5h: 31650, reqWeek: 79050, reqMonth: 158150, label: "Volumen bestia" },
   deepseekPro: { name: "DeepSeek V4 Pro", req5h: 3450, reqWeek: 8550, reqMonth: 17150, label: "Fuerte y razonable" },
   qwen35: { name: "Qwen 3.5 Plus", req5h: 10200, reqWeek: 25200, reqMonth: 50500, label: "Muy rentable" },
-  qwen36: { name: "Qwen 3.6 Plus", req5h: 3300, reqWeek: 8200, reqMonth: 16300, label: "Más capaz, menos barato" },
+  qwen36: { name: "Qwen 3.6 Plus", req5h: 3300, reqWeek: 8200, reqMonth: 16300, label: "MÃ¡s capaz, menos barato" },
   minimax27: { name: "MiniMax M2.7", req5h: 3400, reqWeek: 8500, reqMonth: 17000, label: "Balance general" },
-  glm51: { name: "GLM-5.1", req5h: 880, reqWeek: 2150, reqMonth: 4300, label: "Más caro por request" }
+  glm51: { name: "GLM-5.1", req5h: 880, reqWeek: 2150, reqMonth: 4300, label: "MÃ¡s caro por request" }
 };
 
 for (const model of Object.values(goModels)) {
@@ -1733,9 +1733,9 @@ for (const model of Object.values(goModels)) {
 }
 
 const claudeModels = {
-  sonnet46: { name: "Sonnet 4.6", input: 3, cached: 0.30, output: 15, context: "200K estándar · 1M beta", tier: "Balance",        quotaMultiplier: 1.00 },
-  opus47:   { name: "Opus 4.7",   input: 5, cached: 0.50, output: 25, context: "200K",                    tier: "Máxima calidad", quotaMultiplier: 2.05 },
-  haiku45:  { name: "Haiku 4.5",  input: 1, cached: 0.10, output: 5,  context: "200K",                    tier: "Rápido y barato",quotaMultiplier: 0.30 }
+  sonnet46: { name: "Sonnet 4.6", input: 3, cached: 0.30, output: 15, context: "200K estÃ¡ndar Â· 1M beta", tier: "Balance",        quotaMultiplier: 1.00 },
+  opus47:   { name: "Opus 4.7",   input: 5, cached: 0.50, output: 25, context: "200K",                    tier: "MÃ¡xima calidad", quotaMultiplier: 2.05 },
+  haiku45:  { name: "Haiku 4.5",  input: 1, cached: 0.10, output: 5,  context: "200K",                    tier: "RÃ¡pido y barato",quotaMultiplier: 0.30 }
 };
 
 const codexModels = {
@@ -1749,13 +1749,13 @@ const codexModels = {
     name: "GPT-5.4",
     input: 2.50, cached: 0.25, output: 15, context: "1.05M",
     creditsInput: 62.5, creditsCached: 6.25, creditsOutput: 375,
-    tier: "Más contexto", quotaMultiplier: 1.00
+    tier: "MÃ¡s contexto", quotaMultiplier: 1.00
   },
   gpt55: {
     name: "GPT-5.5",
     input: 5, cached: 0.50, output: 30, context: "1M",
     creditsInput: 125, creditsCached: 12.5, creditsOutput: 750,
-    tier: "Más caro y más fuerte", quotaMultiplier: 0.85
+    tier: "MÃ¡s caro y mÃ¡s fuerte", quotaMultiplier: 0.85
   },
   gpt54mini: {
     name: "GPT-5.4 mini",
@@ -1794,17 +1794,17 @@ const benchmarkModels = [
 ];
 
 const benchmarkScenarios = [
-  { key: 'Diseño', desc: 'Diseño y frontend', metric: 'SWE-bench Verified', bestModel: 'GPT-5.3-Codex', bestScore: 83, bestCost: 7, valueModel: 'DeepSeek V4 Flash', valueScore: 78, valueCost: 0.21 },
-  { key: 'Debug', desc: 'Debug y solución de bugs', metric: 'Terminal-Bench 2.0', bestModel: 'GPT-5.5', bestScore: 82.7, bestCost: 17.5, valueModel: 'Qwen 3.5 Plus', valueScore: 60, valueCost: 1.4 },
+  { key: 'DiseÃ±o', desc: 'DiseÃ±o y frontend', metric: 'SWE-bench Verified', bestModel: 'GPT-5.3-Codex', bestScore: 83, bestCost: 7, valueModel: 'DeepSeek V4 Flash', valueScore: 78, valueCost: 0.21 },
+  { key: 'Debug', desc: 'Debug y soluciÃ³n de bugs', metric: 'Terminal-Bench 2.0', bestModel: 'GPT-5.5', bestScore: 82.7, bestCost: 17.5, valueModel: 'Qwen 3.5 Plus', valueScore: 60, valueCost: 1.4 },
   { key: 'Feature', desc: 'Features y desarrollo general', metric: 'SWE-bench Pro', bestModel: 'Opus 4.7', bestScore: 64.3, bestCost: 15, valueModel: 'DeepSeek V4 Pro', valueScore: 55.4, valueCost: 2.61 },
   { key: 'Infra', desc: 'Infraestructura y DevOps', metric: 'Terminal-Bench 2.0', bestModel: 'GPT-5.5', bestScore: 82.7, bestCost: 17.5, valueModel: 'Sonnet 4.6', valueScore: 65, valueCost: 9 },
-  { key: 'Seguridad', desc: 'Auditoría y razonamiento', metric: 'GPQA Diamond', bestModel: 'GPT-5.5', bestScore: 93.6, bestCost: 17.5, valueModel: 'DeepSeek V4 Pro', valueScore: 90.1, valueCost: 2.61 }
+  { key: 'Seguridad', desc: 'AuditorÃ­a y razonamiento', metric: 'GPQA Diamond', bestModel: 'GPT-5.5', bestScore: 93.6, bestCost: 17.5, valueModel: 'DeepSeek V4 Pro', valueScore: 90.1, valueCost: 2.61 }
 ];
 
 const el = (id) => document.getElementById(id);
 
 function fmtMoney(amountUsd, decimals) {
-  if (amountUsd == null || isNaN(amountUsd) || !isFinite(amountUsd)) return '—';
+  if (amountUsd == null || isNaN(amountUsd) || !isFinite(amountUsd)) return 'â€”';
   const cur = state.currency;
   let amount, locale, currCode;
   if (cur === 'cop') {
@@ -1872,13 +1872,13 @@ function mountUsageButtons() {
   `).join("");
 }
 
-const currencyLabels = { usd: 'USD $', cop: 'COP $', eur: 'EUR €', mxn: 'MXN $' };
+const currencyLabels = { usd: 'USD $', cop: 'COP $', eur: 'EUR â‚¬', mxn: 'MXN $' };
 
 const timelineEvents = [
   {
     date: '5 may 2026',
-    title: 'Versión inicial de la calculadora',
-    detail: 'Soporte para OpenCode Go, Claude Code y Codex. Precios y límites según documentación oficial de cada proveedor.',
+    title: 'VersiÃ³n inicial de la calculadora',
+    detail: 'Soporte para OpenCode Go, Claude Code y Codex. Precios y lÃ­mites segÃºn documentaciÃ³n oficial de cada proveedor.',
     source: 'opencode.ai, anthropic.com, openai.com'
   },
   {
@@ -1926,7 +1926,7 @@ function applyCurrency(currency) {
 }
 
 async function fetchLiveRates() {
-  // Intenta rates.json estático primero (GitHub Pages: 0 requests externos)
+  // Intenta rates.json estÃ¡tico primero (GitHub Pages: 0 requests externos)
   try {
     const res = await fetch('/rates.json');
     if (res.ok) {
@@ -1970,7 +1970,7 @@ function mountModelButtons(containerId, collection, stateKey) {
   grid.innerHTML = Object.entries(collection).map(([key, item]) => `
     <button class="model-btn ${state[stateKey] === key ? "active" : ""}" data-state="${stateKey}" data-model="${key}">
       <div class="title">${item.name}</div>
-      <div class="meta">${item.tier || item.label} · ${item.context || ""}</div>
+      <div class="meta">${item.tier || item.label} Â· ${item.context || ""}</div>
     </button>
   `).join("");
 }
@@ -1979,38 +1979,38 @@ const claudeFeatureData = {
   title: 'Planes en detalle',
   header: ['Feature', 'Free', 'Pro', 'Max 5x', 'Max 20x'],
   rows: [
-    ['Chat web / app',          '✓', '✓', '✓', '✓'],
-    ['Sonnet 4.6',              '✓', '✓', '✓', '✓'],
-    ['Memory / Projects',       '✓', '✓', '✓', '✓'],
-    ['Web search',              '✓', '✓', '✓', '✓'],
-    ['Artifacts / Code exec',   '✓', '✓', '✓', '✓'],
-    ['MCP básico',              '✓', '✓', '✓', '✓'],
-    ['Claude Code',             '✗', '✓', '✓', '✓'],
-    ['Research',                '✗', '✓', '✓', '✓'],
-    ['Claude Excel',            '✗', '✓', '✓', '✓'],
-    ['Cowork',                  '✗', '✓', '✓', '✓'],
-    ['MCP custom',              '✗', '✓', '✓', '✓'],
-    ['1M contexto (beta)',      '✗', '✓', '✓', '✓'],
-    ['Opus 4.7',                '✗', '✗', '✓', '✓'],
-    ['PowerPoint (research)',   '✗', '✗', '<span class="tag info">beta</span>', '<span class="tag info">beta</span>'],
-    ['Prioridad tráfico',       '✗', '✗', '✓', '✓']
+    ['Chat web / app',          'âœ“', 'âœ“', 'âœ“', 'âœ“'],
+    ['Sonnet 4.6',              'âœ“', 'âœ“', 'âœ“', 'âœ“'],
+    ['Memory / Projects',       'âœ“', 'âœ“', 'âœ“', 'âœ“'],
+    ['Web search',              'âœ“', 'âœ“', 'âœ“', 'âœ“'],
+    ['Artifacts / Code exec',   'âœ“', 'âœ“', 'âœ“', 'âœ“'],
+    ['MCP bÃ¡sico',              'âœ“', 'âœ“', 'âœ“', 'âœ“'],
+    ['Claude Code',             'âœ—', 'âœ“', 'âœ“', 'âœ“'],
+    ['Research',                'âœ—', 'âœ“', 'âœ“', 'âœ“'],
+    ['Claude Excel',            'âœ—', 'âœ“', 'âœ“', 'âœ“'],
+    ['Cowork',                  'âœ—', 'âœ“', 'âœ“', 'âœ“'],
+    ['MCP custom',              'âœ—', 'âœ“', 'âœ“', 'âœ“'],
+    ['1M contexto (beta)',      'âœ—', 'âœ“', 'âœ“', 'âœ“'],
+    ['Opus 4.7',                'âœ—', 'âœ—', 'âœ“', 'âœ“'],
+    ['PowerPoint (research)',   'âœ—', 'âœ—', '<span class="tag info">beta</span>', '<span class="tag info">beta</span>'],
+    ['Prioridad trÃ¡fico',       'âœ—', 'âœ—', 'âœ“', 'âœ“']
   ],
-  footer: 'Max no agrega features sobre Pro excepto Opus 4.7, PowerPoint y prioridad. Con Pro $20 ya tienes todo lo del día a día.'
+  footer: 'Max no agrega features sobre Pro excepto Opus 4.7, PowerPoint y prioridad. Con Pro $20 ya tienes todo lo del dÃ­a a dÃ­a.'
 };
 
 const codexFeatureData = {
   title: 'Planes en detalle',
   header: ['Feature', 'Free', 'Go', 'Plus', 'Pro 100', 'Pro 200'],
   rows: [
-    ['Chat web / app',          '✓', '✓', '✓', '✓', '✓'],
-    ['GPT-5.5 Thinking',        '✗', '✓', '✓', '✓', '✓'],
-    ['GPT-5.5 Pro',             '✗', '✗', '✗', '✓', '✓'],
-    ['Deep Research',           '<span class="tag warn">limit</span>', '<span class="tag warn">limit</span>', '✓', '✓', '✓'],
-    ['Codex CLI / IDE',         '<span class="tag warn">limit</span>', '<span class="tag warn">ligero</span>', '✓', '✓', '✓'],
-    ['Cloud tasks (Codex)',     '✗', '✗', '✓', '✓', '✓'],
-    ['Code reviews',            '✗', '✗', '✓', '✓', '✓'],
-    ['Codex-Spark',             '✗', '✗', '✗', '✓', '✓'],
-    ['Credits (extender)',      '✗', '✗', '✓', '✓', '✓']
+    ['Chat web / app',          'âœ“', 'âœ“', 'âœ“', 'âœ“', 'âœ“'],
+    ['GPT-5.5 Thinking',        'âœ—', 'âœ“', 'âœ“', 'âœ“', 'âœ“'],
+    ['GPT-5.5 Pro',             'âœ—', 'âœ—', 'âœ—', 'âœ“', 'âœ“'],
+    ['Deep Research',           '<span class="tag warn">limit</span>', '<span class="tag warn">limit</span>', 'âœ“', 'âœ“', 'âœ“'],
+    ['Codex CLI / IDE',         '<span class="tag warn">limit</span>', '<span class="tag warn">ligero</span>', 'âœ“', 'âœ“', 'âœ“'],
+    ['Cloud tasks (Codex)',     'âœ—', 'âœ—', 'âœ“', 'âœ“', 'âœ“'],
+    ['Code reviews',            'âœ—', 'âœ—', 'âœ“', 'âœ“', 'âœ“'],
+    ['Codex-Spark',             'âœ—', 'âœ—', 'âœ—', 'âœ“', 'âœ“'],
+    ['Credits (extender)',      'âœ—', 'âœ—', 'âœ“', 'âœ“', 'âœ“']
   ],
   footer: 'Plus $20 es el punto de entrada serio. Pro $100+ si Codex es parte de tu flujo diario de trabajo.'
 };
@@ -2209,16 +2209,16 @@ function renderScenarioCards() {
   grid.innerHTML = benchmarkScenarios.map(s => `
     <div class="scenario-card">
       <div class="scenario-title">${s.key}</div>
-      <div class="scenario-desc">${s.desc} · Benchmark: ${s.metric}</div>
+      <div class="scenario-desc">${s.desc} Â· Benchmark: ${s.metric}</div>
       <div class="scenario-row best">
         <span class="label">Mejor puntaje</span>
         <span class="model">${s.bestModel}</span>
-        <span class="score">${s.bestScore}% · ${fmtMoney(s.bestCost, 2)}/M</span>
+        <span class="score">${s.bestScore}% Â· ${fmtMoney(s.bestCost, 2)}/M</span>
       </div>
       <div class="scenario-row value">
         <span class="label">Mejor costo/beneficio</span>
         <span class="model">${s.valueModel}</span>
-        <span class="score">${fmtMoney(s.valueCost, 2)}/M · ${s.valueScore}%</span>
+        <span class="score">${fmtMoney(s.valueCost, 2)}/M Â· ${s.valueScore}%</span>
       </div>
     </div>
   `).join("");
@@ -2278,7 +2278,7 @@ function costPerRequest(model, inputs) {
   );
 }
 
-/* ── Capacidad real del plan ─────────────────── */
+/* â”€â”€ Capacidad real del plan â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 function calculateDesiredUsage(inputs) {
   const desiredPromptsPerDay = inputs.hoursPerDay * inputs.promptsPerHour;
@@ -2432,9 +2432,9 @@ function calculatePlanCapacity(desiredUsage, planLimits) {
     case 'total_tokens': bottleneckLabel = 'tokens totales'; break;
     case 'requests': bottleneckLabel = 'requests mensuales'; break;
     case 'budget': bottleneckLabel = 'presupuesto'; break;
-    case 'credits': bottleneckLabel = 'créditos'; break;
-    case 'daily_limit': bottleneckLabel = 'límite diario'; break;
-    case 'weekly_limit': bottleneckLabel = 'límite semanal'; break;
+    case 'credits': bottleneckLabel = 'crÃ©ditos'; break;
+    case 'daily_limit': bottleneckLabel = 'lÃ­mite diario'; break;
+    case 'weekly_limit': bottleneckLabel = 'lÃ­mite semanal'; break;
     case 'window_limit': bottleneckLabel = 'ventana de 5h'; break;
     default: bottleneckLabel = 'ninguno';
   }
@@ -2501,7 +2501,7 @@ function generateCapacitySummary(result) {
   if (result.isEnough) {
     return `Cubre tu ritmo estimado con ${Math.round(result.remainingMarginPercentage)}% de margen.`;
   }
-  return `Se queda corto: alcanza para ${Math.round(result.maxPromptsPerMonth).toLocaleString('es-CO')} prompts/mes, ${Math.round(result.maxPromptsPerDay).toLocaleString('es-CO')} prompts/día, ${result.maxPromptsPerHour.toFixed(1)} prompts/h y ${Math.round(result.maxRequestsPerMonth).toLocaleString('es-CO')} req/mes.`;
+  return `Se queda corto: alcanza para ${Math.round(result.maxPromptsPerMonth).toLocaleString('es-CO')} prompts/mes, ${Math.round(result.maxPromptsPerDay).toLocaleString('es-CO')} prompts/dÃ­a, ${result.maxPromptsPerHour.toFixed(1)} prompts/h y ${Math.round(result.maxRequestsPerMonth).toLocaleString('es-CO')} req/mes.`;
 }
 
 function generateRecommendation(result, providerId) {
@@ -2510,7 +2510,7 @@ function generateRecommendation(result, providerId) {
   }
   switch (providerId) {
     case 'go':
-      return 'Usa un modelo más barato (DeepSeek Flash, Qwen 3.5 Plus) o combina con API directa.';
+      return 'Usa un modelo mÃ¡s barato (DeepSeek Flash, Qwen 3.5 Plus) o combina con API directa.';
     case 'claude':
       return result.bottleneck === 'budget'
         ? 'Sube a Max 5x, Max 20x o usa API pay-as-you-go.'
@@ -2518,7 +2518,7 @@ function generateRecommendation(result, providerId) {
     case 'codex':
       return result.bottleneck === 'budget'
         ? 'Sube a Pro $100, Pro $200 o usa API directa.'
-        : 'Cambia a GPT-5.4 mini para ahorrar créditos.';
+        : 'Cambia a GPT-5.4 mini para ahorrar crÃ©ditos.';
     default:
       return 'Ajusta la carga de trabajo o considera otro plan.';
   }
@@ -2545,7 +2545,7 @@ function renderCapacity(containerId, capacity, desiredUsage, providerId) {
   const pct = capacity.isEnough ? capacity.remainingMarginPercentage : capacity.coveragePercentage;
   const secondaryHtml = `
     <div class="capacity-secondary">
-      <span><strong>${Math.round(capacity.maxPromptsPerDay).toLocaleString('es-CO')}</strong> prompts/día</span>
+      <span><strong>${Math.round(capacity.maxPromptsPerDay).toLocaleString('es-CO')}</strong> prompts/dÃ­a</span>
       <span><strong>${capacity.maxPromptsPerHour.toFixed(1)}</strong> prompts/h</span>
       <span><strong>${Math.round(capacity.maxRequestsPerMonth).toLocaleString('es-CO')}</strong> req/mes</span>
     </div>
@@ -2632,7 +2632,7 @@ function renderMultiCapacity(containerId, plans, suggestedName) {
     const hasLimit = plan.limits.monthlyBudgetLimitUsd != null || plan.limits.maxRequestsPerMonth != null;
     const rowClass = isSuggested ? 'capacity-table-row suggested' : 'capacity-table-row';
     const valClass = hasLimit ? 'plan-val' : 'plan-val na';
-    const na = '—';
+    const na = 'â€”';
 
     const nameSuffix = isSuggested ? ' <span class="tag info" style="margin-left:6px">sugerido</span>' : '';
     const promptsMes = hasLimit ? Math.round(cap.maxPromptsPerMonth).toLocaleString('es-CO') : na;
@@ -2653,7 +2653,7 @@ function renderMultiCapacity(containerId, plans, suggestedName) {
   const bottleClass = suggestedCap.bottleneck === 'none' ? 'none' : 'active';
 
   const summaryText = isEnough
-    ? `${suggested.name} cubre tu ritmo (${Math.round(suggestedCap.maxPromptsPerDay).toLocaleString('es-CO')} prompts/día, ${Math.round(suggestedCap.coveragePercentage)}% de tu carga).`
+    ? `${suggested.name} cubre tu ritmo (${Math.round(suggestedCap.maxPromptsPerDay).toLocaleString('es-CO')} prompts/dÃ­a, ${Math.round(suggestedCap.coveragePercentage)}% de tu carga).`
     : `${suggested.name} se queda corto (${Math.round(suggestedCap.coveragePercentage)}% de cobertura). Prueba el siguiente plan o API.`;
 
   container.className = `capacity-block ${mainClass}`;
@@ -2663,7 +2663,7 @@ function renderMultiCapacity(containerId, plans, suggestedName) {
       <div class="capacity-table-row header">
         <span>Plan</span>
         <span>prompts/mes</span>
-        <span>/día</span>
+        <span>/dÃ­a</span>
         <span>/h</span>
       </div>
       ${rows}
@@ -2682,8 +2682,8 @@ function calculate() {
   const claudeModel = claudeModels[state.claudeModel];
   const codexModel = codexModels[state.codexModel];
 
-  el("hoursPerDayOut").textContent = `${inputs.hoursPerDay} h/día`;
-  el("daysPerMonthOut").textContent = `${inputs.daysPerMonth} días`;
+  el("hoursPerDayOut").textContent = `${inputs.hoursPerDay} h/dÃ­a`;
+  el("daysPerMonthOut").textContent = `${inputs.daysPerMonth} dÃ­as`;
   el("promptsPerHourOut").textContent = `${inputs.promptsPerHour} prompts/h`;
   el("requestsPerPromptOut").textContent = `${inputs.requestsPerPrompt} req/prompt`;
   el("inputTokensOut").textContent = `${fmtK(inputs.inputTokens)} tok`;
@@ -2709,7 +2709,7 @@ function calculate() {
         mxn: '$' + state.mxnUsd.toFixed(4)
       };
       rateLabel.textContent = labels[state.currency] || 'Tasa';
-      rateValue.textContent = values[state.currency] || '—';
+      rateValue.textContent = values[state.currency] || 'â€”';
       if (rateDate) {
         try {
           const cached = JSON.parse(localStorage.getItem('ai-trm'));
@@ -2757,7 +2757,7 @@ function calculate() {
     goPlanSub = "OpenCode Go no tiene 5x/20x. Si esto no cabe, toca bajar de modelo o usar balance/API.";
   } else if (goPctMonth > 80 || goPct5h > 80) {
     goPlanHint = "Go te sirve justo";
-    goPlanSub = "Sí cabe, pero ya sin mucho colchón. Cualquier subida de contexto o loops puede romper la comodidad.";
+    goPlanSub = "SÃ­ cabe, pero ya sin mucho colchÃ³n. Cualquier subida de contexto o loops puede romper la comodidad.";
   }
   el("goPlanHint").textContent = goPlanHint;
   el("goPlanSub").textContent = goPlanSub;
@@ -2778,11 +2778,11 @@ function calculate() {
   const goStatus = el("goStatus");
   goStatus.className = `status ${statusTone(Math.max(goPct5h, goPctWeek, goPctMonth))}`;
   if (goPctMonth < 70 && goPct5h < 70) {
-    goStatus.textContent = `OpenCode Go te queda cómodo con ${goModel.name}. Para mucho volumen de código o soporte diario sigue siendo la opción más eficiente en costo.`;
+    goStatus.textContent = `OpenCode Go te queda cÃ³modo con ${goModel.name}. Para mucho volumen de cÃ³digo o soporte diario sigue siendo la opciÃ³n mÃ¡s eficiente en costo.`;
   } else if (goPctMonth < 100 && goPct5h < 100) {
-    goStatus.textContent = `OpenCode Go todavía aguanta, pero ya entras en zona de administración fina. Te sirve mejor si combinas tareas pesadas con modelos más baratos en parte del flujo.`;
+    goStatus.textContent = `OpenCode Go todavÃ­a aguanta, pero ya entras en zona de administraciÃ³n fina. Te sirve mejor si combinas tareas pesadas con modelos mÃ¡s baratos en parte del flujo.`;
   } else {
-    goStatus.textContent = `A este ritmo OpenCode Go ya no es estable como plan principal con ${goModel.name}. O cambias a un modelo más barato, o te conviene API directa / Claude / Codex.`;
+    goStatus.textContent = `A este ritmo OpenCode Go ya no es estable como plan principal con ${goModel.name}. O cambias a un modelo mÃ¡s barato, o te conviene API directa / Claude / Codex.`;
   }
 
   const claudeReqCost = costPerRequest(claudeModel, inputs);
@@ -2795,13 +2795,13 @@ function calculate() {
   el("claudeDayCost").textContent = fmtMoney(claudeDayCost, 2);
 
   let claudePlanHint = "Pro $20";
-  let claudePlanSub = "Esta carga debería caber mejor en Pro, aunque Claude usa ventanas blandas y no una bolsa pública simple.";
+  let claudePlanSub = "Esta carga deberÃ­a caber mejor en Pro, aunque Claude usa ventanas blandas y no una bolsa pÃºblica simple.";
   if (claudeMonthCost > 160) {
     claudePlanHint = "Max 20x o API";
-    claudePlanSub = "Pro y Max 5x ya se ven apretados para este ritmo. Si además abres sesiones largas, 20x o API es la lectura más sana.";
+    claudePlanSub = "Pro y Max 5x ya se ven apretados para este ritmo. Si ademÃ¡s abres sesiones largas, 20x o API es la lectura mÃ¡s sana.";
   } else if (claudeMonthCost > 75) {
     claudePlanHint = "Max 5x";
-    claudePlanSub = "Pro probablemente se quede corto o incómodo. Max 5x ya se parece más a un uso serio diario.";
+    claudePlanSub = "Pro probablemente se quede corto o incÃ³modo. Max 5x ya se parece mÃ¡s a un uso serio diario.";
   } else if (claudeMonthCost > 40) {
     claudePlanHint = "Pro, pero justo";
     claudePlanSub = "Los l\xedmites de 5h se duplicaron (88K tok), as\xed que el plan rinde m\xe1s que antes, pero sesiones muy largas o intensas pueden apretarlo.";
@@ -2816,11 +2816,11 @@ function calculate() {
   } else if (state.claudeModel === "sonnet46") {
     claudeStatus.className = claudeMonthCost <= 100 ? "status good" : "status warn";
     claudeStatus.textContent = claudeMonthCost <= 100
-      ? "Sonnet 4.6 es el punto más sano de Claude Code para trabajo serio diario: bastante criterio, costo todavía defendible y mejor elasticidad que Opus."
-      : "Sonnet 4.6 sigue siendo defendible, pero tu carga ya entra en territorio donde una suscripción Pro puede quedarse incómoda y la Max o API se vuelven más lógicas.";
+      ? "Sonnet 4.6 es el punto mÃ¡s sano de Claude Code para trabajo serio diario: bastante criterio, costo todavÃ­a defendible y mejor elasticidad que Opus."
+      : "Sonnet 4.6 sigue siendo defendible, pero tu carga ya entra en territorio donde una suscripciÃ³n Pro puede quedarse incÃ³moda y la Max o API se vuelven mÃ¡s lÃ³gicas.";
   } else {
     claudeStatus.className = claudeMonthCost <= 150 ? "status warn" : "status bad";
-    claudeStatus.textContent = "Opus 4.7 es para los casos donde el error sale más caro que el token: seguridad, infra compleja y reasoning largo. Financieramente se vuelve premium muy rápido.";
+    claudeStatus.textContent = "Opus 4.7 es para los casos donde el error sale mÃ¡s caro que el token: seguridad, infra compleja y reasoning largo. Financieramente se vuelve premium muy rÃ¡pido.";
   }
 
   const codexReqCost = costPerRequest(codexModel, inputs);
@@ -2836,16 +2836,16 @@ function calculate() {
   el("codexCredits").textContent = `${Math.round(codexCredits).toLocaleString("es-CO")} cr`;
 
   let codexPlanHint = "Plus $20";
-  let codexPlanSub = "Para esta carga, Plus debería ser el punto de entrada suficiente si no disparas demasiadas instancias ni fast mode.";
+  let codexPlanSub = "Para esta carga, Plus deberÃ­a ser el punto de entrada suficiente si no disparas demasiadas instancias ni fast mode.";
   if (codexMonthCost > 150 || codexCredits > 18000) {
     codexPlanHint = "Pro $200";
-    codexPlanSub = "Con esta mezcla de contexto, output y créditos, el Pro $100 ya se ve corto. El escalón sano es Pro $200.";
+    codexPlanSub = "Con esta mezcla de contexto, output y crÃ©ditos, el Pro $100 ya se ve corto. El escalÃ³n sano es Pro $200.";
   } else if (codexMonthCost > 60 || codexCredits > 7000) {
     codexPlanHint = "Pro $100";
     codexPlanSub = "Plus ya se ve apretado. Pro $100 encaja mejor para un flujo diario sostenido.";
   } else if (codexMonthCost > 20 || codexCredits > 2500) {
     codexPlanHint = "Plus, pero exigido";
-    codexPlanSub = "Te debería servir, pero no con mucho margen si abres tareas paralelas, sesiones largas o fast mode.";
+    codexPlanSub = "Te deberÃ­a servir, pero no con mucho margen si abres tareas paralelas, sesiones largas o fast mode.";
   }
   el("codexPlanHint").textContent = codexPlanHint;
   el("codexPlanSub").textContent = codexPlanSub;
@@ -2853,36 +2853,36 @@ function calculate() {
   const codexStatus = el("codexStatus");
   if (state.codexModel === "gpt54mini") {
     codexStatus.className = "status good";
-    codexStatus.textContent = "GPT-5.4 mini es el mejor punto de entrada para desarrollar features normales con buena calidad y una factura mucho más civilizada que GPT-5.5.";
+    codexStatus.textContent = "GPT-5.4 mini es el mejor punto de entrada para desarrollar features normales con buena calidad y una factura mucho mÃ¡s civilizada que GPT-5.5.";
   } else if (state.codexModel === "gpt53codex") {
     codexStatus.className = codexMonthCost <= 120 ? "status good" : "status warn";
-    codexStatus.textContent = "GPT-5.3-Codex sigue siendo la apuesta más directa cuando lo tuyo es coding agent puro. Si haces bastante review y ejecución, suele sentirse más natural que GPT-5.4 mini.";
+    codexStatus.textContent = "GPT-5.3-Codex sigue siendo la apuesta mÃ¡s directa cuando lo tuyo es coding agent puro. Si haces bastante review y ejecuciÃ³n, suele sentirse mÃ¡s natural que GPT-5.4 mini.";
   } else if (state.codexModel === "gpt54") {
     codexStatus.className = codexMonthCost <= 150 ? "status warn" : "status bad";
-    codexStatus.textContent = "GPT-5.4 vale la pena cuando la ventana de contexto y el trabajo profesional transversal importan tanto como el código. No gana por precio, gana por amplitud.";
+    codexStatus.textContent = "GPT-5.4 vale la pena cuando la ventana de contexto y el trabajo profesional transversal importan tanto como el cÃ³digo. No gana por precio, gana por amplitud.";
   } else {
     codexStatus.className = "status bad";
-    codexStatus.textContent = "GPT-5.5 es una herramienta de alto nivel para los casos donde diseño, estrategia, análisis y código se mezclan. Es la mejor si el costo del error es alto, no si buscas volumen barato.";
+    codexStatus.textContent = "GPT-5.5 es una herramienta de alto nivel para los casos donde diseÃ±o, estrategia, anÃ¡lisis y cÃ³digo se mezclan. Es la mejor si el costo del error es alto, no si buscas volumen barato.";
   }
 
-  /* ── Capacidad real ──────────────────── */
+  /* â”€â”€ Capacidad real â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
   const desiredUsage = calculateDesiredUsage(inputs);
 
-  /* OpenCode Go — single plan */
+  /* OpenCode Go â€” single plan */
   const goLimits = getGoPlanLimits(goModel);
   const goCapacity = calculatePlanCapacity(desiredUsage, goLimits);
   renderCapacity('goCapacity', goCapacity, desiredUsage, 'go');
 
-  /* Claude Code — multi-plan table */
+  /* Claude Code â€” multi-plan table */
   const claudePlans = buildClaudePlans(claudeModel, inputs, desiredUsage);
   renderMultiCapacity('claudeCapacity', claudePlans, claudePlanHint);
 
-  /* Codex — multi-plan table */
+  /* Codex â€” multi-plan table */
   const codexPlans = buildCodexPlans(codexModel, inputs, desiredUsage);
   renderMultiCapacity('codexCapacity', codexPlans, codexPlanHint);
 
-  /* ── Plan texts currency toggle ── */
+  /* â”€â”€ Plan texts currency toggle â”€â”€ */
   updatePlanTexts();
 }
 
@@ -2983,3 +2983,4 @@ init();
 </script>
 </body>
 </html>
+
