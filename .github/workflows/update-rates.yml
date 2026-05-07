@@ -10,8 +10,12 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: data
 
       - name: Fetch rates
         run: |
@@ -22,11 +26,9 @@ jobs:
           echo "{\"copUsd\":$COP,\"eurUsd\":$EUR,\"mxnUsd\":$MXN,\"date\":\"$DATE\"}" > rates.json
           echo "Rates updated: COP=$COP EUR=$EUR MXN=$MXN"
 
-      - name: Commit to data branch
+      - name: Commit
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git fetch origin data
-          git checkout data
           git add rates.json
-          git diff --staged --quiet || (git commit -m "chore: update exchange rates $(date -u +%Y-%m-%d)" && git push origin data)
+          git diff --staged --quiet || (git commit -m "chore: update exchange rates $(date -u +%Y-%m-%d)" && git push)
