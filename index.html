@@ -1,0 +1,2985 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculadora pro · OpenCode Go vs Claude Code vs Codex</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/tabulator-tables@6.3.0/dist/css/tabulator.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<script src="https://unpkg.com/tabulator-tables@6.3.0/dist/js/tabulator.min.js"></script>
+<style>
+:root {
+  --bg: #08111f;
+  --bg-soft: #0d1728;
+  --panel: rgba(11, 23, 41, 0.86);
+  --panel-strong: #12203a;
+  --line: rgba(166, 194, 255, 0.14);
+  --line-strong: rgba(166, 194, 255, 0.26);
+  --text: #edf3ff;
+  --muted: #8ea0c3;
+  --muted-2: #6d7f9f;
+  --good: #4fe08b;
+  --warn: #ffd166;
+  --bad: #ff758f;
+  --opencode: #4fe08b;
+  --claude: #ffb36b;
+  --codex: #70b7ff;
+  --shadow: 0 24px 70px rgba(2, 7, 17, 0.45);
+  --radius: 18px;
+  --mono: "IBM Plex Mono", monospace;
+  --sans: "IBM Plex Sans", sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; min-width: 0; }
+html, body { scroll-behavior: smooth; max-width: 100%; overflow-x: clip; }
+body {
+  background:
+    radial-gradient(circle at top left, rgba(79, 224, 139, 0.15), transparent 28%),
+    radial-gradient(circle at top right, rgba(112, 183, 255, 0.18), transparent 26%),
+    linear-gradient(180deg, #06101c 0%, #09111f 48%, #08101b 100%);
+  color: var(--text);
+  font-family: var(--sans);
+  min-height: 100vh;
+  padding: 28px 16px 44px;
+}
+
+.shell {
+  width: min(1180px, 100%);
+  margin: 0 auto;
+}
+
+.hero {
+  position: relative;
+  overflow: hidden;
+  background:
+    linear-gradient(135deg, rgba(79, 224, 139, 0.12), rgba(112, 183, 255, 0.09)),
+    var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  padding: 26px;
+  box-shadow: var(--shadow);
+  margin-bottom: 18px;
+}
+
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: auto -8% -50% auto;
+  width: 320px;
+  height: 320px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(112, 183, 255, 0.12), transparent 68%);
+  pointer-events: none;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #b7c6e4;
+  margin-bottom: 12px;
+}
+
+.eyebrow::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--good), var(--codex));
+  box-shadow: 0 0 16px rgba(112, 183, 255, 0.5);
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(280px, 0.9fr);
+  gap: 18px;
+  align-items: start;
+}
+
+.hero h1 {
+  font-size: clamp(2rem, 4vw, 3.3rem);
+  line-height: 1.02;
+  letter-spacing: -0.05em;
+  margin-bottom: 12px;
+  max-width: 10ch;
+}
+
+.hero h1 span {
+  display: inline-block;
+  color: #9ed0ff;
+}
+
+.hero p {
+  max-width: 66ch;
+  color: var(--muted);
+  font-size: 0.98rem;
+  line-height: 1.6;
+}
+
+.hero-side {
+  background: rgba(8, 17, 31, 0.72);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 16px;
+}
+
+.hero-side h2,
+.panel-title {
+  font-family: var(--mono);
+  font-size: 0.77rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #b4c4e2;
+  margin-bottom: 10px;
+}
+
+.hero-side ul {
+  list-style: none;
+  display: grid;
+  gap: 10px;
+}
+
+.hero-side li {
+  color: var(--muted);
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+.hero-side strong { color: var(--text); font-weight: 600; }
+
+.panel,
+.provider-card,
+.kpi,
+.note,
+.metric-box,
+.matrix-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.layout {
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+}
+
+.config-panel {
+  width: 320px;
+  flex-shrink: 0;
+  padding: 18px;
+  align-self: flex-start;
+  position: -webkit-sticky;
+  position: sticky;
+  top: 12px;
+  max-height: calc(100vh - 24px);
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(166, 194, 255, 0.18) transparent;
+}
+
+.layout > main {
+  flex: 1;
+  min-width: 0;
+}
+
+.control-block + .control-block {
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+}
+
+.preset-grid,
+.chip-grid,
+.provider-head {
+  display: grid;
+  gap: 10px;
+}
+
+.preset-grid {
+  grid-template-columns: 1fr 1fr;
+}
+
+.chip-grid {
+  grid-template-columns: 1fr;
+}
+
+.hint-card {
+  margin-top: 12px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: rgba(8, 17, 31, 0.72);
+}
+
+.hint-card strong {
+  color: var(--text);
+}
+
+.hint-card p {
+  color: var(--muted);
+  font-size: 0.86rem;
+  line-height: 1.5;
+}
+
+button {
+  font: inherit;
+  border: none;
+  color: inherit;
+}
+
+.preset-btn,
+.model-btn,
+.toggle-btn {
+  text-align: left;
+  background: rgba(8, 17, 31, 0.75);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 12px;
+  cursor: pointer;
+  transition: transform 0.16s ease, border-color 0.16s ease, background 0.16s ease;
+}
+
+.preset-btn:hover,
+.model-btn:hover,
+.toggle-btn:hover {
+  transform: translateY(-1px);
+  border-color: var(--line-strong);
+  background: rgba(15, 28, 49, 0.85);
+}
+
+.preset-btn.active,
+.model-btn.active,
+.toggle-btn.active {
+  border-color: rgba(112, 183, 255, 0.45);
+  background: linear-gradient(135deg, rgba(22, 40, 69, 0.95), rgba(11, 24, 45, 0.98));
+}
+
+.preset-btn .title,
+.model-btn .title {
+  font-weight: 600;
+  font-size: 0.94rem;
+}
+
+.preset-btn .meta,
+.model-btn .meta {
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 0.84rem;
+  line-height: 1.45;
+}
+
+.field + .field { margin-top: 14px; }
+
+.field-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: baseline;
+  margin-bottom: 8px;
+}
+
+.field-row label {
+  color: #dce7fd;
+  font-size: 0.93rem;
+}
+
+.field-row output {
+  font-family: var(--mono);
+  color: #c6d6f4;
+  font-size: 0.9rem;
+}
+
+input[type="range"] {
+  width: 100%;
+  accent-color: #8cc9ff;
+}
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.kpi {
+  padding: 16px;
+}
+
+.provider-stack {
+  display: grid;
+  gap: 16px;
+}
+
+.sticky-nav {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 12px;
+  z-index: 20;
+  display: flex;
+  gap: 6px;
+  padding: 10px 14px;
+  margin-bottom: 14px;
+  background: rgba(8, 17, 31, 0.82);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+}
+
+.sticky-nav button {
+  flex: 1;
+  text-align: center;
+  font: inherit;
+  border: none;
+  color: inherit;
+  padding: 8px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 0.88rem;
+  font-weight: 500;
+  background: transparent;
+  transition: background 0.16s ease, color 0.16s ease;
+}
+
+.sticky-nav button:hover {
+  background: rgba(166, 194, 255, 0.08);
+}
+
+.sticky-nav button.active {
+  background: rgba(112, 183, 255, 0.15);
+  color: #c6d6f4;
+}
+
+.sticky-nav .dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 6px;
+  vertical-align: middle;
+}
+
+.provider-card {
+  overflow: hidden;
+  scroll-margin-top: 100px;
+}
+
+.provider-head {
+  gap: 12px;
+  padding: 18px 18px 0;
+}
+
+.provider-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.provider-mark {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.provider-title h3 {
+  font-size: 1.25rem;
+  letter-spacing: -0.03em;
+}
+
+.provider-title p,
+.provider-side p {
+  margin-top: 6px;
+  color: var(--muted);
+  line-height: 1.55;
+  font-size: 0.92rem;
+}
+
+.provider-side {
+  background: rgba(8, 17, 31, 0.72);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 16px 20px;
+}
+
+.plan-table {
+  display: grid;
+  gap: 3px;
+}
+
+.plan-tr {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 6px 10px;
+  align-items: baseline;
+}
+
+.plan-tr.header {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted-2);
+  padding-bottom: 3px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 2px;
+}
+
+.ptd.name {
+  color: var(--muted);
+  font-size: 0.86rem;
+}
+
+.ptd.usd {
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 0.86rem;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.ptd.usd strong {
+  color: var(--text);
+}
+
+.ptd.converted {
+  color: var(--muted-2);
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  text-align: right;
+  white-space: nowrap;
+  min-width: 60px;
+}
+
+.plan-footer {
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px solid var(--line);
+  font-size: 0.82rem;
+  color: var(--muted-2);
+  line-height: 1.5;
+}
+
+.plan-footer strong {
+  color: var(--muted);
+}
+
+.timeline {
+  margin-top: 18px;
+  padding: 18px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.timeline-list {
+  list-style: none;
+  display: grid;
+  gap: 14px;
+  margin-top: 12px;
+}
+
+.timeline-event {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  gap: 12px;
+  padding-left: 14px;
+  border-left: 2px solid var(--line);
+  position: relative;
+}
+
+.timeline-event::before {
+  content: '';
+  position: absolute;
+  left: -5px;
+  top: 4px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--codex);
+}
+
+.timeline-event .date {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--muted-2);
+  padding-top: 1px;
+}
+
+.timeline-event .body .title {
+  font-weight: 600;
+  color: var(--text);
+  font-size: 0.92rem;
+}
+
+.timeline-event .body .detail {
+  color: var(--muted);
+  font-size: 0.84rem;
+  line-height: 1.5;
+  margin-top: 2px;
+}
+
+.timeline-event .body .source {
+  color: var(--muted-2);
+  font-size: 0.78rem;
+  margin-top: 2px;
+}
+
+.feature-note {
+  margin-top: 14px;
+}
+
+.feature-note .panel-title {
+  cursor: pointer;
+  user-select: none;
+}
+
+.feature-note .panel-title::after {
+  content: ' ▸';
+  font-size: 0.7rem;
+  transition: transform 0.2s ease;
+  display: inline-block;
+}
+
+.feature-note .panel-title.open::after {
+  transform: rotate(90deg);
+}
+
+.feature-table-wrap {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.3s ease;
+}
+
+.feature-table-wrap.open {
+  max-height: 600px;
+}
+
+.feature-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 8px;
+  font-size: 0.82rem;
+}
+
+.feature-table th,
+.feature-table td {
+  padding: 5px 6px;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  vertical-align: middle;
+}
+
+.feature-table th {
+  font-family: var(--mono);
+  color: var(--muted-2);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+
+.feature-table td:first-child {
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.feature-table td {
+  color: var(--text);
+  text-align: center;
+  font-size: 0.84rem;
+}
+
+.feature-table .tag {
+  font-size: 0.68rem;
+  padding: 1px 5px;
+}
+
+.provider-body {
+  padding: 18px;
+  display: grid;
+  gap: 14px;
+}
+
+.model-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.provider-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.metric-box {
+  padding: 14px;
+}
+
+.metric-box .sub:empty {
+  display: none;
+}
+
+.progress-wrap {
+  display: grid;
+  gap: 10px;
+}
+
+.progress-row {
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: rgba(8, 17, 31, 0.7);
+}
+
+.progress-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: baseline;
+  margin-bottom: 8px;
+}
+
+.progress-head span:first-child {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.progress-head span:last-child {
+  font-family: var(--mono);
+  font-size: 0.9rem;
+}
+
+.bar {
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(146, 170, 214, 0.12);
+  overflow: hidden;
+}
+
+.bar > span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  transition: width 0.3s ease;
+}
+
+.hint {
+  margin-top: 8px;
+  color: var(--muted-2);
+  font-size: 0.84rem;
+  line-height: 1.45;
+}
+
+.status {
+  border-radius: 16px;
+  padding: 14px 16px;
+  font-size: 0.94rem;
+  line-height: 1.55;
+}
+
+.status.good {
+  background: rgba(79, 224, 139, 0.12);
+  border: 1px solid rgba(79, 224, 139, 0.3);
+  color: #9ef0be;
+}
+
+.status.warn {
+  background: rgba(255, 209, 102, 0.12);
+  border: 1px solid rgba(255, 209, 102, 0.34);
+  color: #ffe39a;
+}
+
+.status.bad {
+  background: rgba(255, 117, 143, 0.12);
+  border: 1px solid rgba(255, 117, 143, 0.3);
+  color: #ffb0c0;
+}
+
+.bottom-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+  margin-top: 18px;
+}
+
+.matrix-card,
+.note {
+  padding: 18px;
+}
+
+.matrix {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.matrix th,
+.matrix td {
+  padding: 10px 8px;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  vertical-align: top;
+  font-size: 0.92rem;
+}
+
+.matrix th {
+  font-family: var(--mono);
+  color: var(--muted);
+  font-size: 0.76rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.matrix tr:last-child td { border-bottom: none; }
+.matrix strong { color: var(--text); }
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.03em;
+}
+
+.tag.good { background: rgba(79, 224, 139, 0.12); color: #9ef0be; }
+.tag.warn { background: rgba(255, 209, 102, 0.12); color: #ffe39a; }
+.tag.info { background: rgba(112, 183, 255, 0.12); color: #abd7ff; }
+
+.note ul {
+  list-style: none;
+  display: grid;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.note li {
+  color: var(--muted);
+  line-height: 1.55;
+  font-size: 0.92rem;
+}
+
+.note strong { color: var(--text); }
+
+.footer-note {
+  margin-top: 16px;
+  color: var(--muted-2);
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+.capacity-block {
+  margin-top: 14px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: rgba(8, 17, 31, 0.6);
+}
+
+.capacity-block.enough {
+  border-color: rgba(79, 224, 139, 0.25);
+}
+
+.capacity-block.not-enough {
+  border-color: rgba(255, 117, 143, 0.25);
+}
+
+.capacity-title {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+
+.capacity-main {
+  font-size: 1.7rem;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1.1;
+  margin-bottom: 8px;
+}
+
+.capacity-main.enough-text {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--good);
+  letter-spacing: normal;
+}
+
+.capacity-main-suffix {
+  font-size: 0.92rem;
+  font-weight: 400;
+  color: var(--muted);
+  letter-spacing: normal;
+}
+
+.capacity-secondary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin-bottom: 10px;
+  color: var(--muted-2);
+  font-size: 0.84rem;
+  line-height: 1.5;
+}
+
+.capacity-secondary strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.capacity-coverage {
+  font-size: 0.82rem;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+
+.capacity-coverage strong {
+  color: var(--text);
+}
+
+.capacity-bottleneck {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.03em;
+  margin-bottom: 8px;
+}
+
+.capacity-bottleneck.none {
+  background: rgba(79, 224, 139, 0.12);
+  color: #9ef0be;
+}
+
+.capacity-bottleneck.active {
+  background: rgba(255, 209, 102, 0.12);
+  color: #ffe39a;
+}
+
+.capacity-recommendation {
+  color: var(--muted);
+  font-size: 0.86rem;
+  line-height: 1.5;
+}
+
+.capacity-table {
+  display: grid;
+  gap: 2px;
+  margin-bottom: 10px;
+}
+
+.capacity-table-row {
+  display: grid;
+  grid-template-columns: 1fr repeat(3, auto);
+  gap: 6px 12px;
+  padding: 5px 8px;
+  border-radius: 8px;
+  align-items: center;
+  font-size: 0.84rem;
+  line-height: 1.5;
+}
+
+.capacity-table-row.header {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted-2);
+  padding: 2px 8px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 2px;
+}
+
+.capacity-table-row .plan-name {
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.capacity-table-row .plan-val {
+  font-family: var(--mono);
+  color: var(--text);
+  text-align: right;
+  min-width: 50px;
+}
+
+.capacity-table-row .plan-val.na {
+  color: var(--muted-2);
+}
+
+.capacity-table-row.suggested {
+  background: rgba(112, 183, 255, 0.08);
+}
+
+.sources-section {
+  margin-top: 18px;
+  padding: 18px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.sources-section ul {
+  list-style: none;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.sources-section li.full {
+  grid-column: 1 / -1;
+}
+
+.sources-section li {
+  color: var(--muted);
+  line-height: 1.55;
+  font-size: 0.92rem;
+}
+
+.sources-section li strong {
+  color: var(--text);
+}
+
+.sources-section .tag {
+  font-size: 0.7rem;
+  vertical-align: middle;
+  margin-left: 6px;
+}
+
+@media (max-width: 1080px) {
+  .layout {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .hero-grid,
+  .bottom-grid,
+  .provider-head {
+    grid-template-columns: 1fr;
+  }
+
+  .config-panel {
+    position: static;
+    max-height: none;
+    overflow-y: visible;
+    width: 100%;
+  }
+
+  .sticky-nav button {
+    font-size: 0.78rem;
+    padding: 6px 8px;
+  }
+
+  .metrics-grid,
+  .provider-metrics,
+  .model-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.benchmark-section {
+  margin-top: 18px;
+}
+
+.benchmark-section > .panel-title {
+  margin-bottom: 12px;
+}
+
+#benchmarkTable {
+  margin-bottom: 18px;
+  border-radius: var(--radius);
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+#benchmarkChart {
+  width: 100%;
+  max-width: 100%;
+  height: 420px;
+  margin-bottom: 18px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.scenario-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr));
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.scenario-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 14px;
+}
+
+.scenario-card .scenario-title {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+.scenario-card .scenario-desc {
+  color: var(--muted-2);
+  font-size: 0.82rem;
+  margin-bottom: 10px;
+}
+
+.scenario-card .scenario-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 10px;
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+.scenario-card .scenario-row + .scenario-row {
+  margin-top: 4px;
+}
+
+.scenario-card .scenario-row.best {
+  background: rgba(79, 224, 139, 0.08);
+}
+
+.scenario-card .scenario-row.value {
+  background: rgba(112, 183, 255, 0.08);
+}
+
+.scenario-card .scenario-row .label {
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.scenario-card .scenario-row .model {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.scenario-card .scenario-row .score {
+  font-family: var(--mono);
+  color: var(--text);
+  font-size: 0.84rem;
+}
+
+@media (max-width: 860px) {
+  .metrics-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .model-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .sources-section ul {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  body { padding: 18px 12px 30px; }
+  .hero { padding: 20px; }
+  .metrics-grid,
+  .provider-metrics,
+  .preset-grid,
+  .model-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.tabulator,
+.tabulator *,
+.tabulator-tableholder,
+.tabulator-tableholder * {
+  background-color: transparent !important;
+  color: var(--text) !important;
+  border-color: var(--line) !important;
+}
+
+.tabulator {
+  border: 1px solid var(--line) !important;
+  border-radius: 14px !important;
+  font-family: var(--sans) !important;
+  font-size: 0.88rem !important;
+}
+
+.tabulator .tabulator-header {
+  background: rgba(8, 17, 31, 0.85) !important;
+  border-bottom: 1px solid var(--line) !important;
+}
+
+.tabulator .tabulator-header .tabulator-col {
+  border-right: 1px solid var(--line) !important;
+}
+
+.tabulator .tabulator-header .tabulator-col .tabulator-col-content {
+  padding: 10px 8px !important;
+}
+
+.tabulator .tabulator-header .tabulator-col .tabulator-col-title {
+  color: var(--muted) !important;
+  font-family: var(--mono) !important;
+  font-size: 0.72rem !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+}
+
+.tabulator .tabulator-header .tabulator-col .tabulator-header-filter input {
+  background: rgba(8, 17, 31, 0.7) !important;
+  border: 1px solid var(--line-strong) !important;
+  color: var(--text) !important;
+  border-radius: 6px !important;
+  padding: 4px 6px !important;
+  font-size: 0.82rem !important;
+  font-family: var(--sans) !important;
+}
+
+.tabulator .tabulator-row {
+  border-bottom: 1px solid var(--line) !important;
+}
+
+.tabulator .tabulator-row.tabulator-row-even {
+  background: rgba(166, 194, 255, 0.04) !important;
+}
+
+.tabulator .tabulator-row .tabulator-cell {
+  padding: 8px !important;
+  border-right: 1px solid var(--line) !important;
+}
+
+.tabulator .tabulator-row .tabulator-cell:last-child {
+  border-right: none !important;
+}
+
+.tabulator .tabulator-arrow {
+  border-bottom-color: var(--muted-2) !important;
+}
+
+.tabulator .tabulator-col-resize-handle {
+  border-right: 1px solid var(--line) !important;
+}
+
+.tabulator .tabulator-responsive-collapse {
+  background: rgba(8, 17, 31, 0.6) !important;
+  border-top: 1px solid var(--line) !important;
+  color: var(--muted) !important;
+  font-size: 0.84rem !important;
+  padding: 8px !important;
+}
+
+.tabulator .tabulator-responsive-collapse table td {
+  color: var(--text) !important;
+  padding: 4px 8px !important;
+}
+
+.ctooltip {
+  position: fixed;
+  z-index: 9999;
+  background: rgba(8, 17, 31, 0.94);
+  border: 1px solid rgba(166, 194, 255, 0.18);
+  border-radius: 8px;
+  padding: 6px 10px;
+  color: #edf3ff;
+  font-size: 0.84rem;
+  pointer-events: none;
+  display: none;
+  white-space: nowrap;
+}
+</style>
+</head>
+<body>
+<div class="shell">
+  <section class="hero">
+    <div class="eyebrow">Actualizado 5 de mayo de 2026</div>
+    <div class="hero-grid">
+      <div>
+        <h1>Costear <span>coding agents</span> sin humo.</h1>
+        <p>
+          Esta versión ya no mira solo OpenCode Go. Ahora estima carga real de trabajo para OpenCode Go,
+          Claude Code y Codex de GPT, con presets de <strong>debug</strong>, <strong>features</strong>,
+          <strong>diseño</strong>, <strong>infraestructura</strong> y <strong>seguridad</strong>.
+          La comparación mezcla precios oficiales, límites publicados y una lectura práctica de cuándo conviene
+          suscripción vs API.
+        </p>
+      </div>
+      <aside class="hero-side">
+        <h2>Qué sí responde</h2>
+        <ul>
+          <li><strong>Cuánto costaría tu mes</strong> si trabajas con un modelo concreto y una carga parecida a un SaaS real.</li>
+          <li><strong>Si OpenCode Go aguanta o no</strong> tus ventanas de 5 horas, semana y mes.</li>
+          <li><strong>Qué stack sale más lógico</strong> para diseño, bug fixing, features largas, infra y seguridad.</li>
+        </ul>
+      </aside>
+    </div>
+  </section>
+
+  <div class="layout">
+    <aside class="panel config-panel">
+      <div class="panel-title">Perfil de trabajo</div>
+
+      <div class="control-block">
+        <div class="panel-title">Mostrar en</div>
+        <div class="preset-grid" id="currencyGrid"></div>
+        <div class="hint-card" style="margin-top:10px">
+          <p><strong id="rateLabel">Tasa</strong> <span id="rateValue">—</span></p>
+          <p style="margin-top:4px;font-size:0.78rem;color:var(--muted-2)" id="rateDate"></p>
+        </div>
+      </div>
+
+      <div class="control-block">
+        <div class="panel-title">Preset de tarea</div>
+        <div class="preset-grid" id="presetGrid"></div>
+      </div>
+
+      <div class="control-block">
+        <div class="panel-title">Intensidad de uso</div>
+        <div class="preset-grid" id="usageGrid"></div>
+        <div class="hint-card">
+          <p><strong>Regla rápida:</strong> `11 req/prompt` no es poco. Para chat o consultas suele ser alto; para debugging fuerte, refactors o agent mode sí puede ser completamente normal.</p>
+        </div>
+      </div>
+
+      <div class="control-block">
+        <div class="panel-title">Carga mensual</div>
+
+        <div class="field">
+          <div class="field-row">
+            <label for="hoursPerDay">Horas activas por día</label>
+            <output id="hoursPerDayOut"></output>
+          </div>
+          <input id="hoursPerDay" type="range" min="1" max="10" step="1">
+        </div>
+
+        <div class="field">
+          <div class="field-row">
+            <label for="daysPerMonth">Días de trabajo al mes</label>
+            <output id="daysPerMonthOut"></output>
+          </div>
+          <input id="daysPerMonth" type="range" min="8" max="26" step="1">
+        </div>
+
+        <div class="field">
+          <div class="field-row">
+            <label for="promptsPerHour">Prompts tuyos por hora</label>
+            <output id="promptsPerHourOut"></output>
+          </div>
+          <input id="promptsPerHour" type="range" min="2" max="24" step="1">
+        </div>
+
+        <div class="field">
+          <div class="field-row">
+            <label for="requestsPerPrompt">Requests internos por prompt</label>
+            <output id="requestsPerPromptOut"></output>
+          </div>
+          <input id="requestsPerPrompt" type="range" min="1" max="18" step="1">
+        </div>
+      </div>
+
+      <div class="control-block">
+        <div class="panel-title">Peso por request</div>
+
+        <div class="field">
+          <div class="field-row">
+            <label for="inputTokens">Input tokens por request</label>
+            <output id="inputTokensOut"></output>
+          </div>
+          <input id="inputTokens" type="range" min="200" max="5000" step="50">
+        </div>
+
+        <div class="field">
+          <div class="field-row">
+            <label for="cachedTokens">Cached input tokens</label>
+            <output id="cachedTokensOut"></output>
+          </div>
+          <input id="cachedTokens" type="range" min="0" max="120000" step="1000">
+        </div>
+
+        <div class="field">
+          <div class="field-row">
+            <label for="outputTokens">Output tokens por request</label>
+            <output id="outputTokensOut"></output>
+          </div>
+          <input id="outputTokens" type="range" min="80" max="3000" step="20">
+        </div>
+
+      </div>
+    </aside>
+
+    <main>
+      <section class="metrics-grid">
+        <article class="kpi">
+          <div class="label">Requests al día</div>
+          <div class="value" id="reqDay"></div>
+          <div class="sub">Prompts tuyos x loops internos del agente.</div>
+        </article>
+        <article class="kpi">
+          <div class="label">Requests al mes</div>
+          <div class="value" id="reqMonth"></div>
+          <div class="sub">La unidad más útil para comparar OpenCode Go vs API.</div>
+        </article>
+        <article class="kpi">
+          <div class="label">Input total / mes</div>
+          <div class="value" id="inputMonth"></div>
+          <div class="sub">Suma input fresco + caché. El caché pesa mucho en agentes largos.</div>
+        </article>
+        <article class="kpi">
+          <div class="label">Output total / mes</div>
+          <div class="value" id="outputMonth"></div>
+          <div class="sub">Te pega más duro en modelos premium tipo Opus o GPT-5.5.</div>
+        </article>
+      </section>
+
+      <nav class="sticky-nav" id="stickyNav">
+        <button class="active" data-scroll="goCard"><img src="../../assets/ai-costs/opencode-dark.svg" height="16" style="vertical-align:middle;margin-right:5px">OpenCode Go</button>
+        <button data-scroll="claudeCard"><img src="../../assets/ai-costs/claude-ai-icon.svg" height="16" style="vertical-align:middle;margin-right:5px">Claude Code</button>
+        <button data-scroll="codexCard"><img src="../../assets/ai-costs/codex_dark.svg" height="16" style="vertical-align:middle;margin-right:5px">Codex</button>
+      </nav>
+
+      <section class="provider-stack">
+        <article class="provider-card" id="goCard">
+          <div class="provider-head">
+            <div class="provider-title">
+              <img src="../../assets/ai-costs/opencode-dark.svg" height="32" style="flex-shrink:0">
+              <div>
+                <h3>OpenCode Go</h3>
+                <p>Modelo abierto barato, cuota fija de entrada y techo duro por ventanas de uso. Bueno cuando quieres volumen y flexibilidad multmodelo sin irte a Claude/OpenAI.</p>
+              </div>
+            </div>
+            <aside class="provider-side">
+              <div class="panel-title">Plan base</div>
+              <div class="plan-table">
+                <div class="plan-tr header"><span class="ptd name">Plan</span><span class="ptd usd">USD</span><span class="ptd converted" data-col="converted">COP</span></div>
+                <div class="plan-tr"><span class="ptd name">Suscripción</span><span class="ptd usd"><strong data-usd="10">$10</strong>/mes</span><span class="ptd converted"><strong data-usd="10"></strong></span></div>
+                <div class="plan-tr"><span class="ptd name">Primer mes</span><span class="ptd usd"><strong data-usd="5">$5</strong></span><span class="ptd converted"><strong data-usd="5"></strong></span></div>
+              </div>
+              <div class="plan-footer">OpenCode Go subsidia tu suscripción de $10/mes con límites de consumo de $60/mes, $30/semana y $12 por ventana de 5h. El modelo determina cuántos requests entran en esos límites.</div>
+            </aside>
+          </div>
+          <div class="provider-body">
+            <div class="model-grid" id="goModels"></div>
+            <div class="provider-metrics">
+              <div class="metric-box">
+                <div class="label">Costo inferido / req</div>
+                <div class="value" id="goReqCost"></div>
+                <div class="sub">Estimado desde la tabla oficial de requests por ventana.</div>
+              </div>
+              <div class="metric-box">
+                <div class="label">Gasto mes equivalente</div>
+                <div class="value" id="goMonthCost"></div>
+                <div class="sub" id="goMonthCostCop"></div>
+              </div>
+              <div class="metric-box">
+                <div class="label">Plan suficiente</div>
+                <div class="value" id="goPlanHint"></div>
+                <div class="sub" id="goPlanSub">OpenCode Go no tiene escalones 5x/20x tipo Claude.</div>
+              </div>
+              <div class="metric-box">
+                <div class="label">Break-even vs API</div>
+                <div class="value" id="goBreakeven"></div>
+                <div class="sub">Desde aquí el fijo de $10 casi siempre gana.</div>
+              </div>
+            </div>
+            <div class="progress-wrap">
+              <div class="progress-row">
+                <div class="progress-head">
+                  <span>Ventana de 5 horas</span>
+                  <span id="go5hPct"></span>
+                </div>
+                <div class="bar"><span id="go5hBar" style="background:var(--opencode)"></span></div>
+                <div class="hint" id="go5hHint"></div>
+              </div>
+              <div class="progress-row">
+                <div class="progress-head">
+                  <span>Límite semanal</span>
+                  <span id="goWeekPct"></span>
+                </div>
+                <div class="bar"><span id="goWeekBar" style="background:#91d17a"></span></div>
+                <div class="hint" id="goWeekHint"></div>
+              </div>
+              <div class="progress-row">
+                <div class="progress-head">
+                  <span>Límite mensual</span>
+                  <span id="goMonthPct"></span>
+                </div>
+                <div class="bar"><span id="goMonthBar" style="background:#7be6b1"></span></div>
+                <div class="hint" id="goMonthHint"></div>
+              </div>
+            </div>
+            <div id="goCapacity" class="capacity-block"></div>
+            <div id="goStatus" class="status"></div>
+          </div>
+        </article>
+
+        <article class="provider-card" id="claudeCard">
+          <div class="provider-head">
+            <div class="provider-title">
+              <img src="../../assets/ai-costs/claude-ai-icon.svg" height="32" style="flex-shrink:0">
+              <div>
+                <h3>Claude Code</h3>
+                <p>Muy fuerte para reasoning largo, revisión de código y trabajo con contexto pesado. La versión suscripción tiene límites blandos por sesión/semana; con API pagas por token y no te frena con un techo duro por prompt.</p>
+              </div>
+            </div>
+            <aside class="provider-side">
+              <div class="panel-title">Planes individuales <span class="tag info">2× límites 5h</span></div>
+              <div class="plan-table">
+                <div class="plan-tr header"><span class="ptd name">Plan</span><span class="ptd usd">USD</span><span class="ptd converted" data-col="converted">COP</span></div>
+                <div class="plan-tr"><span class="ptd name">Pro</span><span class="ptd usd"><strong data-usd="20">$20</strong>/mes</span><span class="ptd converted"><strong data-usd="20"></strong></span></div>
+                <div class="plan-tr"><span class="ptd name">Max 5x</span><span class="ptd usd"><strong data-usd="100">$100</strong></span><span class="ptd converted"><strong data-usd="100"></strong></span></div>
+                <div class="plan-tr"><span class="ptd name">Max 20x</span><span class="ptd usd"><strong data-usd="200">$200</strong></span><span class="ptd converted"><strong data-usd="200"></strong></span></div>
+              </div>
+              <div class="plan-footer">Capacidad estimada a partir del límite publicado de tokens por ventana de 5h (Pro 88K · Max 5x 176K · Max 20x 440K). El cuello de botella en suscripciones es el output: solo se cuentan output tokens contra el límite de ventana (el input, aunque alto, no agota la cuota). <strong>Si entras con API key, es pay as you go sin techo de ventana.</strong></div>
+            </aside>
+          </div>
+          <div class="provider-body">
+            <div class="model-grid" id="claudeModels"></div>
+            <div class="provider-metrics">
+              <div class="metric-box">
+                <div class="label">Costo API / request</div>
+                <div class="value" id="claudeReqCost"></div>
+                <div class="sub">Input + caché + output con el perfil actual.</div>
+              </div>
+              <div class="metric-box">
+                <div class="label">Costo API / mes</div>
+                <div class="value" id="claudeMonthCost"></div>
+                <div class="sub" id="claudeMonthCostCop"></div>
+              </div>
+              <div class="metric-box">
+                <div class="label">Plan suficiente</div>
+                <div class="value" id="claudePlanHint"></div>
+                <div class="sub" id="claudePlanSub">Solo orientación. Claude no publica un tope simple por tokens para Pro/Max.</div>
+              </div>
+              <div class="metric-box">
+                <div class="label">Costo día activo</div>
+                <div class="value" id="claudeDayCost"></div>
+                <div class="sub">Útil para contrastar con sesiones pesadas de arquitectura o seguridad.</div>
+              </div>
+            </div>
+            <div id="claudeCapacity" class="capacity-block"></div>
+            <div class="feature-note" id="claudeFeatureNote"></div>
+            <div id="claudeStatus" class="status"></div>
+          </div>
+        </article>
+
+        <article class="provider-card" id="codexCard">
+          <div class="provider-head">
+            <div class="provider-title">
+              <img src="../../assets/ai-costs/codex_dark.svg" height="32" style="flex-shrink:0">
+              <div>
+                <h3>Codex de GPT</h3>
+                <p>El más fuerte cuando quieres mezclar coding, búsqueda, artefactos, herramientas y trabajo profesional amplio. Tiene dos lecturas: el producto incluido en ChatGPT y el costo fino por tokens/credits si lo mides como API/Codex.</p>
+              </div>
+            </div>
+            <aside class="provider-side">
+              <div class="panel-title">Acceso</div>
+              <div class="plan-table">
+                <div class="plan-tr header"><span class="ptd name">Plan</span><span class="ptd usd">USD</span><span class="ptd converted" data-col="converted">COP</span></div>
+                <div class="plan-tr"><span class="ptd name">ChatGPT Plus</span><span class="ptd usd"><strong data-usd="20">$20</strong></span><span class="ptd converted"><strong data-usd="20"></strong></span></div>
+                <div class="plan-tr"><span class="ptd name">Pro</span><span class="ptd usd"><strong data-usd="100">$100</strong></span><span class="ptd converted"><strong data-usd="100"></strong></span></div>
+                <div class="plan-tr"><span class="ptd name">Pro</span><span class="ptd usd"><strong data-usd="200">$200</strong></span><span class="ptd converted"><strong data-usd="200"></strong></span></div>
+              </div>
+              <div class="plan-footer">Capacidad estimada a partir del límite de tokens por ventana de 5h (Plus 86K · Pro $100 344K · Pro $200 688K). Solo se cuentan output tokens contra el límite; modelos más pesados (GPT-5.5) consumen más cuota que los ligeros (GPT-5.4 mini). <strong>Con API key es pay as you go sin techo de ventana.</strong></div>
+            </aside>
+          </div>
+          <div class="provider-body">
+            <div class="model-grid" id="codexModels"></div>
+            <div class="provider-metrics">
+              <div class="metric-box">
+                <div class="label">Costo API / request</div>
+                <div class="value" id="codexReqCost"></div>
+                <div class="sub">Estimado con el modelo seleccionado.</div>
+              </div>
+              <div class="metric-box">
+                <div class="label">Costo API / mes</div>
+                <div class="value" id="codexMonthCost"></div>
+                <div class="sub" id="codexMonthCostCop"></div>
+              </div>
+              <div class="metric-box">
+                <div class="label">Créditos / mes</div>
+                <div class="value" id="codexCredits"></div>
+                <div class="sub">Usando la rate card oficial de Codex para el modelo.</div>
+              </div>
+              <div class="metric-box">
+                <div class="label">Plan sugerido</div>
+                <div class="value" id="codexPlanHint"></div>
+                <div class="sub" id="codexPlanSub">La guía real depende del uso y del modo rápido, no solo de dólares.</div>
+              </div>
+            </div>
+            <div id="codexCapacity" class="capacity-block"></div>
+            <div class="feature-note" id="codexFeatureNote"></div>
+            <div id="codexStatus" class="status"></div>
+          </div>
+        </article>
+      </section>
+
+      <section class="bottom-grid">
+        <aside class="note">
+          <div class="panel-title">Notas que importan</div>
+          <ul>
+            <li><strong>OpenCode Go</strong> es el más fácil de modelar porque sí publica ventanas claras en dólares y una tabla de requests por modelo.</li>
+            <li><strong>Claude Code suscripción</strong> y <strong>Codex en ChatGPT</strong> no equivalen a una bolsa de tokens pública simple. Aquí se muestran umbrales prácticos, no una promesa contractual.</li>
+            <li><strong>Claude vía API</strong> gana claridad financiera: pagas por token y no te corta por plan, pero en tareas largas Opus se dispara muy rápido.</li>
+            <li><strong>Codex</strong> suele ser el más versátil para mezclar coding con flujos más amplios. Para puro volumen barato, normalmente pierde contra OpenCode Go.</li>
+          </ul>
+        </aside>
+      </section>
+
+      <section class="benchmark-section">
+        <div class="panel-title">Benchmarks</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 18px;margin-bottom:12px;color:var(--muted-2);font-size:0.82rem;line-height:1.55">
+          <span><strong style="color:var(--muted)">SWE-bench V</strong> → % issues GitHub resueltos (código real)</span>
+          <span><strong style="color:var(--muted)">SWE-bench Pro</strong> → Multi-lenguaje, scaffold estándar, más justo</span>
+          <span><strong style="color:var(--muted)">GPQA Diamond</strong> → Razonamiento nivel PhD, propósito general</span>
+          <span><strong style="color:var(--muted)">Terminal-Bench</strong> → Tareas de terminal, debugging, infra</span>
+          <span><strong style="color:var(--muted)">Costo blended</strong> → Promedio input+output $/1M tokens</span>
+        </div>
+        <p style="color:var(--muted);font-size:0.82rem;line-height:1.55;margin-bottom:12px">
+          Scores sobre 13 modelos. † = estimados. Fuente: AkitaOnRails, DataCamp, BuildFastWithAI (mayo 2026).
+        </p>
+        <div id="benchmarkTable"></div>
+        <div id="benchmarkChart"><div style="text-align:center;padding:80px 0;color:var(--muted-2);font-size:0.92rem" id="chartFallback">Cargando gráfico…</div></div>
+        <div id="chartChips" style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:4px"></div>
+        <div id="chartChipsFamilies" style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:12px"></div>
+
+        <div class="panel-title" style="margin-top:4px">Dónde brilla cada uno</div>
+        <p style="color:var(--muted);font-size:0.92rem;line-height:1.55;margin-bottom:12px">
+          Para cada escenario, el modelo con mejor puntaje en el benchmark relevante y la opción con mejor relación costo/rendimiento.
+        </p>
+        <div class="scenario-grid" id="scenarioGrid"></div>
+      </section>
+
+      <section class="sources-section">
+        <div class="panel-title">Fuentes</div>
+        <ul>
+          <li><strong>OpenCode Go</strong> — Límites oficiales publicados en opencode.ai <span class="tag info">5 may 2026</span></li>
+          <li><strong>Claude Code</strong> — Precios API de Anthropic (anthropic.com/pricing) y suscripciones (anthropic.com) <span class="tag info">5 may 2026</span></li>
+          <li><strong>Codex / GPT</strong> — Precios API de OpenAI (openai.com/pricing) y planes ChatGPT (openai.com/chatgpt) <span class="tag info">5 may 2026</span></li>
+          <li><strong>TRM</strong> — Tasas obtenidas de <code>api.frankfurter.dev</code>. Última consulta: <span id="ratesDate">5 may 2026</span></li>
+          <li>Logos de proveedores obtenidos de <a href="https://svgl.app" style="color:var(--codex);text-decoration:none">svgl.app</a></li>
+          <li class="full">Los valores pueden desactualizarse. Verifica siempre contra la fuente oficial antes de tomar decisiones financieras.</li>
+        </ul>
+      </section>
+
+      <section class="timeline">
+        <div class="panel-title">Historial de cambios</div>
+        <div class="timeline-list" id="timelineList"></div>
+      </section>
+    </main>
+  </div>
+</div>
+
+<script>
+const fmtCurrency = new Intl.NumberFormat("es-CO", {
+  style: "currency",
+  currency: "COP",
+  maximumFractionDigits: 0
+});
+
+const defaultRates = { copUsd: 3707.58, eurUsd: 1.1023, mxnUsd: 17.45 };
+let cachedRates;
+try { cachedRates = JSON.parse(localStorage.getItem('ai-trm')); } catch(e) {}
+const initialRates = { ...defaultRates, ...cachedRates };
+
+const state = {
+  preset: "feature",
+  usageProfile: "normal",
+  goModel: "deepseekFlash",
+  claudeModel: "sonnet46",
+  codexModel: "gpt53codex",
+  currency: localStorage.getItem('ai-currency') || 'usd',
+  trm: initialRates.copUsd,
+  eurUsd: initialRates.eurUsd,
+  mxnUsd: initialRates.mxnUsd
+};
+
+const presets = {
+  debug: {
+    name: "Debug puntual",
+    summary: "Bug aislado, repo conocido, loops cortos.",
+    hoursPerDay: 3,
+    daysPerMonth: 16,
+    promptsPerHour: 9,
+    requestsPerPrompt: 4,
+    inputTokens: 600,
+    cachedTokens: 45000,
+    outputTokens: 360,
+    goModel: "qwen35",
+    claudeModel: "sonnet46",
+    codexModel: "gpt54mini"
+  },
+  feature: {
+    name: "Feature SaaS",
+    summary: "Cambios backend + frontend + revisión de flujo.",
+    hoursPerDay: 5,
+    daysPerMonth: 20,
+    promptsPerHour: 8,
+    requestsPerPrompt: 7,
+    inputTokens: 900,
+    cachedTokens: 80000,
+    outputTokens: 650,
+    goModel: "deepseekPro",
+    claudeModel: "sonnet46",
+    codexModel: "gpt53codex"
+  },
+  design: {
+    name: "Diseño / UX",
+    summary: "Más iteración visual, menos infra pesada.",
+    hoursPerDay: 4,
+    daysPerMonth: 18,
+    promptsPerHour: 10,
+    requestsPerPrompt: 5,
+    inputTokens: 700,
+    cachedTokens: 55000,
+    outputTokens: 720,
+    goModel: "qwen36",
+    claudeModel: "sonnet46",
+    codexModel: "gpt54"
+  },
+  infra: {
+    name: "Infra / DevOps",
+    summary: "Más contexto, logs, scripts, diagnóstico y loops.",
+    hoursPerDay: 5,
+    daysPerMonth: 20,
+    promptsPerHour: 7,
+    requestsPerPrompt: 10,
+    inputTokens: 1200,
+    cachedTokens: 100000,
+    outputTokens: 780,
+    goModel: "glm51",
+    claudeModel: "opus47",
+    codexModel: "gpt54"
+  },
+  security: {
+    name: "Seguridad / auditoría",
+    summary: "Mucho contexto, razonamiento y trazabilidad.",
+    hoursPerDay: 4,
+    daysPerMonth: 18,
+    promptsPerHour: 6,
+    requestsPerPrompt: 11,
+    inputTokens: 1500,
+    cachedTokens: 120000,
+    outputTokens: 920,
+    goModel: "glm51",
+    claudeModel: "opus47",
+    codexModel: "gpt55"
+  }
+};
+
+const usageProfiles = {
+  chat: {
+    name: "Chat / consulta",
+    summary: "Preguntas rápidas, menos tool use, más conversación.",
+    hoursPerDay: 4,
+    daysPerMonth: 22,
+    promptsPerHour: 6,
+    requestsPerPrompt: 3
+  },
+  normal: {
+    name: "Coding normal",
+    summary: "Trabajo serio diario con mezcla de lectura, edición y validación.",
+    hoursPerDay: 8,
+    daysPerMonth: 26,
+    promptsPerHour: 10,
+    requestsPerPrompt: 8
+  },
+  intense: {
+    name: "Debug intensivo",
+    summary: "Bugs, refactors, varios archivos y loops más pesados.",
+    hoursPerDay: 9,
+    daysPerMonth: 26,
+    promptsPerHour: 12,
+    requestsPerPrompt: 11
+  }
+};
+
+const goModels = {
+  deepseekFlash: { name: "DeepSeek V4 Flash", req5h: 31650, reqWeek: 79050, reqMonth: 158150, label: "Volumen bestia" },
+  deepseekPro: { name: "DeepSeek V4 Pro", req5h: 3450, reqWeek: 8550, reqMonth: 17150, label: "Fuerte y razonable" },
+  qwen35: { name: "Qwen 3.5 Plus", req5h: 10200, reqWeek: 25200, reqMonth: 50500, label: "Muy rentable" },
+  qwen36: { name: "Qwen 3.6 Plus", req5h: 3300, reqWeek: 8200, reqMonth: 16300, label: "Más capaz, menos barato" },
+  minimax27: { name: "MiniMax M2.7", req5h: 3400, reqWeek: 8500, reqMonth: 17000, label: "Balance general" },
+  glm51: { name: "GLM-5.1", req5h: 880, reqWeek: 2150, reqMonth: 4300, label: "Más caro por request" }
+};
+
+for (const model of Object.values(goModels)) {
+  model.costPerReq = 12 / model.req5h;
+}
+
+const claudeModels = {
+  sonnet46: { name: "Sonnet 4.6", input: 3, cached: 0.30, output: 15, context: "200K estándar · 1M beta", tier: "Balance",        quotaMultiplier: 1.00 },
+  opus47:   { name: "Opus 4.7",   input: 5, cached: 0.50, output: 25, context: "200K",                    tier: "Máxima calidad", quotaMultiplier: 2.05 },
+  haiku45:  { name: "Haiku 4.5",  input: 1, cached: 0.10, output: 5,  context: "200K",                    tier: "Rápido y barato",quotaMultiplier: 0.30 }
+};
+
+const codexModels = {
+  gpt53codex: {
+    name: "GPT-5.3-Codex",
+    input: 1.75, cached: 0.175, output: 14, context: "400K",
+    creditsInput: 43.75, creditsCached: 4.375, creditsOutput: 350,
+    tier: "Coding flagship", quotaMultiplier: 0.70
+  },
+  gpt54: {
+    name: "GPT-5.4",
+    input: 2.50, cached: 0.25, output: 15, context: "1.05M",
+    creditsInput: 62.5, creditsCached: 6.25, creditsOutput: 375,
+    tier: "Más contexto", quotaMultiplier: 1.00
+  },
+  gpt55: {
+    name: "GPT-5.5",
+    input: 5, cached: 0.50, output: 30, context: "1M",
+    creditsInput: 125, creditsCached: 12.5, creditsOutput: 750,
+    tier: "Más caro y más fuerte", quotaMultiplier: 0.85
+  },
+  gpt54mini: {
+    name: "GPT-5.4 mini",
+    input: 0.75, cached: 0.075, output: 4.5, context: "400K",
+    creditsInput: 18.75, creditsCached: 1.875, creditsOutput: 113,
+    tier: "Mejor costo/beneficio", quotaMultiplier: 0.20
+  }
+};
+
+const claudePlanWindowTokens = {
+  pro:    { price: 20,  windowTok: 88_000 },
+  max5x:  { price: 100, windowTok: 176_000 },
+  max20x: { price: 200, windowTok: 440_000 },
+};
+
+const codexPlanWindowTokens = {
+  plus:   { price: 20,  windowTok: 86_000  },
+  pro100: { price: 100, windowTok: 344_000 },
+  pro200: { price: 200, windowTok: 688_000 },
+};
+
+const benchmarkModels = [
+  { model: 'GPT-5.5', family: 'OpenAI', swebVerified: 82, swebPro: 58.6, gpqa: 93.6, terminal: 82.7, inputCost: 5, outputCost: 30, blendedCost: 17.5 },
+  { model: 'GPT-5.4', family: 'OpenAI', swebVerified: 80, swebPro: 50, gpqa: 88, terminal: 72, inputCost: 2.5, outputCost: 15, blendedCost: 8.75 },
+  { model: 'GPT-5.3-Codex', family: 'OpenAI', swebVerified: 83, swebPro: 54, gpqa: 85, terminal: 78, inputCost: 2, outputCost: 12, blendedCost: 7 },
+  { model: 'GPT-5.4 mini', family: 'OpenAI', swebVerified: 70, swebPro: 38, gpqa: 75, terminal: 52, inputCost: 0.4, outputCost: 1.6, blendedCost: 1 },
+  { model: 'Sonnet 4.6', family: 'Anthropic', swebVerified: 79.6, swebPro: 46, gpqa: 84, terminal: 65, inputCost: 3, outputCost: 15, blendedCost: 9 },
+  { model: 'Opus 4.7', family: 'Anthropic', swebVerified: 82, swebPro: 64.3, gpqa: 91.5, terminal: 76, inputCost: 5, outputCost: 25, blendedCost: 15 },
+  { model: 'Haiku 4.5', family: 'Anthropic', swebVerified: 55, swebPro: 28, gpqa: 68, terminal: 42, inputCost: 0.8, outputCost: 4, blendedCost: 2.4 },
+  { model: 'DeepSeek V4 Flash', family: 'DeepSeek', swebVerified: 78, swebPro: 44, gpqa: 72, terminal: 55, inputCost: 0.14, outputCost: 0.28, blendedCost: 0.21 },
+  { model: 'DeepSeek V4 Pro', family: 'DeepSeek', swebVerified: 80.6, swebPro: 55.4, gpqa: 90.1, terminal: 67.9, inputCost: 1.74, outputCost: 3.48, blendedCost: 2.61 },
+  { model: 'Qwen 3.5 Plus', family: 'Qwen', swebVerified: 76.4, swebPro: 42, gpqa: 81.7, terminal: 60, inputCost: 0.8, outputCost: 2, blendedCost: 1.4 },
+  { model: 'Qwen 3.6 Plus', family: 'Qwen', swebVerified: 73.4, swebPro: 45, gpqa: 86, terminal: 63, inputCost: 1.2, outputCost: 3.5, blendedCost: 2.35 },
+  { model: 'MiniMax M2.7', family: 'MiniMax', swebVerified: 78, swebPro: 41, gpqa: 80, terminal: 58, inputCost: 0.9, outputCost: 2.5, blendedCost: 1.7 },
+  { model: 'GLM-5.1', family: 'Zhipu AI', swebVerified: 76.5, swebPro: 58.4, gpqa: 83, terminal: 62, inputCost: 0.3, outputCost: 1, blendedCost: 0.65 }
+];
+
+const benchmarkScenarios = [
+  { key: 'Diseño', desc: 'Diseño y frontend', metric: 'SWE-bench Verified', bestModel: 'GPT-5.3-Codex', bestScore: 83, bestCost: 7, valueModel: 'DeepSeek V4 Flash', valueScore: 78, valueCost: 0.21 },
+  { key: 'Debug', desc: 'Debug y solución de bugs', metric: 'Terminal-Bench 2.0', bestModel: 'GPT-5.5', bestScore: 82.7, bestCost: 17.5, valueModel: 'Qwen 3.5 Plus', valueScore: 60, valueCost: 1.4 },
+  { key: 'Feature', desc: 'Features y desarrollo general', metric: 'SWE-bench Pro', bestModel: 'Opus 4.7', bestScore: 64.3, bestCost: 15, valueModel: 'DeepSeek V4 Pro', valueScore: 55.4, valueCost: 2.61 },
+  { key: 'Infra', desc: 'Infraestructura y DevOps', metric: 'Terminal-Bench 2.0', bestModel: 'GPT-5.5', bestScore: 82.7, bestCost: 17.5, valueModel: 'Sonnet 4.6', valueScore: 65, valueCost: 9 },
+  { key: 'Seguridad', desc: 'Auditoría y razonamiento', metric: 'GPQA Diamond', bestModel: 'GPT-5.5', bestScore: 93.6, bestCost: 17.5, valueModel: 'DeepSeek V4 Pro', valueScore: 90.1, valueCost: 2.61 }
+];
+
+const el = (id) => document.getElementById(id);
+
+function fmtMoney(amountUsd, decimals) {
+  if (amountUsd == null || isNaN(amountUsd) || !isFinite(amountUsd)) return '—';
+  const cur = state.currency;
+  let amount, locale, currCode;
+  if (cur === 'cop') {
+    amount = amountUsd * state.trm;
+    locale = 'es-CO';
+    currCode = 'COP';
+    decimals = decimals ?? 0;
+  } else if (cur === 'mxn') {
+    amount = amountUsd * state.mxnUsd;
+    locale = 'es-MX';
+    currCode = 'MXN';
+    decimals = decimals ?? 0;
+  } else if (cur === 'eur') {
+    amount = amountUsd / state.eurUsd;
+    locale = 'de-DE';
+    currCode = 'EUR';
+    decimals = decimals ?? (Math.abs(amountUsd) < 1 ? 4 : 2);
+  } else {
+    amount = amountUsd;
+    locale = 'en-US';
+    currCode = 'USD';
+    decimals = decimals ?? (Math.abs(amountUsd) < 1 ? 4 : 2);
+  }
+  return amount.toLocaleString(locale, {
+    style: 'currency',
+    currency: currCode,
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals
+  });
+}
+
+function fmtK(num) {
+  if (num >= 1000000) return (num / 1000000).toFixed(2).replace(".00", "") + "M";
+  if (num >= 1000) return (num / 1000).toFixed(1).replace(".0", "") + "K";
+  return Math.round(num).toLocaleString("es-CO");
+}
+
+function pctText(value) {
+  return value.toFixed(1).replace(".0", "") + "%";
+}
+
+function statusTone(value) {
+  if (value < 65) return "good";
+  if (value < 100) return "warn";
+  return "bad";
+}
+
+function mountPresetButtons() {
+  const grid = el("presetGrid");
+  grid.innerHTML = Object.entries(presets).map(([key, preset]) => `
+    <button class="preset-btn ${state.preset === key ? "active" : ""}" data-preset="${key}">
+      <div class="title">${preset.name}</div>
+      <div class="meta">${preset.summary}</div>
+    </button>
+  `).join("");
+}
+
+function mountUsageButtons() {
+  const grid = el("usageGrid");
+  grid.innerHTML = Object.entries(usageProfiles).map(([key, profile]) => `
+    <button class="preset-btn ${state.usageProfile === key ? "active" : ""}" data-usage="${key}">
+      <div class="title">${profile.name}</div>
+      <div class="meta">${profile.summary}</div>
+    </button>
+  `).join("");
+}
+
+const currencyLabels = { usd: 'USD $', cop: 'COP $', eur: 'EUR €', mxn: 'MXN $' };
+
+const timelineEvents = [
+  {
+    date: '5 may 2026',
+    title: 'Versión inicial de la calculadora',
+    detail: 'Soporte para OpenCode Go, Claude Code y Codex. Precios y límites según documentación oficial de cada proveedor.',
+    source: 'opencode.ai, anthropic.com, openai.com'
+  },
+  {
+    date: '6 may 2026',
+    title: 'Rate limits 5h de Claude Code duplicados',
+    detail: 'Pro: 88K tok/5h (antes 44K). Max 5x: 176K tok/5h (antes 88K). Max 20x: 440K tok/5h (antes 220K). Throttling en horas pico eliminado para Pro y Max.',
+    source: 'anthropic.com/news/spacex'
+  }
+];
+
+
+
+function mountCurrencyButtons() {
+  const grid = el("currencyGrid");
+  if (!grid) return;
+  grid.innerHTML = Object.entries(currencyLabels).map(([key, label]) => `
+    <button class="preset-btn ${state.currency === key ? "active" : ""}" data-currency="${key}">
+      <div class="title">${label}</div>
+    </button>
+  `).join("");
+}
+
+function updateRatesDate() {
+  const el_ = el('ratesDate');
+  if (!el_) return;
+  try {
+    const cached = JSON.parse(localStorage.getItem('ai-trm'));
+    if (cached?.fetchedAt) {
+      el_.textContent = new Date(cached.fetchedAt).toLocaleDateString('es-CO', {
+        day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
+      });
+    } else if (cached?.updatedAt) {
+      el_.textContent = new Date(cached.updatedAt).toLocaleDateString('es-CO', {
+        day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
+      });
+    }
+  } catch(e) {}
+}
+
+function applyCurrency(currency) {
+  state.currency = currency;
+  localStorage.setItem('ai-currency', currency);
+  mountCurrencyButtons();
+  calculate();
+}
+
+async function fetchLiveRates() {
+  // Intenta rates.json estático primero (GitHub Pages: 0 requests externos)
+  try {
+    const res = await fetch('/rates.json');
+    if (res.ok) {
+      const data = await res.json();
+      state.trm    = data.copUsd;
+      state.eurUsd = data.eurUsd;
+      state.mxnUsd = data.mxnUsd;
+      const cache = { copUsd: data.copUsd, eurUsd: data.eurUsd, mxnUsd: data.mxnUsd, updatedAt: data.date };
+      try { localStorage.setItem('ai-trm', JSON.stringify(cache)); } catch(e) {}
+      updateRatesDate();
+      calculate();
+      return;
+    }
+  } catch(_) {}
+  // Fallback: llamar frankfurter.dev directamente (dev local / iframe)
+  try {
+    const [copRes, eurRes, mxnRes] = await Promise.all([
+      fetch('https://api.frankfurter.dev/v2/rate/COP/USD'),
+      fetch('https://api.frankfurter.dev/v2/rate/EUR/USD'),
+      fetch('https://api.frankfurter.dev/v2/rate/MXN/USD')
+    ]);
+    if (!copRes.ok || !eurRes.ok || !mxnRes.ok) throw new Error('API error');
+    const copData = await copRes.json();
+    const eurData = await eurRes.json();
+    const mxnData = await mxnRes.json();
+    state.trm = Math.round(1 / copData.rate);
+    state.eurUsd = eurData.rate;
+    state.mxnUsd = 1 / mxnData.rate;
+    const now = new Date().toISOString();
+    const cache = { copUsd: state.trm, eurUsd: state.eurUsd, mxnUsd: state.mxnUsd, updatedAt: now, fetchedAt: now };
+    try { localStorage.setItem('ai-trm', JSON.stringify(cache)); } catch(e) {}
+    updateRatesDate();
+    calculate();
+  } catch(e) {
+    console.warn('No se pudieron obtener tasas en vivo, usando valores guardados');
+  }
+}
+
+function mountModelButtons(containerId, collection, stateKey) {
+  const grid = el(containerId);
+  grid.innerHTML = Object.entries(collection).map(([key, item]) => `
+    <button class="model-btn ${state[stateKey] === key ? "active" : ""}" data-state="${stateKey}" data-model="${key}">
+      <div class="title">${item.name}</div>
+      <div class="meta">${item.tier || item.label} · ${item.context || ""}</div>
+    </button>
+  `).join("");
+}
+
+const claudeFeatureData = {
+  title: 'Planes en detalle',
+  header: ['Feature', 'Free', 'Pro', 'Max 5x', 'Max 20x'],
+  rows: [
+    ['Chat web / app',          '✓', '✓', '✓', '✓'],
+    ['Sonnet 4.6',              '✓', '✓', '✓', '✓'],
+    ['Memory / Projects',       '✓', '✓', '✓', '✓'],
+    ['Web search',              '✓', '✓', '✓', '✓'],
+    ['Artifacts / Code exec',   '✓', '✓', '✓', '✓'],
+    ['MCP básico',              '✓', '✓', '✓', '✓'],
+    ['Claude Code',             '✗', '✓', '✓', '✓'],
+    ['Research',                '✗', '✓', '✓', '✓'],
+    ['Claude Excel',            '✗', '✓', '✓', '✓'],
+    ['Cowork',                  '✗', '✓', '✓', '✓'],
+    ['MCP custom',              '✗', '✓', '✓', '✓'],
+    ['1M contexto (beta)',      '✗', '✓', '✓', '✓'],
+    ['Opus 4.7',                '✗', '✗', '✓', '✓'],
+    ['PowerPoint (research)',   '✗', '✗', '<span class="tag info">beta</span>', '<span class="tag info">beta</span>'],
+    ['Prioridad tráfico',       '✗', '✗', '✓', '✓']
+  ],
+  footer: 'Max no agrega features sobre Pro excepto Opus 4.7, PowerPoint y prioridad. Con Pro $20 ya tienes todo lo del día a día.'
+};
+
+const codexFeatureData = {
+  title: 'Planes en detalle',
+  header: ['Feature', 'Free', 'Go', 'Plus', 'Pro 100', 'Pro 200'],
+  rows: [
+    ['Chat web / app',          '✓', '✓', '✓', '✓', '✓'],
+    ['GPT-5.5 Thinking',        '✗', '✓', '✓', '✓', '✓'],
+    ['GPT-5.5 Pro',             '✗', '✗', '✗', '✓', '✓'],
+    ['Deep Research',           '<span class="tag warn">limit</span>', '<span class="tag warn">limit</span>', '✓', '✓', '✓'],
+    ['Codex CLI / IDE',         '<span class="tag warn">limit</span>', '<span class="tag warn">ligero</span>', '✓', '✓', '✓'],
+    ['Cloud tasks (Codex)',     '✗', '✗', '✓', '✓', '✓'],
+    ['Code reviews',            '✗', '✗', '✓', '✓', '✓'],
+    ['Codex-Spark',             '✗', '✗', '✗', '✓', '✓'],
+    ['Credits (extender)',      '✗', '✗', '✓', '✓', '✓']
+  ],
+  footer: 'Plus $20 es el punto de entrada serio. Pro $100+ si Codex es parte de tu flujo diario de trabajo.'
+};
+
+function renderFeatureNote(containerId, data) {
+  const container = el(containerId);
+  if (!container) return;
+  const headerRow = data.header.map(h => `<th>${h}</th>`).join('');
+  const bodyRows = data.rows.map(r =>
+    `<tr>${r.map((c, i) => i === 0 ? `<td>${c}</td>` : `<td>${c}</td>`).join('')}</tr>`
+  ).join('');
+  container.innerHTML = `
+    <div class="panel-title" onclick="this.classList.toggle('open');this.nextElementSibling.classList.toggle('open')">${data.title}</div>
+    <div class="feature-table-wrap">
+      <table class="feature-table">
+        <thead><tr>${headerRow}</tr></thead>
+        <tbody>${bodyRows}</tbody>
+      </table>
+      <div style="color:var(--muted-2);font-size:0.8rem;line-height:1.5;margin-top:6px">${data.footer}</div>
+    </div>`;
+}
+
+function renderTimeline() {
+  const list = el('timelineList');
+  if (!list) return;
+  list.innerHTML = timelineEvents.map(e => `
+    <li class="timeline-event">
+      <span class="date">${e.date}</span>
+      <div class="body">
+        <div class="title">${e.title}</div>
+        <div class="detail">${e.detail}</div>
+        <div class="source">Fuente: ${e.source}</div>
+      </div>
+    </li>
+  `).join('');
+}
+
+function updatePlanTexts() {
+  const names = { cop: 'COP', eur: 'EUR', mxn: 'MXN' };
+  const curName = names[state.currency] || 'USD';
+  const isUsd = state.currency === 'usd';
+
+  // USD column always shows dollar amount
+  document.querySelectorAll('.ptd.usd [data-usd]').forEach(el => {
+    el.textContent = '$' + Number(el.dataset.usd);
+  });
+
+  // Show/hide converted column + header
+  document.querySelectorAll('.ptd.converted, [data-col="converted"]').forEach(el => {
+    if (isUsd) {
+      el.style.display = 'none';
+    } else {
+      el.style.display = '';
+      if (el.matches('[data-col]')) {
+        el.textContent = curName;
+      }
+    }
+  });
+
+  // Fill converted values when visible
+  document.querySelectorAll('.ptd.converted [data-usd]').forEach(el => {
+    if (isUsd) return;
+    el.textContent = fmtMoney(Number(el.dataset.usd), 0) + ' ' + curName;
+  });
+}
+
+function initBenchmark() {
+  try {
+  const tableEl = el("benchmarkTable");
+  if (tableEl && typeof Tabulator !== 'undefined') {
+    const savedScroll = window.scrollY;
+    new Tabulator(tableEl, {
+      data: benchmarkModels,
+      layout: "fitData",
+      paginationSize: 13,
+      columns: [
+        { title: "Modelo", field: "model", headerFilter: "input", width: 150, headerTooltip: true },
+        { title: "Familia", field: "family", width: 90, headerTooltip: true },
+        { title: "SWE-V", field: "swebVerified", sorter: "number", hozAlign: "right", width: 80, formatter: "plaintext", headerTooltip: "SWE-bench Verified" },
+        { title: "SWE-Pro", field: "swebPro", sorter: "number", hozAlign: "right", width: 85, formatter: "plaintext", headerTooltip: "SWE-bench Pro" },
+        { title: "GPQA", field: "gpqa", sorter: "number", hozAlign: "right", width: 75, formatter: "plaintext", headerTooltip: "GPQA Diamond" },
+        { title: "Terminal", field: "terminal", sorter: "number", hozAlign: "right", width: 85, formatter: "plaintext", headerTooltip: "Terminal-Bench 2.0" },
+        { title: "$/M", field: "blendedCost", sorter: "number", hozAlign: "right", width: 70, formatter: "plaintext", headerTooltip: "Costo blended $/M" }
+      ]
+    });
+    const tipMap = { 'SWE-V': 'SWE-bench Verified', 'SWE-Pro': 'SWE-bench Pro', 'GPQA': 'GPQA Diamond', 'Terminal': 'Terminal-Bench 2.0', '$/M': 'Costo blended $/M' };
+    setTimeout(() => {
+      window.scrollTo(0, savedScroll);
+      if (document.activeElement && document.activeElement !== document.body) document.activeElement.blur();
+      tableEl.querySelectorAll('.tabulator, .tabulator-tableholder, .tabulator-col, .tabulator-row, .tabulator-cell')
+        .forEach(el => el.style.setProperty('background', 'transparent', 'important'));
+
+      const tip = Object.assign(document.createElement('div'), { className: 'ctooltip' });
+      document.body.appendChild(tip);
+      document.querySelectorAll('.tabulator-col[role="columnheader"]').forEach(col => {
+        const title = col.querySelector('.tabulator-col-title');
+        if (!title) return;
+        const full = tipMap[title.textContent.trim()];
+        if (!full) return;
+        col.addEventListener('mouseenter', () => {
+          tip.textContent = full;
+          tip.style.display = 'block';
+          const r = col.getBoundingClientRect();
+          tip.style.left = Math.max(4, Math.min(r.left + r.width / 2 - tip.offsetWidth / 2, window.innerWidth - tip.offsetWidth - 4)) + 'px';
+          tip.style.top = (r.bottom + 6) + 'px';
+        });
+        col.addEventListener('mouseleave', () => { tip.style.display = 'none'; });
+      });
+    }, 100);
+  }
+  } catch(e) { console.warn('Tabulator init failed', e); }
+
+  const colors = { 'OpenAI': '#70b7ff', 'Anthropic': '#ffb36b', 'DeepSeek': '#4fe08b', 'Qwen': '#ffd166', 'MiniMax': '#c084fc', 'Zhipu AI': '#f472b6' };
+  const families = [...new Set(benchmarkModels.map(m => m.family))];
+  const allSelected = new Set(benchmarkModels.map(m => m.model));
+  const chipGrid = el("chartChips");
+  const famChipGrid = el("chartChipsFamilies");
+
+  function mountChips() {
+    const allOn = allSelected.size === benchmarkModels.length;
+    chipGrid.innerHTML = [
+      `<button class="model-btn ${allOn ? 'active' : ''}" data-chip="all" style="padding:6px 10px"><div class="title" style="font-size:0.82rem">Todos</div></button>`,
+      ...benchmarkModels.map(m => `<button class="model-btn ${allSelected.has(m.model) ? 'active' : ''}" data-chip="${m.model}" style="padding:6px 10px"><div class="title" style="font-size:0.82rem">${m.model}</div></button>`)
+    ].join('');
+  }
+
+  function mountFamilyChips() {
+    famChipGrid.innerHTML = families.map(f => {
+      const inFam = benchmarkModels.filter(m => m.family === f);
+      const nOn = inFam.filter(m => allSelected.has(m.model)).length;
+      const cls = nOn === inFam.length ? 'active' : nOn > 0 ? 'active' : '';
+      const style = nOn > 0 && nOn < inFam.length ? 'opacity:0.5' : '';
+      return `<button class="model-btn ${cls}" data-fchip="${f}" style="padding:6px 10px;${style}"><div class="title" style="font-size:0.82rem"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${colors[f]};margin-right:5px;vertical-align:middle"></span>${f}</div></button>`;
+    }).join('');
+  }
+
+  function commitChips() { mountChips(); mountFamilyChips(); }
+  const tick = () => { if (chart) chart.setOption(makeOption(allSelected)); };
+
+  chipGrid.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-chip]');
+    if (!b) return;
+    if (b.dataset.chip === 'all') {
+      allSelected.size === benchmarkModels.length ? allSelected.clear() : benchmarkModels.forEach(m => allSelected.add(m.model));
+    } else {
+      allSelected.has(b.dataset.chip) ? allSelected.delete(b.dataset.chip) : allSelected.add(b.dataset.chip);
+    }
+    commitChips(); tick();
+  });
+
+  famChipGrid.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-fchip]');
+    if (!b) return;
+    const inFam = benchmarkModels.filter(m => m.family === b.dataset.fchip);
+    const allOn = inFam.every(m => allSelected.has(m.model));
+    inFam.forEach(m => allOn ? allSelected.delete(m.model) : allSelected.add(m.model));
+    commitChips(); tick();
+  });
+
+  commitChips();
+
+  let chart, makeOption;
+  try {
+    const chartEl = el("benchmarkChart");
+    if (chartEl && typeof echarts !== 'undefined') {
+      chart = echarts.init(chartEl);
+      makeOption = function(selected) {
+        const series = benchmarkModels.map(m => {
+          const avg = (m.swebVerified + m.swebPro + m.gpqa + m.terminal) / 4;
+          const vis = selected.has(m.model);
+          return {
+            name: m.model, type: 'scatter', symbolSize: 14,
+            data: [{ value: [m.blendedCost, avg, m.model] }],
+            itemStyle: { color: colors[m.family] || '#aaa', opacity: vis ? 1 : 0.08 },
+            label: { show: true, formatter: () => m.model, position: 'right', color: '#edf3ff', fontSize: 10, opacity: vis ? 1 : 0.08 }
+          };
+        });
+        return {
+          backgroundColor: 'transparent',
+          grid: { left: 60, right: 20, top: 10, bottom: 50 },
+          xAxis: { name: 'Costo blended $/M', type: 'log', nameLocation: 'center', nameGap: 35, nameTextStyle: { color: '#8ea0c3' }, axisLabel: { color: '#8ea0c3' }, splitLine: { lineStyle: { color: 'rgba(166,194,255,0.08)' } } },
+          yAxis: { name: 'Rendimiento promedio %', min: 30, max: 90, nameLocation: 'center', nameGap: 45, nameTextStyle: { color: '#8ea0c3' }, axisLabel: { color: '#8ea0c3' }, splitLine: { lineStyle: { color: 'rgba(166,194,255,0.08)' } } },
+          tooltip: { trigger: 'item', backgroundColor: 'rgba(8,17,31,0.94)', borderColor: 'rgba(166,194,255,0.15)', textStyle: { color: '#edf3ff', fontSize: 12 }, formatter: (p) => `<strong>${p.seriesName}</strong><br/>Costo: $${p.value[0].toFixed(2)}/M<br/>Rendimiento: ${p.value[1].toFixed(1)}%` },
+          series
+        };
+      }
+      chart.setOption(makeOption(allSelected));
+      window.addEventListener('resize', () => chart.resize());
+    }
+  } catch(e) { console.warn('Chart error:', e); }
+}
+
+function renderScenarioCards() {
+  const grid = el("scenarioGrid");
+  if (!grid) return;
+  grid.innerHTML = benchmarkScenarios.map(s => `
+    <div class="scenario-card">
+      <div class="scenario-title">${s.key}</div>
+      <div class="scenario-desc">${s.desc} · Benchmark: ${s.metric}</div>
+      <div class="scenario-row best">
+        <span class="label">Mejor puntaje</span>
+        <span class="model">${s.bestModel}</span>
+        <span class="score">${s.bestScore}% · ${fmtMoney(s.bestCost, 2)}/M</span>
+      </div>
+      <div class="scenario-row value">
+        <span class="label">Mejor costo/beneficio</span>
+        <span class="model">${s.valueModel}</span>
+        <span class="score">${fmtMoney(s.valueCost, 2)}/M · ${s.valueScore}%</span>
+      </div>
+    </div>
+  `).join("");
+}
+
+function applyPreset(key) {
+  const preset = presets[key];
+  state.preset = key;
+  state.goModel = preset.goModel;
+  state.claudeModel = preset.claudeModel;
+  state.codexModel = preset.codexModel;
+
+  el("hoursPerDay").value = preset.hoursPerDay;
+  el("daysPerMonth").value = preset.daysPerMonth;
+  el("promptsPerHour").value = preset.promptsPerHour;
+  el("requestsPerPrompt").value = preset.requestsPerPrompt;
+  el("inputTokens").value = preset.inputTokens;
+  el("cachedTokens").value = preset.cachedTokens;
+  el("outputTokens").value = preset.outputTokens;
+
+  mountPresetButtons();
+  mountUsageButtons();
+  mountModelButtons("goModels", goModels, "goModel");
+  mountModelButtons("claudeModels", claudeModels, "claudeModel");
+  mountModelButtons("codexModels", codexModels, "codexModel");
+  calculate();
+}
+
+function applyUsageProfile(key) {
+  const profile = usageProfiles[key];
+  state.usageProfile = key;
+  el("hoursPerDay").value = profile.hoursPerDay;
+  el("daysPerMonth").value = profile.daysPerMonth;
+  el("promptsPerHour").value = profile.promptsPerHour;
+  el("requestsPerPrompt").value = profile.requestsPerPrompt;
+  mountUsageButtons();
+  calculate();
+}
+
+function getInputs() {
+  return {
+    hoursPerDay: Number(el("hoursPerDay").value),
+    daysPerMonth: Number(el("daysPerMonth").value),
+    promptsPerHour: Number(el("promptsPerHour").value),
+    requestsPerPrompt: Number(el("requestsPerPrompt").value),
+    inputTokens: Number(el("inputTokens").value),
+    cachedTokens: Number(el("cachedTokens").value),
+    outputTokens: Number(el("outputTokens").value)
+  };
+}
+
+function costPerRequest(model, inputs) {
+  return (
+    (inputs.inputTokens / 1000000) * model.input +
+    (inputs.cachedTokens / 1000000) * model.cached +
+    (inputs.outputTokens / 1000000) * model.output
+  );
+}
+
+/* ── Capacidad real del plan ─────────────────── */
+
+function calculateDesiredUsage(inputs) {
+  const desiredPromptsPerDay = inputs.hoursPerDay * inputs.promptsPerHour;
+  const desiredPromptsPerMonth = desiredPromptsPerDay * inputs.daysPerMonth;
+  const desiredRequestsPerMonth = desiredPromptsPerMonth * inputs.requestsPerPrompt;
+  const desiredInputTokensPerMonth = desiredRequestsPerMonth * inputs.inputTokens;
+  const desiredOutputTokensPerMonth = desiredRequestsPerMonth * inputs.outputTokens;
+  const desiredTotalTokensPerMonth = desiredInputTokensPerMonth + desiredOutputTokensPerMonth;
+
+  return {
+    desiredPromptsPerDay,
+    desiredPromptsPerMonth,
+    desiredPromptsPerHour: inputs.promptsPerHour,
+    desiredRequestsPerMonth,
+    desiredInputTokensPerMonth,
+    desiredOutputTokensPerMonth,
+    desiredTotalTokensPerMonth,
+    activeHoursPerDay: inputs.hoursPerDay,
+    workDaysPerMonth: inputs.daysPerMonth,
+    promptsPerHour: inputs.promptsPerHour,
+    requestsPerPrompt: inputs.requestsPerPrompt,
+    inputTokensPerRequest: inputs.inputTokens,
+    outputTokensPerRequest: inputs.outputTokens,
+    estimatedCostPerPrompt: null
+  };
+}
+
+function detectBottleneck(desiredUsage, planLimits) {
+  const { desiredPromptsPerMonth, requestsPerPrompt, inputTokensPerRequest, outputTokensPerRequest } = desiredUsage;
+  const {
+    monthlyBudgetLimitUsd, maxRequestsPerMonth, maxInputTokensPerMonth, maxOutputTokensPerMonth,
+    maxTotalTokensPerMonth, costPerRequest
+  } = planLimits;
+
+  const totalTokensPerPrompt = (inputTokensPerRequest + outputTokensPerRequest) * requestsPerPrompt;
+  const inputTokensPerPrompt = inputTokensPerRequest * requestsPerPrompt;
+  const outputTokensPerPrompt = outputTokensPerRequest * requestsPerPrompt;
+  const costPerPrompt = costPerRequest != null ? costPerRequest * requestsPerPrompt : null;
+
+  let minRatio = Infinity;
+  let bottleneck = 'none';
+
+  const check = (key, value) => {
+    if (value != null && value > 0 && value < minRatio) {
+      minRatio = value;
+      bottleneck = key;
+    }
+  };
+
+  check('budget', monthlyBudgetLimitUsd != null && costPerPrompt != null && costPerPrompt > 0
+    ? monthlyBudgetLimitUsd / (costPerPrompt * desiredPromptsPerMonth)
+    : null);
+  check('requests', maxRequestsPerMonth != null
+    ? maxRequestsPerMonth / (desiredPromptsPerMonth * requestsPerPrompt)
+    : null);
+  check('input_tokens', maxInputTokensPerMonth != null
+    ? maxInputTokensPerMonth / (desiredPromptsPerMonth * inputTokensPerPrompt)
+    : null);
+  check('output_tokens', maxOutputTokensPerMonth != null
+    ? maxOutputTokensPerMonth / (desiredPromptsPerMonth * outputTokensPerPrompt)
+    : null);
+  check('total_tokens', maxTotalTokensPerMonth != null
+    ? maxTotalTokensPerMonth / (desiredPromptsPerMonth * totalTokensPerPrompt)
+    : null);
+
+  return minRatio >= 1 ? 'none' : bottleneck;
+}
+
+function calculatePlanCapacity(desiredUsage, planLimits) {
+  const {
+    desiredPromptsPerMonth, desiredPromptsPerDay, desiredPromptsPerHour,
+    desiredRequestsPerMonth, workDaysPerMonth, activeHoursPerDay,
+    inputTokensPerRequest, outputTokensPerRequest, requestsPerPrompt
+  } = desiredUsage;
+
+  const {
+    monthlyBudgetLimitUsd, maxRequestsPerMonth, maxRequestsPerWeek, maxRequestsPerDay,
+    maxInputTokensPerMonth, maxOutputTokensPerMonth, maxTotalTokensPerMonth,
+    maxCreditsPerMonth, costPerRequest, creditCostPerRequest
+  } = planLimits;
+
+  const totalTokensPerPrompt = (inputTokensPerRequest + outputTokensPerRequest) * requestsPerPrompt;
+  const inputTokensPerPrompt = inputTokensPerRequest * requestsPerPrompt;
+  const outputTokensPerPrompt = outputTokensPerRequest * requestsPerPrompt;
+  const costPerPrompt = costPerRequest != null ? costPerRequest * requestsPerPrompt : null;
+
+  const candidates = [];
+
+  if (monthlyBudgetLimitUsd != null && costPerPrompt != null && costPerPrompt > 0) {
+    candidates.push({ key: 'budget', value: monthlyBudgetLimitUsd / costPerPrompt });
+  }
+  if (maxRequestsPerMonth != null) {
+    candidates.push({ key: 'requests', value: maxRequestsPerMonth / requestsPerPrompt });
+  }
+  if (maxInputTokensPerMonth != null) {
+    candidates.push({ key: 'input_tokens', value: maxInputTokensPerMonth / inputTokensPerPrompt });
+  }
+  if (maxOutputTokensPerMonth != null) {
+    candidates.push({ key: 'output_tokens', value: maxOutputTokensPerMonth / outputTokensPerPrompt });
+  }
+  if (maxTotalTokensPerMonth != null) {
+    candidates.push({ key: 'total_tokens', value: maxTotalTokensPerMonth / totalTokensPerPrompt });
+  }
+  if (maxCreditsPerMonth != null && creditCostPerRequest != null) {
+    candidates.push({ key: 'credits', value: maxCreditsPerMonth / creditCostPerRequest / requestsPerPrompt });
+  }
+
+  let maxPromptsPerMonth;
+  let bottleneck;
+
+  if (candidates.length > 0) {
+    const minCandidate = candidates.reduce((a, b) => a.value < b.value ? a : b);
+    maxPromptsPerMonth = Math.floor(minCandidate.value);
+    bottleneck = minCandidate.key;
+  } else {
+    maxPromptsPerMonth = desiredPromptsPerMonth;
+    bottleneck = 'none';
+  }
+
+  const isLimited = bottleneck !== 'none' && maxPromptsPerMonth < desiredPromptsPerMonth;
+  const isEnough = maxPromptsPerMonth >= desiredPromptsPerMonth;
+
+  const coveragePercentage = desiredPromptsPerMonth > 0
+    ? Math.min(100, (maxPromptsPerMonth / desiredPromptsPerMonth) * 100)
+    : 100;
+
+  const remainingMargin = isEnough && desiredPromptsPerMonth > 0
+    ? ((maxPromptsPerMonth - desiredPromptsPerMonth) / desiredPromptsPerMonth) * 100
+    : 0;
+
+  const maxPromptsPerDay = workDaysPerMonth > 0 ? maxPromptsPerMonth / workDaysPerMonth : 0;
+  const maxPromptsPerHourCalc = activeHoursPerDay > 0 ? maxPromptsPerDay / activeHoursPerDay : 0;
+  const maxRequestsPerMonthCalc = maxPromptsPerMonth * requestsPerPrompt;
+  const maxRequestsPerDayCalc = maxPromptsPerDay * requestsPerPrompt;
+  const maxRequestsPerHourCalc = maxPromptsPerHourCalc * requestsPerPrompt;
+  const maxInputTokensPerMonthCalc = maxPromptsPerMonth * inputTokensPerPrompt;
+  const maxOutputTokensPerMonthCalc = maxPromptsPerMonth * outputTokensPerPrompt;
+  const maxTotalTokensPerMonthCalc = maxPromptsPerMonth * totalTokensPerPrompt;
+
+  const supportedWorkDays = maxPromptsPerMonth > 0 && desiredPromptsPerDay > 0
+    ? Math.floor(maxPromptsPerMonth / Math.max(1, desiredPromptsPerDay))
+    : 0;
+  const supportedActiveHours = maxPromptsPerMonth > 0 && desiredPromptsPerHour > 0
+    ? Math.floor(maxPromptsPerMonth / Math.max(1, desiredPromptsPerHour))
+    : 0;
+
+  let bottleneckLabel;
+  switch (bottleneck) {
+    case 'input_tokens': bottleneckLabel = 'tokens de entrada'; break;
+    case 'output_tokens': bottleneckLabel = 'tokens de salida'; break;
+    case 'total_tokens': bottleneckLabel = 'tokens totales'; break;
+    case 'requests': bottleneckLabel = 'requests mensuales'; break;
+    case 'budget': bottleneckLabel = 'presupuesto'; break;
+    case 'credits': bottleneckLabel = 'créditos'; break;
+    case 'daily_limit': bottleneckLabel = 'límite diario'; break;
+    case 'weekly_limit': bottleneckLabel = 'límite semanal'; break;
+    case 'window_limit': bottleneckLabel = 'ventana de 5h'; break;
+    default: bottleneckLabel = 'ninguno';
+  }
+
+  return {
+    maxPromptsPerMonth,
+    maxPromptsPerWeek: workDaysPerMonth > 0
+      ? maxPromptsPerDay * Math.min(workDaysPerMonth, 5)
+      : 0,
+    maxPromptsPerDay,
+    maxPromptsPerHour: maxPromptsPerHourCalc,
+    maxRequestsPerMonth: maxRequestsPerMonthCalc,
+    maxRequestsPerWeek: workDaysPerMonth > 0
+      ? maxRequestsPerDayCalc * Math.min(workDaysPerMonth, 5)
+      : 0,
+    maxRequestsPerDay: maxRequestsPerDayCalc,
+    maxRequestsPerHour: maxRequestsPerHourCalc,
+    maxInputTokensPerMonth: maxInputTokensPerMonthCalc,
+    maxOutputTokensPerMonth: maxOutputTokensPerMonthCalc,
+    maxTotalTokensPerMonth: maxTotalTokensPerMonthCalc,
+    supportedWorkDays,
+    supportedActiveHours,
+    coveragePercentage,
+    remainingMarginPercentage: remainingMargin,
+    isEnough,
+    bottleneck,
+    bottleneckLabel,
+    summaryText: '',
+    recommendation: ''
+  };
+}
+
+function detectPlanBudget(hint) {
+  if (!hint) return null;
+  const map = {
+    'Pro $20': 20,
+    'Pro, pero justo': 20,
+    'Plus $20': 20,
+    'Plus, pero exigido': 20,
+    'Max 5x': 100,
+    'Pro $100': 100,
+    'Max 20x o API': 200,
+    'Pro $200': 200,
+    'Go $10': 60,
+    'Go te sirve justo': 60,
+    'Go se queda corto': 60
+  };
+  return map[hint] != null ? map[hint] : null;
+}
+
+function getGoPlanLimits(goModel) {
+  return {
+    monthlyBudgetLimitUsd: 60,
+    weeklyBudgetUsd: 30,
+    windowBudgetUsd: 12,
+    costPerRequest: goModel.costPerReq,
+    maxRequestsPerMonth: goModel.reqMonth,
+    maxRequestsPerWeek: goModel.reqWeek,
+    maxRequestsPerDay: goModel.req5h
+  };
+}
+
+function generateCapacitySummary(result) {
+  if (result.isEnough) {
+    return `Cubre tu ritmo estimado con ${Math.round(result.remainingMarginPercentage)}% de margen.`;
+  }
+  return `Se queda corto: alcanza para ${Math.round(result.maxPromptsPerMonth).toLocaleString('es-CO')} prompts/mes, ${Math.round(result.maxPromptsPerDay).toLocaleString('es-CO')} prompts/día, ${result.maxPromptsPerHour.toFixed(1)} prompts/h y ${Math.round(result.maxRequestsPerMonth).toLocaleString('es-CO')} req/mes.`;
+}
+
+function generateRecommendation(result, providerId) {
+  if (result.isEnough) {
+    return 'Viable como plan principal.';
+  }
+  switch (providerId) {
+    case 'go':
+      return 'Usa un modelo más barato (DeepSeek Flash, Qwen 3.5 Plus) o combina con API directa.';
+    case 'claude':
+      return result.bottleneck === 'budget'
+        ? 'Sube a Max 5x, Max 20x o usa API pay-as-you-go.'
+        : 'Reduce la carga o usa Haiku 4.5.';
+    case 'codex':
+      return result.bottleneck === 'budget'
+        ? 'Sube a Pro $100, Pro $200 o usa API directa.'
+        : 'Cambia a GPT-5.4 mini para ahorrar créditos.';
+    default:
+      return 'Ajusta la carga de trabajo o considera otro plan.';
+  }
+}
+
+function renderCapacity(containerId, capacity, desiredUsage, providerId) {
+  const container = el(containerId);
+  if (!container) return;
+
+  capacity.summaryText = generateCapacitySummary(capacity);
+  capacity.recommendation = generateRecommendation(capacity, providerId);
+
+  const mainClass = capacity.isEnough ? 'enough' : 'not-enough';
+  const bottleClass = capacity.bottleneck === 'none' ? 'none' : 'active';
+
+  let mainHtml;
+  if (capacity.isEnough && capacity.bottleneck === 'none') {
+    mainHtml = `<div class="capacity-main enough-text">Este plan cubre tu uso estimado</div>`;
+  } else {
+    mainHtml = `<div class="capacity-main">${Math.round(capacity.maxPromptsPerMonth).toLocaleString('es-CO')} <span class="capacity-main-suffix">prompts/mes</span></div>`;
+  }
+
+  const label = capacity.isEnough ? 'Margen' : 'Cobertura';
+  const pct = capacity.isEnough ? capacity.remainingMarginPercentage : capacity.coveragePercentage;
+  const secondaryHtml = `
+    <div class="capacity-secondary">
+      <span><strong>${Math.round(capacity.maxPromptsPerDay).toLocaleString('es-CO')}</strong> prompts/día</span>
+      <span><strong>${capacity.maxPromptsPerHour.toFixed(1)}</strong> prompts/h</span>
+      <span><strong>${Math.round(capacity.maxRequestsPerMonth).toLocaleString('es-CO')}</strong> req/mes</span>
+    </div>
+    <div class="capacity-coverage">
+      ${label}: <strong>${Math.round(pct)}%</strong>
+    </div>`;
+
+  container.className = `capacity-block ${mainClass}`;
+  container.innerHTML = `
+    <div class="capacity-title">Capacidad real</div>
+    ${mainHtml}
+    ${secondaryHtml}
+    <div class="capacity-bottleneck ${bottleClass}">
+      Cuello de botella: ${capacity.bottleneckLabel}
+    </div>
+    <div class="capacity-recommendation">
+      ${capacity.summaryText} ${capacity.recommendation}
+    </div>
+  `;
+}
+
+function buildClaudePlans(claudeModel, inputs, desiredUsage) {
+  const costReq = costPerRequest(claudeModel, inputs);
+  const freshTokPerReq = inputs.outputTokens * claudeModel.quotaMultiplier;
+  const windowsPerDay = desiredUsage.activeHoursPerDay / 5;
+
+  const windowPlan = (windowTok) => {
+    const reqPerWindow = freshTokPerReq > 0 ? windowTok / freshTokPerReq : Infinity;
+    const maxRequestsPerMonth = Math.floor(reqPerWindow * windowsPerDay * desiredUsage.workDaysPerMonth);
+    return { maxRequestsPerMonth, costPerRequest: costReq };
+  };
+
+  const plans = [
+    { name: 'Pro $20',  limits: windowPlan(claudePlanWindowTokens.pro.windowTok)   },
+    { name: 'Max 5x',   limits: windowPlan(claudePlanWindowTokens.max5x.windowTok) },
+    { name: 'Max 20x',  limits: windowPlan(claudePlanWindowTokens.max20x.windowTok)},
+    { name: 'API',      limits: { costPerRequest: costReq } }
+  ];
+  return plans.map(p => ({ ...p, capacity: calculatePlanCapacity(desiredUsage, p.limits) }));
+}
+
+function buildCodexPlans(codexModel, inputs, desiredUsage) {
+  const costReq = costPerRequest(codexModel, inputs);
+  const freshTokPerReq = inputs.outputTokens * codexModel.quotaMultiplier;
+  const windowsPerDay = desiredUsage.activeHoursPerDay / 5;
+
+  const windowPlan = (windowTok) => {
+    const reqPerWindow = freshTokPerReq > 0 ? windowTok / freshTokPerReq : Infinity;
+    const maxRequestsPerMonth = Math.floor(reqPerWindow * windowsPerDay * desiredUsage.workDaysPerMonth);
+    return { maxRequestsPerMonth, costPerRequest: costReq };
+  };
+
+  const plans = [
+    { name: 'Plus $20',  limits: windowPlan(codexPlanWindowTokens.plus.windowTok)   },
+    { name: 'Pro $100',  limits: windowPlan(codexPlanWindowTokens.pro100.windowTok) },
+    { name: 'Pro $200',  limits: windowPlan(codexPlanWindowTokens.pro200.windowTok) },
+    { name: 'API',       limits: { costPerRequest: costReq } }
+  ];
+  return plans.map(p => ({ ...p, capacity: calculatePlanCapacity(desiredUsage, p.limits) }));
+}
+
+function findSuggestedPlan(plans, hint) {
+  if (!hint) return plans[0];
+  const budget = detectPlanBudget(hint);
+  if (budget != null) {
+    const found = plans.find(p => p.limits.monthlyBudgetLimitUsd === budget);
+    if (found) return found;
+  }
+  if (hint.toLowerCase().includes('api')) {
+    return plans.find(p => p.limits.monthlyBudgetLimitUsd == null) || plans[plans.length - 1];
+  }
+  return plans[0];
+}
+
+function renderMultiCapacity(containerId, plans, suggestedName) {
+  const container = el(containerId);
+  if (!container) return;
+
+  const suggested = findSuggestedPlan(plans, suggestedName);
+
+  const rows = plans.map(plan => {
+    const isSuggested = plan === suggested;
+    const cap = plan.capacity;
+    const hasLimit = plan.limits.monthlyBudgetLimitUsd != null || plan.limits.maxRequestsPerMonth != null;
+    const rowClass = isSuggested ? 'capacity-table-row suggested' : 'capacity-table-row';
+    const valClass = hasLimit ? 'plan-val' : 'plan-val na';
+    const na = '—';
+
+    const nameSuffix = isSuggested ? ' <span class="tag info" style="margin-left:6px">sugerido</span>' : '';
+    const promptsMes = hasLimit ? Math.round(cap.maxPromptsPerMonth).toLocaleString('es-CO') : na;
+    const promptsDia = hasLimit ? Math.round(cap.maxPromptsPerDay).toLocaleString('es-CO') : na;
+    const promptsH = hasLimit ? cap.maxPromptsPerHour.toFixed(1) : na;
+
+    return `<div class="${rowClass}">
+      <span class="plan-name">${plan.name}${nameSuffix}</span>
+      <span class="${valClass}">${promptsMes}</span>
+      <span class="${valClass}">${promptsDia}</span>
+      <span class="${valClass}">${promptsH}</span>
+    </div>`;
+  }).join('');
+
+  const suggestedCap = suggested.capacity;
+  const isEnough = suggestedCap.isEnough;
+  const mainClass = isEnough ? 'enough' : 'not-enough';
+  const bottleClass = suggestedCap.bottleneck === 'none' ? 'none' : 'active';
+
+  const summaryText = isEnough
+    ? `${suggested.name} cubre tu ritmo (${Math.round(suggestedCap.maxPromptsPerDay).toLocaleString('es-CO')} prompts/día, ${Math.round(suggestedCap.coveragePercentage)}% de tu carga).`
+    : `${suggested.name} se queda corto (${Math.round(suggestedCap.coveragePercentage)}% de cobertura). Prueba el siguiente plan o API.`;
+
+  container.className = `capacity-block ${mainClass}`;
+  container.innerHTML = `
+    <div class="capacity-title">Capacidad real por plan</div>
+    <div class="capacity-table">
+      <div class="capacity-table-row header">
+        <span>Plan</span>
+        <span>prompts/mes</span>
+        <span>/día</span>
+        <span>/h</span>
+      </div>
+      ${rows}
+    </div>
+    <div class="capacity-bottleneck ${bottleClass}">
+      Cuello de botella: ${suggestedCap.bottleneckLabel}
+    </div>
+    <div class="capacity-recommendation">
+      ${summaryText}
+    </div>`;
+}
+
+function calculate() {
+  const inputs = getInputs();
+  const goModel = goModels[state.goModel];
+  const claudeModel = claudeModels[state.claudeModel];
+  const codexModel = codexModels[state.codexModel];
+
+  el("hoursPerDayOut").textContent = `${inputs.hoursPerDay} h/día`;
+  el("daysPerMonthOut").textContent = `${inputs.daysPerMonth} días`;
+  el("promptsPerHourOut").textContent = `${inputs.promptsPerHour} prompts/h`;
+  el("requestsPerPromptOut").textContent = `${inputs.requestsPerPrompt} req/prompt`;
+  el("inputTokensOut").textContent = `${fmtK(inputs.inputTokens)} tok`;
+  el("cachedTokensOut").textContent = `${fmtK(inputs.cachedTokens)} tok`;
+  el("outputTokensOut").textContent = `${fmtK(inputs.outputTokens)} tok`;
+  const rateHint = document.querySelector('.control-block .hint-card');
+  if (rateHint) {
+    if (state.currency === 'usd') {
+      rateHint.style.display = 'none';
+    } else {
+      rateHint.style.display = '';
+      const rateLabel = el("rateLabel");
+      const rateValue = el("rateValue");
+      const rateDate = el("rateDate");
+      const labels = {
+        cop: 'COP/USD',
+        eur: 'EUR/USD',
+        mxn: 'MXN/USD'
+      };
+      const values = {
+        cop: '$' + state.trm.toFixed(2),
+        eur: '$' + state.eurUsd.toFixed(4),
+        mxn: '$' + state.mxnUsd.toFixed(4)
+      };
+      rateLabel.textContent = labels[state.currency] || 'Tasa';
+      rateValue.textContent = values[state.currency] || '—';
+      if (rateDate) {
+        try {
+          const cached = JSON.parse(localStorage.getItem('ai-trm'));
+          if (cached?.fetchedAt) {
+            rateDate.textContent = 'Consultado: ' + new Date(cached.fetchedAt).toLocaleDateString('es-CO', {
+              day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
+            });
+          } else {
+            rateDate.textContent = '';
+          }
+        } catch(e) { rateDate.textContent = ''; }
+      }
+    }
+  }
+
+  const requestsDay = inputs.hoursPerDay * inputs.promptsPerHour * inputs.requestsPerPrompt;
+  const requestsMonth = requestsDay * inputs.daysPerMonth;
+  const requests5h = inputs.promptsPerHour * 5 * inputs.requestsPerPrompt;
+  const requestsWeek = requestsDay * Math.min(inputs.daysPerMonth, 5);
+
+  const inputMonth = requestsMonth * inputs.inputTokens;
+  const cachedMonth = requestsMonth * inputs.cachedTokens;
+  const outputMonth = requestsMonth * inputs.outputTokens;
+
+  el("reqDay").textContent = Math.round(requestsDay).toLocaleString("es-CO");
+  el("reqMonth").textContent = Math.round(requestsMonth).toLocaleString("es-CO");
+  el("inputMonth").textContent = fmtK(inputMonth + cachedMonth);
+  el("outputMonth").textContent = fmtK(outputMonth);
+
+  const goCostReq = goModel.costPerReq;
+  const goCost5h = requests5h * goCostReq;
+  const goCostWeek = requestsWeek * goCostReq;
+  const goCostMonth = requestsMonth * goCostReq;
+  const goPct5h = (goCost5h / 12) * 100;
+  const goPctWeek = (goCostWeek / 30) * 100;
+  const goPctMonth = (goCostMonth / 60) * 100;
+
+  el("goReqCost").textContent = fmtMoney(goCostReq, 4);
+  el("goMonthCost").textContent = fmtMoney(goCostMonth, 2);
+  el("goMonthCostCop").textContent = "";
+  let goPlanHint = "Go $10";
+  let goPlanSub = `Tu carga proyecta ${fmtMoney(goCostMonth, 2)} frente al techo mensual oficial de $60.`;
+  if (goPctMonth > 100 || goPct5h > 100) {
+    goPlanHint = "Go se queda corto";
+    goPlanSub = "OpenCode Go no tiene 5x/20x. Si esto no cabe, toca bajar de modelo o usar balance/API.";
+  } else if (goPctMonth > 80 || goPct5h > 80) {
+    goPlanHint = "Go te sirve justo";
+    goPlanSub = "Sí cabe, pero ya sin mucho colchón. Cualquier subida de contexto o loops puede romper la comodidad.";
+  }
+  el("goPlanHint").textContent = goPlanHint;
+  el("goPlanSub").textContent = goPlanSub;
+  el("goBreakeven").textContent = `${Math.ceil(10 / goCostReq).toLocaleString("es-CO")} req/mes`;
+
+  const goBars = [
+    ["go5hBar", "go5hPct", "go5hHint", goPct5h, `Equivale a ${fmtMoney(goCost5h, 2)} en 5h. ${goPct5h < 100 ? "Cabe." : "Te frena antes de cerrar la ventana."}`],
+    ["goWeekBar", "goWeekPct", "goWeekHint", goPctWeek, `Equivale a ${fmtMoney(goCostWeek, 2)} por semana corta de referencia.`],
+    ["goMonthBar", "goMonthPct", "goMonthHint", goPctMonth, `Equivale a ${fmtMoney(goCostMonth, 2)} al mes con este ritmo.`]
+  ];
+
+  goBars.forEach(([barId, pctId, hintId, value, hint]) => {
+    el(barId).style.width = `${Math.min(value, 100)}%`;
+    el(pctId).textContent = pctText(value);
+    el(hintId).textContent = hint;
+  });
+
+  const goStatus = el("goStatus");
+  goStatus.className = `status ${statusTone(Math.max(goPct5h, goPctWeek, goPctMonth))}`;
+  if (goPctMonth < 70 && goPct5h < 70) {
+    goStatus.textContent = `OpenCode Go te queda cómodo con ${goModel.name}. Para mucho volumen de código o soporte diario sigue siendo la opción más eficiente en costo.`;
+  } else if (goPctMonth < 100 && goPct5h < 100) {
+    goStatus.textContent = `OpenCode Go todavía aguanta, pero ya entras en zona de administración fina. Te sirve mejor si combinas tareas pesadas con modelos más baratos en parte del flujo.`;
+  } else {
+    goStatus.textContent = `A este ritmo OpenCode Go ya no es estable como plan principal con ${goModel.name}. O cambias a un modelo más barato, o te conviene API directa / Claude / Codex.`;
+  }
+
+  const claudeReqCost = costPerRequest(claudeModel, inputs);
+  const claudeMonthCost = claudeReqCost * requestsMonth;
+  const claudeDayCost = claudeReqCost * requestsDay;
+
+  el("claudeReqCost").textContent = fmtMoney(claudeReqCost, 4);
+  el("claudeMonthCost").textContent = fmtMoney(claudeMonthCost, 2);
+  el("claudeMonthCostCop").textContent = "";
+  el("claudeDayCost").textContent = fmtMoney(claudeDayCost, 2);
+
+  let claudePlanHint = "Pro $20";
+  let claudePlanSub = "Esta carga debería caber mejor en Pro, aunque Claude usa ventanas blandas y no una bolsa pública simple.";
+  if (claudeMonthCost > 160) {
+    claudePlanHint = "Max 20x o API";
+    claudePlanSub = "Pro y Max 5x ya se ven apretados para este ritmo. Si además abres sesiones largas, 20x o API es la lectura más sana.";
+  } else if (claudeMonthCost > 75) {
+    claudePlanHint = "Max 5x";
+    claudePlanSub = "Pro probablemente se quede corto o incómodo. Max 5x ya se parece más a un uso serio diario.";
+  } else if (claudeMonthCost > 40) {
+    claudePlanHint = "Pro, pero justo";
+    claudePlanSub = "Los l\xedmites de 5h se duplicaron (88K tok), as\xed que el plan rinde m\xe1s que antes, pero sesiones muy largas o intensas pueden apretarlo.";
+  }
+  el("claudePlanHint").textContent = claudePlanHint;
+  el("claudePlanSub").textContent = claudePlanSub;
+
+  const claudeStatus = el("claudeStatus");
+  if (state.claudeModel === "haiku45") {
+    claudeStatus.className = "status good";
+    claudeStatus.textContent = "Haiku 4.5 sirve cuando quieres velocidad y costo bajo, pero para arquitectura, seguridad o cambios largos normalmente se queda corto frente a Sonnet.";
+  } else if (state.claudeModel === "sonnet46") {
+    claudeStatus.className = claudeMonthCost <= 100 ? "status good" : "status warn";
+    claudeStatus.textContent = claudeMonthCost <= 100
+      ? "Sonnet 4.6 es el punto más sano de Claude Code para trabajo serio diario: bastante criterio, costo todavía defendible y mejor elasticidad que Opus."
+      : "Sonnet 4.6 sigue siendo defendible, pero tu carga ya entra en territorio donde una suscripción Pro puede quedarse incómoda y la Max o API se vuelven más lógicas.";
+  } else {
+    claudeStatus.className = claudeMonthCost <= 150 ? "status warn" : "status bad";
+    claudeStatus.textContent = "Opus 4.7 es para los casos donde el error sale más caro que el token: seguridad, infra compleja y reasoning largo. Financieramente se vuelve premium muy rápido.";
+  }
+
+  const codexReqCost = costPerRequest(codexModel, inputs);
+  const codexMonthCost = codexReqCost * requestsMonth;
+  const codexCredits =
+    (inputMonth / 1000000) * codexModel.creditsInput +
+    (cachedMonth / 1000000) * codexModel.creditsCached +
+    (outputMonth / 1000000) * codexModel.creditsOutput;
+
+  el("codexReqCost").textContent = fmtMoney(codexReqCost, 4);
+  el("codexMonthCost").textContent = fmtMoney(codexMonthCost, 2);
+  el("codexMonthCostCop").textContent = "";
+  el("codexCredits").textContent = `${Math.round(codexCredits).toLocaleString("es-CO")} cr`;
+
+  let codexPlanHint = "Plus $20";
+  let codexPlanSub = "Para esta carga, Plus debería ser el punto de entrada suficiente si no disparas demasiadas instancias ni fast mode.";
+  if (codexMonthCost > 150 || codexCredits > 18000) {
+    codexPlanHint = "Pro $200";
+    codexPlanSub = "Con esta mezcla de contexto, output y créditos, el Pro $100 ya se ve corto. El escalón sano es Pro $200.";
+  } else if (codexMonthCost > 60 || codexCredits > 7000) {
+    codexPlanHint = "Pro $100";
+    codexPlanSub = "Plus ya se ve apretado. Pro $100 encaja mejor para un flujo diario sostenido.";
+  } else if (codexMonthCost > 20 || codexCredits > 2500) {
+    codexPlanHint = "Plus, pero exigido";
+    codexPlanSub = "Te debería servir, pero no con mucho margen si abres tareas paralelas, sesiones largas o fast mode.";
+  }
+  el("codexPlanHint").textContent = codexPlanHint;
+  el("codexPlanSub").textContent = codexPlanSub;
+
+  const codexStatus = el("codexStatus");
+  if (state.codexModel === "gpt54mini") {
+    codexStatus.className = "status good";
+    codexStatus.textContent = "GPT-5.4 mini es el mejor punto de entrada para desarrollar features normales con buena calidad y una factura mucho más civilizada que GPT-5.5.";
+  } else if (state.codexModel === "gpt53codex") {
+    codexStatus.className = codexMonthCost <= 120 ? "status good" : "status warn";
+    codexStatus.textContent = "GPT-5.3-Codex sigue siendo la apuesta más directa cuando lo tuyo es coding agent puro. Si haces bastante review y ejecución, suele sentirse más natural que GPT-5.4 mini.";
+  } else if (state.codexModel === "gpt54") {
+    codexStatus.className = codexMonthCost <= 150 ? "status warn" : "status bad";
+    codexStatus.textContent = "GPT-5.4 vale la pena cuando la ventana de contexto y el trabajo profesional transversal importan tanto como el código. No gana por precio, gana por amplitud.";
+  } else {
+    codexStatus.className = "status bad";
+    codexStatus.textContent = "GPT-5.5 es una herramienta de alto nivel para los casos donde diseño, estrategia, análisis y código se mezclan. Es la mejor si el costo del error es alto, no si buscas volumen barato.";
+  }
+
+  /* ── Capacidad real ──────────────────── */
+
+  const desiredUsage = calculateDesiredUsage(inputs);
+
+  /* OpenCode Go — single plan */
+  const goLimits = getGoPlanLimits(goModel);
+  const goCapacity = calculatePlanCapacity(desiredUsage, goLimits);
+  renderCapacity('goCapacity', goCapacity, desiredUsage, 'go');
+
+  /* Claude Code — multi-plan table */
+  const claudePlans = buildClaudePlans(claudeModel, inputs, desiredUsage);
+  renderMultiCapacity('claudeCapacity', claudePlans, claudePlanHint);
+
+  /* Codex — multi-plan table */
+  const codexPlans = buildCodexPlans(codexModel, inputs, desiredUsage);
+  renderMultiCapacity('codexCapacity', codexPlans, codexPlanHint);
+
+  /* ── Plan texts currency toggle ── */
+  updatePlanTexts();
+}
+
+function initStickyNav() {
+  const nav = el("stickyNav");
+  if (!nav) return;
+
+  const cards = ["goCard", "claudeCard", "codexCard"];
+
+  nav.addEventListener("click", (e) => {
+    const btn = e.target.closest("[data-scroll]");
+    if (!btn) return;
+    const target = el(btn.dataset.scroll);
+    if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+
+  const observer = new IntersectionObserver((entries) => {
+    let visible = null;
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) visible = entry.target.id;
+    });
+    if (visible) {
+      nav.querySelectorAll("[data-scroll]").forEach((btn) => {
+        btn.classList.toggle("active", btn.dataset.scroll === visible);
+      });
+    }
+  }, { rootMargin: "-100px 0px -60% 0px" });
+
+  cards.forEach((id) => {
+    const card = el(id);
+    if (card) observer.observe(card);
+  });
+}
+
+function bindEvents() {
+  document.addEventListener("click", (event) => {
+    const presetBtn = event.target.closest("[data-preset]");
+    if (presetBtn) {
+      applyPreset(presetBtn.dataset.preset);
+      return;
+    }
+
+    const usageBtn = event.target.closest("[data-usage]");
+    if (usageBtn) {
+      applyUsageProfile(usageBtn.dataset.usage);
+      return;
+    }
+
+    const currencyBtn = event.target.closest("[data-currency]");
+    if (currencyBtn) {
+      applyCurrency(currencyBtn.dataset.currency);
+      return;
+    }
+
+    const modelBtn = event.target.closest("[data-model]");
+    if (modelBtn) {
+      state[modelBtn.dataset.state] = modelBtn.dataset.model;
+      mountModelButtons("goModels", goModels, "goModel");
+      mountModelButtons("claudeModels", claudeModels, "claudeModel");
+      mountModelButtons("codexModels", codexModels, "codexModel");
+      calculate();
+    }
+  });
+
+  [
+    "hoursPerDay",
+    "daysPerMonth",
+    "promptsPerHour",
+    "requestsPerPrompt",
+    "inputTokens",
+    "cachedTokens",
+    "outputTokens"
+  ].forEach((id) => {
+    el(id).addEventListener("input", calculate);
+  });
+}
+
+function init() {
+  mountPresetButtons();
+  mountUsageButtons();
+  mountCurrencyButtons();
+  updateRatesDate();
+  mountModelButtons("goModels", goModels, "goModel");
+  mountModelButtons("claudeModels", claudeModels, "claudeModel");
+  mountModelButtons("codexModels", codexModels, "codexModel");
+  renderFeatureNote('claudeFeatureNote', claudeFeatureData);
+  renderFeatureNote('codexFeatureNote', codexFeatureData);
+  renderScenarioCards();
+  initStickyNav();
+  renderTimeline();
+  initBenchmark();
+  bindEvents();
+  applyPreset(state.preset);
+  fetchLiveRates();
+}
+
+init();
+</script>
+</body>
+</html>
