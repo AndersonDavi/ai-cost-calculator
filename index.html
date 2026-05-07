@@ -2639,14 +2639,34 @@ function buildCodexPlans(codexModel, inputs, desiredUsage) {
 
 function findSuggestedPlan(plans, hint) {
   if (!hint) return plans[0];
-  const budget = detectPlanBudget(hint);
-  if (budget != null) {
-    const found = plans.find(p => p.limits.monthlyBudgetLimitUsd === budget);
-    if (found) return found;
+
+  // 1. Coincidencia exacta por nombre
+  const exact = plans.find(p => p.name === hint);
+  if (exact) return exact;
+
+  // 2. Coincidencia por monto $ (distingue Pro $100 vs Pro $200)
+  const hintBudget = detectPlanBudget(hint);
+  if (hintBudget != null) {
+    const byBudget = plans.find(p => detectPlanBudget(p.name) === hintBudget);
+    if (byBudget) return byBudget;
   }
+
+  // 3. Primera palabra ("Plus, pero exigido" → "Plus $20")
+  const hintWord = hint.split(/[\s,]/)[0].toLowerCase();
+  const byWord = plans.find(p => p.name.toLowerCase().startsWith(hintWord));
+  if (byWord) return byWord;
+
+  // 4. Fallback legacy: monthlyBudgetLimitUsd
+  if (hintBudget != null) {
+    const legacy = plans.find(p => p.limits.monthlyBudgetLimitUsd === hintBudget);
+    if (legacy) return legacy;
+  }
+
   if (hint.toLowerCase().includes('api')) {
-    return plans.find(p => p.limits.monthlyBudgetLimitUsd == null) || plans[plans.length - 1];
+    return plans.find(p => !p.limits.monthlyBudgetLimitUsd && !p.limits.maxRequestsPerMonth)
+      || plans[plans.length - 1];
   }
+
   return plans[0];
 }
 
