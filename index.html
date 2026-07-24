@@ -1605,9 +1605,10 @@ input[type="range"] {
       <section class="sources-section">
         <div class="panel-title">Fuentes</div>
         <ul>
-          <li><strong>OpenCode Go</strong> — Límites oficiales publicados en opencode.ai <span class="tag info">5 may 2026</span></li>
-          <li><strong>Claude Code</strong> — Precios API/modelos y benchmarks publicados por Anthropic, incluyendo Claude Fable 5 y acceso restringido a Mythos 5 <span class="tag info">9 jun 2026</span></li>
-          <li><strong>Codex / GPT</strong> — Precios API, planes ChatGPT y benchmarks publicados por OpenAI <span class="tag info">9 jun 2026</span></li>
+          <li><strong>OpenCode Go</strong> — Límites oficiales de <code>opencode.ai/docs/go</code>, catálogo completo de 17 modelos verificado request por request <span class="tag info">24 jul 2026</span></li>
+          <li><strong>Claude Code</strong> — Precios API/modelos y benchmarks publicados por Anthropic, incluyendo Claude Opus 5 (nuevo default de Max), Sonnet 5, Fable 5 (permanente en Max/Team Premium) y acceso restringido a Mythos 5 <span class="tag info">24 jul 2026</span></li>
+          <li><strong>DeepSeek</strong> — Precios oficiales de <code>api-docs.deepseek.com</code>, con el recorte del 75% en V4 Pro y la deprecación de los alias legacy <span class="tag info">24 jul 2026</span></li>
+          <li><strong>Codex / GPT</strong> — Precios API, planes ChatGPT y benchmarks publicados por OpenAI, incluyendo la familia GPT-5.6 (Sol, Terra, Luna) <span class="tag info">20 jul 2026</span></li>
           <li><strong>TRM</strong> — Tasas obtenidas de <code>api.frankfurter.dev</code>. Última consulta: <span id="ratesDate">5 may 2026</span></li>
           <li>Logos de proveedores obtenidos de <a href="https://svgl.app" style="color:var(--codex);text-decoration:none">svgl.app</a></li>
           <li class="full">Los valores pueden desactualizarse. Verifica siempre contra la fuente oficial antes de tomar decisiones financieras.</li>
@@ -1714,7 +1715,7 @@ const presets = {
     cachedTokens: 120000,
     outputTokens: 920,
     goModel: "glm51",
-    claudeModel: "opus48",
+    claudeModel: "opus5",
     codexModel: "gpt55"
   }
 };
@@ -1748,11 +1749,22 @@ const usageProfiles = {
 
 const goModels = {
   deepseekFlash: { name: "DeepSeek V4 Flash", req5h: 31650, reqWeek: 79050, reqMonth: 158150, label: "Volumen bestia" },
-  deepseekPro: { name: "DeepSeek V4 Pro", req5h: 3450, reqWeek: 8550, reqMonth: 17150, label: "Fuerte y razonable" },
+  mimo25: { name: "MiMo-V2.5", req5h: 30100, reqWeek: 75200, reqMonth: 150400, label: "Volumen bestia" },
   qwen35: { name: "Qwen 3.5 Plus", req5h: 10200, reqWeek: 25200, reqMonth: 50500, label: "Muy rentable" },
-  qwen36: { name: "Qwen 3.6 Plus", req5h: 3300, reqWeek: 8200, reqMonth: 16300, label: "Más capaz, menos barato" },
+  qwen37plus: { name: "Qwen3.7 Plus", req5h: 4300, reqWeek: 10800, reqMonth: 21600, label: "Muy rentable" },
+  hy3: { name: "Hy3", req5h: 4300, reqWeek: 10750, reqMonth: 21500, label: "Muy rentable" },
+  deepseekPro: { name: "DeepSeek V4 Pro", req5h: 3450, reqWeek: 8550, reqMonth: 17150, label: "Fuerte y razonable" },
   minimax27: { name: "MiniMax M2.7", req5h: 3400, reqWeek: 8500, reqMonth: 17000, label: "Balance general" },
-  glm51: { name: "GLM-5.1", req5h: 880, reqWeek: 2150, reqMonth: 4300, label: "Más caro por request" }
+  qwen36: { name: "Qwen 3.6 Plus", req5h: 3300, reqWeek: 8200, reqMonth: 16300, label: "Más capaz, menos barato" },
+  mimo25pro: { name: "MiMo-V2.5-Pro", req5h: 3250, reqWeek: 8150, reqMonth: 16300, label: "Balance general" },
+  minimax3: { name: "MiniMax M3", req5h: 3200, reqWeek: 8000, reqMonth: 16000, label: "Balance general" },
+  kimiK27: { name: "Kimi K2.7 Code", req5h: 1350, reqWeek: 3380, reqMonth: 6750, label: "Agentic coding, contexto 256K" },
+  kimiK26: { name: "Kimi K2.6", req5h: 1150, reqWeek: 2880, reqMonth: 5750, label: "Generación anterior de Kimi" },
+  qwen37max: { name: "Qwen3.7 Max", req5h: 950, reqWeek: 2390, reqMonth: 4770, label: "Más caro por request" },
+  glm51: { name: "GLM-5.1", req5h: 880, reqWeek: 2150, reqMonth: 4300, label: "Más caro por request" },
+  glm52: { name: "GLM-5.2", req5h: 880, reqWeek: 2150, reqMonth: 4300, label: "Más caro por request" },
+  grok45: { name: "Grok 4.5", req5h: 120, reqWeek: 300, reqMonth: 600, label: "Cuota mínima, solo puntual" },
+  kimiK3: { name: "Kimi K3", req5h: 110, reqWeek: 250, reqMonth: 490, label: "Cuota mínima, solo puntual" }
 };
 
 for (const model of Object.values(goModels)) {
@@ -1761,9 +1773,11 @@ for (const model of Object.values(goModels)) {
 
 const claudeModels = {
   sonnet46: { name: "Sonnet 4.6", input: 3, cached: 0.30, output: 15, context: "200K estándar · 1M beta", tier: "Balance",        quotaMultiplier: 1.00 },
+  sonnet5:  { name: "Sonnet 5",   input: 2, cached: 0.20, output: 10, context: "1M · 128K · precio intro hasta 31 ago", tier: "Balance agéntico", quotaMultiplier: 1.00 },
   fable5:   { name: "Fable 5",    input: 10, cached: 1.00, output: 50, context: "1M · 128K output",        tier: "Mythos-class público", quotaMultiplier: 4.10 },
-  opus47:   { name: "Opus 4.7",   input: 5, cached: 0.50, output: 25, context: "200K",                    tier: "Máxima calidad", quotaMultiplier: 2.05 },
+  opus5:    { name: "Opus 5",     input: 5, cached: 0.50, output: 25, context: "1M · 128K · effort low→max", tier: "Nuevo default de Max", quotaMultiplier: 2.05 },
   opus48:   { name: "Opus 4.8",   input: 5, cached: 0.50, output: 25, context: "1M · 128K output",        tier: "Máxima calidad", quotaMultiplier: 2.05 },
+  opus47:   { name: "Opus 4.7",   input: 5, cached: 0.50, output: 25, context: "200K",                    tier: "Máxima calidad", quotaMultiplier: 2.05 },
   haiku45:  { name: "Haiku 4.5",  input: 1, cached: 0.10, output: 5,  context: "200K",                    tier: "Rápido y barato",quotaMultiplier: 0.30 }
 };
 
@@ -1791,6 +1805,12 @@ const codexModels = {
     input: 0.75, cached: 0.075, output: 4.5, context: "400K",
     creditsInput: 18.75, creditsCached: 1.875, creditsOutput: 113,
     tier: "Mejor costo/beneficio", quotaMultiplier: 0.20
+  },
+  gpt56sol: {
+    name: "GPT-5.6 Sol",
+    input: 5, cached: 0.50, output: 30, context: "1.05M · 128K output",
+    creditsInput: 125, creditsCached: 12.5, creditsOutput: 750,
+    tier: "Nuevo flagship coding", quotaMultiplier: 0.85
   }
 };
 
@@ -1807,29 +1827,33 @@ const codexPlanWindowTokens = {
 };
 
 const benchmarkModels = [
+  { model: 'GPT-5.6 Sol', family: 'OpenAI', swebVerified: null, swebPro: 64.6, gpqa: 94.6, terminal: 88.8, inputCost: 5, outputCost: 30, blendedCost: 17.5, source: 'Oficial parcial' },
   { model: 'GPT-5.5', family: 'OpenAI', swebVerified: 82, swebPro: 58.6, gpqa: 93.6, terminal: 82.7, inputCost: 5, outputCost: 30, blendedCost: 17.5, source: 'Oficial parcial' },
   { model: 'GPT-5.4', family: 'OpenAI', swebVerified: 80, swebPro: 57.7, gpqa: 92.8, terminal: 75.1, inputCost: 2.5, outputCost: 15, blendedCost: 8.75, source: 'Oficial parcial' },
   { model: 'GPT-5.3-Codex', family: 'OpenAI', swebVerified: 83, swebPro: 56.8, gpqa: 92.6, terminal: 77.3, inputCost: 2, outputCost: 12, blendedCost: 7, source: 'Oficial parcial' },
   { model: 'GPT-5.4 mini', family: 'OpenAI', swebVerified: 70, swebPro: 38, gpqa: 75, terminal: 52, inputCost: 0.4, outputCost: 1.6, blendedCost: 1, source: 'Terceros' },
-  { model: 'Sonnet 4.6', family: 'Anthropic', swebVerified: 79.6, swebPro: 46, gpqa: 84, terminal: 65, inputCost: 3, outputCost: 15, blendedCost: 9, source: 'Terceros' },
-  { model: 'Fable 5', family: 'Anthropic', swebVerified: null, swebPro: 80.3, gpqa: null, terminal: 88, inputCost: 10, outputCost: 50, blendedCost: 30, source: 'Oficial parcial' },
-  { model: 'Opus 4.7', family: 'Anthropic', swebVerified: 82, swebPro: 64.3, gpqa: 94.2, terminal: 69.4, inputCost: 5, outputCost: 25, blendedCost: 15, source: 'Oficial parcial' },
-  { model: 'Opus 4.8', family: 'Anthropic', swebVerified: 88.6, swebPro: 69.2, gpqa: 93.6, terminal: 82.7, inputCost: 5, outputCost: 25, blendedCost: 15, source: 'Oficial parcial' },
-  { model: 'Haiku 4.5', family: 'Anthropic', swebVerified: 55, swebPro: 28, gpqa: 68, terminal: 42, inputCost: 0.8, outputCost: 4, blendedCost: 2.4, source: 'Terceros' },
+  { model: 'Sonnet 4.6', family: 'Anthropic', swebVerified: 79.6, swebPro: 58.1, gpqa: 84, terminal: 67, frontier: null, inputCost: 3, outputCost: 15, blendedCost: 9, source: 'Oficial parcial' },
+  { model: 'Sonnet 5', family: 'Anthropic', swebVerified: null, swebPro: 63.2, gpqa: null, terminal: 80.4, frontier: null, inputCost: 2, outputCost: 10, blendedCost: 6, source: 'Oficial parcial' },
+  { model: 'Fable 5', family: 'Anthropic', swebVerified: null, swebPro: 80.3, gpqa: null, terminal: 88, frontier: 33.7, inputCost: 10, outputCost: 50, blendedCost: 30, source: 'Oficial parcial' },
+  { model: 'Opus 5', family: 'Anthropic', swebVerified: null, swebPro: null, gpqa: null, terminal: null, frontier: 43.3, inputCost: 5, outputCost: 25, blendedCost: 15, source: 'Oficial parcial' },
+  { model: 'Opus 4.7', family: 'Anthropic', swebVerified: 82, swebPro: 64.3, gpqa: 94.2, terminal: 69.4, frontier: null, inputCost: 5, outputCost: 25, blendedCost: 15, source: 'Oficial parcial' },
+  { model: 'Opus 4.8', family: 'Anthropic', swebVerified: 88.6, swebPro: 69.2, gpqa: 93.6, terminal: 74.6, frontier: 18.7, inputCost: 5, outputCost: 25, blendedCost: 15, source: 'Oficial parcial' },
+  { model: 'Haiku 4.5', family: 'Anthropic', swebVerified: 55, swebPro: 28, gpqa: 68, terminal: 42, frontier: null, inputCost: 1, outputCost: 5, blendedCost: 3, source: 'Terceros' },
   { model: 'DeepSeek V4 Flash', family: 'DeepSeek', swebVerified: 78, swebPro: 44, gpqa: 72, terminal: 55, inputCost: 0.14, outputCost: 0.28, blendedCost: 0.21, source: 'Terceros' },
-  { model: 'DeepSeek V4 Pro', family: 'DeepSeek', swebVerified: 80.6, swebPro: 55.4, gpqa: 90.1, terminal: 67.9, inputCost: 1.74, outputCost: 3.48, blendedCost: 2.61, source: 'Terceros' },
+  { model: 'DeepSeek V4 Pro', family: 'DeepSeek', swebVerified: 80.6, swebPro: 55.4, gpqa: 90.1, terminal: 67.9, frontier: null, inputCost: 0.435, outputCost: 0.87, blendedCost: 0.65, source: 'Terceros' },
   { model: 'Qwen 3.5 Plus', family: 'Qwen', swebVerified: 76.4, swebPro: 42, gpqa: 81.7, terminal: 60, inputCost: 0.8, outputCost: 2, blendedCost: 1.4, source: 'Terceros' },
   { model: 'Qwen 3.6 Plus', family: 'Qwen', swebVerified: 73.4, swebPro: 45, gpqa: 86, terminal: 63, inputCost: 1.2, outputCost: 3.5, blendedCost: 2.35, source: 'Terceros' },
   { model: 'MiniMax M2.7', family: 'MiniMax', swebVerified: 78, swebPro: 41, gpqa: 80, terminal: 58, inputCost: 0.9, outputCost: 2.5, blendedCost: 1.7, source: 'Terceros' },
-  { model: 'GLM-5.1', family: 'Zhipu AI', swebVerified: 76.5, swebPro: 58.4, gpqa: 83, terminal: 62, inputCost: 0.3, outputCost: 1, blendedCost: 0.65, source: 'Terceros' }
+  { model: 'GLM-5.1', family: 'Zhipu AI', swebVerified: 76.5, swebPro: 58.4, gpqa: 83, terminal: 62, inputCost: 0.3, outputCost: 1, blendedCost: 0.65, source: 'Terceros' },
+  { model: 'Kimi K2.7 Code', family: 'Moonshot AI', swebVerified: null, swebPro: 58.6, gpqa: null, terminal: null, inputCost: 0.95, outputCost: 4.00, blendedCost: 2.48, source: 'Terceros' }
 ];
 
 const benchmarkScenarios = [
   { key: 'Diseño', desc: 'Diseño y frontend', metric: 'SWE-bench Verified', bestModel: 'GPT-5.3-Codex', bestScore: 83, bestCost: 7, valueModel: 'DeepSeek V4 Flash', valueScore: 78, valueCost: 0.21 },
   { key: 'Debug', desc: 'Debug y solución de bugs', metric: 'Terminal-Bench 2.0', bestModel: 'GPT-5.5', bestScore: 82.7, bestCost: 17.5, valueModel: 'Qwen 3.5 Plus', valueScore: 60, valueCost: 1.4 },
-  { key: 'Feature', desc: 'Features y desarrollo general', metric: 'SWE-bench Pro', bestModel: 'Fable 5', bestScore: 80.3, bestCost: 30, valueModel: 'DeepSeek V4 Pro', valueScore: 55.4, valueCost: 2.61 },
-  { key: 'Infra', desc: 'Infraestructura y DevOps', metric: 'Terminal-Bench 2.1', bestModel: 'Fable 5', bestScore: 88, bestCost: 30, valueModel: 'Sonnet 4.6', valueScore: 65, valueCost: 9 },
-  { key: 'Seguridad', desc: 'Auditoría y razonamiento', metric: 'GPQA Diamond', bestModel: 'Opus 4.7', bestScore: 94.2, bestCost: 15, valueModel: 'DeepSeek V4 Pro', valueScore: 90.1, valueCost: 2.61 }
+  { key: 'Feature', desc: 'Features y desarrollo general', metric: 'SWE-bench Pro', bestModel: 'Fable 5', bestScore: 80.3, bestCost: 30, valueModel: 'DeepSeek V4 Pro', valueScore: 55.4, valueCost: 0.65 },
+  { key: 'Infra', desc: 'Infraestructura y DevOps', metric: 'Terminal-Bench 2.1', bestModel: 'GPT-5.6 Sol', bestScore: 88.8, bestCost: 17.5, valueModel: 'Sonnet 5', valueScore: 80.4, valueCost: 6 },
+  { key: 'Seguridad', desc: 'Auditoría y razonamiento', metric: 'GPQA Diamond', bestModel: 'Opus 4.7', bestScore: 94.2, bestCost: 15, valueModel: 'DeepSeek V4 Pro', valueScore: 90.1, valueCost: 0.65 }
 ];
 
 const el = (id) => document.getElementById(id);
@@ -1947,6 +1971,60 @@ const timelineEvents = [
     title: 'Benchmarks recalibrados con fuentes oficiales',
     detail: 'Se actualizaron las métricas comparables publicadas por Anthropic y OpenAI: Fable 5 entra con SWE-bench Pro 80.3% y Terminal-Bench 2.1 88.0%; GPT-5.4 y GPT-5.3-Codex se corrigen con los valores oficiales de OpenAI. Las filas sin publicación directa quedan marcadas como terceros.',
     source: 'anthropic.com, openai.com'
+  },
+  {
+    date: '12 jun 2026',
+    title: 'Kimi K2.7 Code lanzado por Moonshot AI',
+    detail: 'Nuevo modelo de coding agentic sobre la base de K2.6: contexto de 256K, thinking mode obligatorio y ~30% menos tokens de razonamiento que K2.6. Reporta 58.6% en SWE-bench Pro. Disponible en el plan OpenCode Go con 1,350 requests/5h · 3,380/semana · 6,750/mes.',
+    source: 'kimi-k2.org, opencode.ai'
+  },
+  {
+    date: '30 jun 2026',
+    title: 'Claude Sonnet 5 lanzado',
+    detail: 'Nuevo Sonnet agéntico (claude-sonnet-5): 1M de contexto, 128K de output, 63.2% en SWE-bench Pro (vs 58.1% de Sonnet 4.6) y 80.4% en Terminal-Bench 2.1, superando incluso a Opus 4.8 (74.6%) en trabajo de terminal. Precio introductorio de $2/$10 por millón de tokens hasta el 31 de agosto de 2026; después sube a $3/$15. La calculadora usa el precio introductorio.',
+    source: 'anthropic.com/news/claude-sonnet-5'
+  },
+  {
+    date: '9 jul 2026',
+    title: 'OpenAI lanza la familia GPT-5.6 (Luna, Terra, Sol)',
+    detail: 'Sol es el nuevo flagship de coding y agentic workflows de OpenAI: $5/$30 por millón de tokens (input/output), contexto de 1.05M con 128K de output, 94.6% en GPQA Diamond, 88.8% en Terminal-Bench 2.1 (91.9% en modo Ultra) y 64.6% en SWE-bench Pro. Terra ($2.50/$15) y Luna ($1/$6) completan la familia como escalones intermedio y económico.',
+    source: 'openai.com/index/gpt-5-6'
+  },
+  {
+    date: '18 jul 2026',
+    title: 'Límites semanales de Claude Code +50% hasta el 19 de agosto',
+    detail: 'Anthropic extendió por cuarta vez la promoción iniciada el 13 de mayo: los topes semanales siguen 50% por encima del baseline en Pro, Max, Team y Enterprise por asientos hasta el 19 de agosto de 2026. Ojo: es +50%, no el doble, y solo aplica al tope semanal — las ventanas rodantes de 5 horas quedan sin cambios. Usar Fable 5 dentro de Claude Code exige la versión 2.1.170 o superior.',
+    source: 'anthropic.com, x.com/claudeai'
+  },
+  {
+    date: '20 jul 2026',
+    title: 'Fable 5 pasa a inclusión permanente en Max y Team Premium',
+    detail: 'Tras varias extensiones del acceso gratuito temporal, Anthropic confirmó que desde el 20 de julio Fable 5 queda incluido de forma permanente en los planes Max y Team Premium, consumiendo hasta el 50% de los límites del plan. Pro y Team Standard mantienen acceso solo vía usage credits, con un crédito único de $100 de bienvenida.',
+    source: 'x.com/claudeai'
+  },
+  {
+    date: '24 jul 2026',
+    title: 'DeepSeek recorta 75% el precio de V4 Pro y retira los alias legacy',
+    detail: 'V4 Pro pasa de $1.74/$3.48 a $0.435/$0.87 por millón de tokens (cache hit a $0.003625), un recorte permanente del 75% que lo deja casi al nivel de V4 Flash en costo con 55.4% en SWE-bench Pro y 90.1% en GPQA Diamond. El mismo día, a las 15:59 UTC, quedan deprecados los alias deepseek-chat y deepseek-reasoner, que ahora apuntan a los modos non-thinking y thinking de V4 Flash.',
+    source: 'api-docs.deepseek.com/quick_start/pricing'
+  },
+  {
+    date: '24 jul 2026',
+    title: 'Claude Opus 5 lanzado',
+    detail: 'Nuevo Opus (claude-opus-5) al mismo precio que Opus 4.8: $5/$25 por millón de tokens, 1M de contexto y 128K de output, con control de esfuerzo de low a max. Marca 43.3% en Frontier-Bench v0.1 — más del doble que Opus 4.8 (18.7%) y por encima de Fable 5 (33.7%) — y queda a menos de 0.5 puntos del pico de Fable 5 en CursorBench 3.2 por la mitad del costo por tarea. Pasa a ser el modelo por defecto en Max y el Opus más fuerte disponible en Pro. Sigue por detrás de Mythos 5 en desarrollo de exploits. Anthropic ya no publica SWE-bench ni GPQA para este modelo.',
+    source: 'anthropic.com/news/claude-opus-5'
+  },
+  {
+    date: '24 jul 2026',
+    title: 'Catálogo de OpenCode Go verificado y ampliado',
+    detail: 'Se contrastaron las cuotas contra la tabla oficial de opencode.ai/docs/go. DeepSeek V4 Pro mantiene 3,450 requests/5h pese al recorte del 75% en su precio API — la petición de subir el límite se cerró como "not planned", así que el ahorro no se traslada al plan Go. Se corrigieron los topes semanal y mensual de Kimi K2.7 Code (3,380 y 6,750, no 4,630 y 9,250) y se añadieron los modelos que faltaban: Grok 4.5, Kimi K3, Kimi K2.6, GLM-5.2, Qwen3.7 Max, Qwen3.7 Plus, MiniMax M3, MiMo-V2.5, MiMo-V2.5-Pro y Hy3.',
+    source: 'opencode.ai/docs/go, github.com/anomalyco/opencode/issues/28846'
+  },
+  {
+    date: '24 jul 2026',
+    title: 'Precio de Haiku 4.5 corregido en la tabla de benchmarks',
+    detail: 'La fila usaba $0.80/$4 por millón de tokens, que en realidad es el precio de Haiku 3.5 (retirado). El valor oficial de Haiku 4.5 es $1/$5 con cache hit a $0.10, tal como ya figuraba en el selector de modelos de Claude Code. El costo blended pasa de $2.40 a $3.',
+    source: 'platform.claude.com/docs/en/about-claude/pricing'
   }
 ];
 
@@ -2045,6 +2123,7 @@ const claudeFeatureData = {
   rows: [
     ['Chat web / app',          '✓', '✓', '✓', '✓'],
     ['Sonnet 4.6',              '✓', '✓', '✓', '✓'],
+    ['Sonnet 5',                '✓', '✓', '✓', '✓'],
     ['Memory / Projects',       '✓', '✓', '✓', '✓'],
     ['Web search',              '✓', '✓', '✓', '✓'],
     ['Artifacts / Code exec',   '✓', '✓', '✓', '✓'],
@@ -2055,12 +2134,13 @@ const claudeFeatureData = {
     ['Cowork',                  '✗', '✓', '✓', '✓'],
     ['MCP custom',              '✗', '✓', '✓', '✓'],
     ['1M contexto (beta)',      '✗', '✓', '✓', '✓'],
-    ['Fable 5',                 '✗', '<span class="tag info">temp</span>', '<span class="tag info">temp</span>', '<span class="tag info">temp</span>'],
+    ['Fable 5',                 '✗', '<span class="tag warn">usage credits</span>', '<span class="tag good">50% límites</span>', '<span class="tag good">50% límites</span>'],
+    ['Opus 5',                  '✗', '<span class="tag good">✓ tope Pro</span>', '<span class="tag good">✓ default</span>', '<span class="tag good">✓ default</span>'],
     ['Opus 4.7 / 4.8',          '✗', '✗', '✓', '✓'],
     ['PowerPoint (research)',   '✗', '✗', '<span class="tag info">beta</span>', '<span class="tag info">beta</span>'],
     ['Prioridad tráfico',       '✗', '✗', '✓', '✓']
   ],
-  footer: 'Fable 5 está incluido temporalmente en planes pagos hasta el 22 de junio de 2026; desde el 23 de junio Anthropic indica que requerirá usage credits salvo extensión de capacidad. Mythos 5 no es self-serve.'
+  footer: 'Desde el 24 de julio de 2026, Opus 5 es el modelo por defecto en Max y el Opus más fuerte disponible en Pro. Fable 5 sigue incluido de forma permanente en Max y Team Premium hasta el 50% de los límites del plan; Pro y Team Standard solo lo alcanzan vía usage credits (pago por uso a tarifa API, que no descuenta del límite normal) más un crédito único de bienvenida. Los topes semanales están 50% por encima del baseline hasta el 19 de agosto de 2026 — la ventana rodante de 5h no cambió. Mythos 5 sigue sin ser self-serve.'
 };
 
 const codexFeatureData = {
@@ -2163,10 +2243,11 @@ function initBenchmark() {
         { title: "SWE-Pro", field: "swebPro", sorter: "number", hozAlign: "right", width: 85, formatter: benchmarkFormatter, headerTooltip: "SWE-bench Pro" },
         { title: "GPQA", field: "gpqa", sorter: "number", hozAlign: "right", width: 75, formatter: benchmarkFormatter, headerTooltip: "GPQA Diamond" },
         { title: "Terminal", field: "terminal", sorter: "number", hozAlign: "right", width: 85, formatter: benchmarkFormatter, headerTooltip: "Terminal-Bench 2.0 / 2.1" },
+        { title: "Frontier", field: "frontier", sorter: "number", hozAlign: "right", width: 85, formatter: benchmarkFormatter, headerTooltip: "Frontier-Bench v0.1 (coding agéntico en terminal)" },
         { title: "$/M", field: "blendedCost", sorter: "number", hozAlign: "right", width: 70, formatter: "plaintext", headerTooltip: "Costo blended $/M" }
       ]
     });
-    const tipMap = { 'Origen': 'Origen de los datos: proveedor o terceros', 'SWE-V': 'SWE-bench Verified', 'SWE-Pro': 'SWE-bench Pro', 'GPQA': 'GPQA Diamond', 'Terminal': 'Terminal-Bench 2.0 / 2.1', '$/M': 'Costo blended $/M' };
+    const tipMap = { 'Origen': 'Origen de los datos: proveedor o terceros', 'SWE-V': 'SWE-bench Verified', 'SWE-Pro': 'SWE-bench Pro', 'GPQA': 'GPQA Diamond', 'Terminal': 'Terminal-Bench 2.0 / 2.1', 'Frontier': 'Frontier-Bench v0.1 (coding agéntico en terminal)', '$/M': 'Costo blended $/M' };
     setTimeout(() => {
       window.scrollTo(0, savedScroll);
       if (document.activeElement && document.activeElement !== document.body) document.activeElement.blur();
@@ -2194,22 +2275,27 @@ function initBenchmark() {
   } catch(e) { console.warn('Tabulator init failed', e); }
 
   const colors = { 'OpenAI': '#70b7ff', 'Anthropic': '#ffb36b', 'DeepSeek': '#4fe08b', 'Qwen': '#ffd166', 'MiniMax': '#c084fc', 'Zhipu AI': '#f472b6' };
-  const families = [...new Set(benchmarkModels.map(m => m.family))];
-  const allSelected = new Set(benchmarkModels.map(m => m.model));
+  // El scatter promedia SWE-V / SWE-Pro / GPQA / Terminal. Frontier-Bench queda fuera
+  // porque está en otra escala. Los modelos sin ninguna de esas 4 métricas publicadas
+  // (p. ej. Opus 5, que Anthropic reporta solo en Frontier-Bench) no entran al gráfico.
+  const comparableScores = (m) => [m.swebVerified, m.swebPro, m.gpqa, m.terminal].filter(v => v != null);
+  const chartModels = benchmarkModels.filter(m => comparableScores(m).length > 0);
+  const families = [...new Set(chartModels.map(m => m.family))];
+  const allSelected = new Set(chartModels.map(m => m.model));
   const chipGrid = el("chartChips");
   const famChipGrid = el("chartChipsFamilies");
 
   function mountChips() {
-    const allOn = allSelected.size === benchmarkModels.length;
+    const allOn = allSelected.size === chartModels.length;
     chipGrid.innerHTML = [
       `<button class="model-btn ${allOn ? 'active' : ''}" data-chip="all" style="padding:6px 10px"><div class="title" style="font-size:0.82rem">Todos</div></button>`,
-      ...benchmarkModels.map(m => `<button class="model-btn ${allSelected.has(m.model) ? 'active' : ''}" data-chip="${m.model}" style="padding:6px 10px"><div class="title" style="font-size:0.82rem">${m.model}</div></button>`)
+      ...chartModels.map(m => `<button class="model-btn ${allSelected.has(m.model) ? 'active' : ''}" data-chip="${m.model}" style="padding:6px 10px"><div class="title" style="font-size:0.82rem">${m.model}</div></button>`)
     ].join('');
   }
 
   function mountFamilyChips() {
     famChipGrid.innerHTML = families.map(f => {
-      const inFam = benchmarkModels.filter(m => m.family === f);
+      const inFam = chartModels.filter(m => m.family === f);
       const nOn = inFam.filter(m => allSelected.has(m.model)).length;
       const cls = nOn === inFam.length ? 'active' : nOn > 0 ? 'active' : '';
       const style = nOn > 0 && nOn < inFam.length ? 'opacity:0.5' : '';
@@ -2224,7 +2310,7 @@ function initBenchmark() {
     const b = e.target.closest('[data-chip]');
     if (!b) return;
     if (b.dataset.chip === 'all') {
-      allSelected.size === benchmarkModels.length ? allSelected.clear() : benchmarkModels.forEach(m => allSelected.add(m.model));
+      allSelected.size === chartModels.length ? allSelected.clear() : chartModels.forEach(m => allSelected.add(m.model));
     } else {
       allSelected.has(b.dataset.chip) ? allSelected.delete(b.dataset.chip) : allSelected.add(b.dataset.chip);
     }
@@ -2234,7 +2320,7 @@ function initBenchmark() {
   famChipGrid.addEventListener('click', (e) => {
     const b = e.target.closest('[data-fchip]');
     if (!b) return;
-    const inFam = benchmarkModels.filter(m => m.family === b.dataset.fchip);
+    const inFam = chartModels.filter(m => m.family === b.dataset.fchip);
     const allOn = inFam.every(m => allSelected.has(m.model));
     inFam.forEach(m => allOn ? allSelected.delete(m.model) : allSelected.add(m.model));
     commitChips(); tick();
@@ -2248,8 +2334,8 @@ function initBenchmark() {
     if (chartEl && typeof echarts !== 'undefined') {
       chart = echarts.init(chartEl);
       makeOption = function(selected) {
-        const series = benchmarkModels.map(m => {
-          const scores = [m.swebVerified, m.swebPro, m.gpqa, m.terminal].filter(v => v != null);
+        const series = chartModels.map(m => {
+          const scores = comparableScores(m);
           const avg = scores.reduce((sum, v) => sum + v, 0) / scores.length;
           const vis = selected.has(m.model);
           return {
@@ -2917,10 +3003,16 @@ function calculate() {
     claudeStatus.textContent = "Opus 4.7 es para los casos donde el error sale más caro que el token: seguridad, infra compleja y reasoning largo. Financieramente se vuelve premium muy rápido.";
   } else if (state.claudeModel === "opus48") {
     claudeStatus.className = claudeMonthCost <= 150 ? "status warn" : "status bad";
-    claudeStatus.textContent = "Opus 4.8 es el techo Opus de Claude Code: 1M de contexto, 69.2% en SWE-bench Pro y dynamic workflows. Para seguridad, arquitectura compleja y agentes autónomos. Financieramente caro — justifica API directa o plan Max 20x.";
+    claudeStatus.textContent = "Opus 4.8 es el techo Opus de Claude Code: 1M de contexto, 69.2% en SWE-bench Pro y dynamic workflows. Para seguridad, arquitectura compleja y agentes autónomos. Financieramente caro — justifica API directa o plan Max 20x. Desde el 24 de julio, Opus 5 lo reemplaza al mismo precio.";
+  } else if (state.claudeModel === "sonnet5") {
+    claudeStatus.className = claudeMonthCost <= 100 ? "status good" : "status warn";
+    claudeStatus.textContent = "Sonnet 5 es hoy el mejor costo/beneficio de Claude Code: 80.4% en Terminal-Bench 2.1 (por encima de Opus 4.8) y 63.2% en SWE-bench Pro, con 1M de contexto. El precio de $2/$10 es introductorio y sube a $3/$15 el 31 de agosto de 2026 — revisa el cálculo después de esa fecha.";
+  } else if (state.claudeModel === "opus5") {
+    claudeStatus.className = claudeMonthCost <= 150 ? "status warn" : "status bad";
+    claudeStatus.textContent = "Opus 5 es el nuevo default de Max y el Opus más fuerte en Pro, al mismo precio que Opus 4.8: 43.3% en Frontier-Bench v0.1 (más del doble que Opus 4.8 y por encima de Fable 5) y a menos de 0.5 puntos del pico de Fable 5 en CursorBench por la mitad del costo por tarea. Con control de esfuerzo low→max puedes bajar el gasto sin cambiar de modelo.";
   } else {
     claudeStatus.className = claudeMonthCost <= 250 ? "status warn" : "status bad";
-    claudeStatus.textContent = "Fable 5 es el salto Mythos-class público: 1M de contexto, 128K output y 80.3% en SWE-bench Pro. Cuesta el doble que Opus 4.8 en API; en suscripciones Anthropic lo incluye temporalmente hasta el 22 de junio y luego pasa a usage credits salvo extensión.";
+    claudeStatus.textContent = "Fable 5 es el salto Mythos-class público: 1M de contexto, 128K output y 80.3% en SWE-bench Pro. Cuesta el doble que Opus 4.8 en API; desde el 20 de julio de 2026 está incluido de forma permanente en Max y Team Premium hasta el 50% de los límites del plan, mientras Pro sigue dependiendo de usage credits.";
   }
 
   const codexReqCost = costPerRequest(codexModel, inputs);
@@ -2960,6 +3052,9 @@ function calculate() {
   } else if (state.codexModel === "gpt54") {
     codexStatus.className = codexMonthCost <= 150 ? "status warn" : "status bad";
     codexStatus.textContent = "GPT-5.4 vale la pena cuando la ventana de contexto y el trabajo profesional transversal importan tanto como el código. No gana por precio, gana por amplitud.";
+  } else if (state.codexModel === "gpt56sol") {
+    codexStatus.className = "status bad";
+    codexStatus.textContent = "GPT-5.6 Sol es el nuevo flagship de coding de OpenAI: 94.6% en GPQA Diamond y 88.8% en Terminal-Bench 2.1 con el mismo precio que GPT-5.5. Mejor relación calidad/costo que GPT-5.5 para agentic coding, pero sigue siendo un modelo premium frente a GPT-5.4/5.4 mini.";
   } else {
     codexStatus.className = "status bad";
     codexStatus.textContent = "GPT-5.5 es una herramienta de alto nivel para los casos donde diseño, estrategia, análisis y código se mezclan. Es la mejor si el costo del error es alto, no si buscas volumen barato.";
