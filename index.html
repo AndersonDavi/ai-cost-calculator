@@ -1353,7 +1353,7 @@ input[type="range"] {
 <body>
 <div class="shell">
   <section class="hero">
-    <div class="eyebrow">Actualizado 9 de junio de 2026</div>
+    <div class="eyebrow">Actualizado 18 de octubre de 2026</div>
     <div class="hero-grid">
       <div>
         <h1>Costear <span>coding agents</span> sin humo.</h1>
@@ -1454,7 +1454,7 @@ input[type="range"] {
             <label for="cachedTokens">Cached input tokens</label>
             <output id="cachedTokensOut"></output>
           </div>
-          <input id="cachedTokens" type="range" min="0" max="120000" step="1000">
+          <input id="cachedTokens" type="range" min="0" max="400000" step="1000">
         </div>
 
         <div class="field">
@@ -1488,7 +1488,7 @@ input[type="range"] {
         <article class="kpi">
           <div class="label">Output total / mes</div>
           <div class="value" id="outputMonth"></div>
-          <div class="sub">Te pega más duro en modelos premium tipo Opus o GPT-5.5.</div>
+          <div class="sub">Te pega más duro en modelos premium tipo Fable o GPT-6 Astra.</div>
         </article>
       </section>
 
@@ -1512,10 +1512,10 @@ input[type="range"] {
               <div class="panel-title">Plan base</div>
               <div class="plan-table">
                 <div class="plan-tr header"><span class="ptd name">Plan</span><span class="ptd usd">USD</span><span class="ptd converted" data-col="converted">COP</span></div>
-                <div class="plan-tr"><span class="ptd name">Suscripción</span><span class="ptd usd"><strong data-usd="10">$10</strong>/mes</span><span class="ptd converted"><strong data-usd="10"></strong></span></div>
-                <div class="plan-tr"><span class="ptd name">Primer mes</span><span class="ptd usd"><strong data-usd="5">$5</strong></span><span class="ptd converted"><strong data-usd="5"></strong></span></div>
+                <div class="plan-tr"><span class="ptd name">Go</span><span class="ptd usd"><strong data-usd="10">$10</strong>/mes</span><span class="ptd converted"><strong data-usd="10"></strong></span></div>
+                <div class="plan-tr"><span class="ptd name">Go Plus</span><span class="ptd usd"><strong data-usd="40">$40</strong>/mes</span><span class="ptd converted"><strong data-usd="40"></strong></span></div>
               </div>
-              <div class="plan-footer">OpenCode Go subsidia tu suscripción de $10/mes con límites de consumo de $60/mes, $30/semana y $12 por ventana de 5h. El modelo determina cuántos requests entran en esos límites.</div>
+              <div class="plan-footer">Cada modelo tiene su propio tope mensual en dólares ($15, $30, $60 u $80 en Go): la ventana de 5h es el 20% de ese tope y la semana el 50%. Go Plus amplía el tope entre 2× y 8× según el modelo. Al agotarlo puedes seguir con los modelos gratis o pasar a tu balance pay-as-you-go.</div>
             </aside>
           </div>
           <div class="provider-body">
@@ -1524,7 +1524,7 @@ input[type="range"] {
               <div class="metric-box">
                 <div class="label">Costo inferido / req</div>
                 <div class="value" id="goReqCost"></div>
-                <div class="sub">Estimado desde la tabla oficial de requests por ventana.</div>
+                <div class="sub">Tope mensual del modelo ÷ requests/mes estimados por OpenCode.</div>
               </div>
               <div class="metric-box">
                 <div class="label">Gasto mes equivalente</div>
@@ -1534,7 +1534,7 @@ input[type="range"] {
               <div class="metric-box">
                 <div class="label">Plan suficiente</div>
                 <div class="value" id="goPlanHint"></div>
-                <div class="sub" id="goPlanSub">OpenCode Go no tiene escalones 5x/20x tipo Claude.</div>
+                <div class="sub" id="goPlanSub"></div>
               </div>
               <div class="metric-box">
                 <div class="label">Break-even vs API</div>
@@ -1640,7 +1640,7 @@ input[type="range"] {
                 <div class="plan-tr"><span class="ptd name">Pro</span><span class="ptd usd"><strong data-usd="100">$100</strong></span><span class="ptd converted"><strong data-usd="100"></strong></span></div>
                 <div class="plan-tr"><span class="ptd name">Pro</span><span class="ptd usd"><strong data-usd="200">$200</strong></span><span class="ptd converted"><strong data-usd="200"></strong></span></div>
               </div>
-              <div class="plan-footer">Capacidad estimada a partir del límite de tokens por ventana de 5h (Plus 86K · Pro $100 344K · Pro $200 688K). Desde el 30 de julio, Terra bajó 20% y Luna 80%; frente a Sol, sus precios API actuales son 60% y 96% menores, y consumen menos créditos en Codex. <strong>Con API key es pay as you go sin techo de ventana.</strong></div>
+              <div class="plan-footer">Capacidad estimada a partir del límite de tokens por ventana de 5h (Plus 86K · Pro $100 344K · Pro $200 688K). La familia GPT-6 (Astra, Sol, Luna) y GPT-6.1 Sol abaratan el flujo diario: 6.1 Sol cuesta $2/$10 y Luna $0.10/$0.50. Por encima de 272K tokens de input aplica la tarifa de contexto largo. <strong>Con API key es pay as you go sin techo de ventana.</strong></div>
             </aside>
           </div>
           <div class="provider-body">
@@ -1752,9 +1752,9 @@ const initialRates = { ...defaultRates, ...cachedRates };
 const state = {
   preset: "feature",
   usageProfile: "normal",
-  goModel: "deepseekFlash",
-  claudeModel: "sonnet46",
-  codexModel: "gpt56terra",
+  goModel: "deepseekFlash41",
+  claudeModel: "sonnet55",
+  codexModel: "gpt61sol",
   currency: localStorage.getItem('ai-currency') || 'usd',
   trm: initialRates.copUsd,
   eurUsd: initialRates.eurUsd,
@@ -1772,9 +1772,9 @@ const presets = {
     inputTokens: 600,
     cachedTokens: 45000,
     outputTokens: 360,
-    goModel: "qwen35",
-    claudeModel: "sonnet46",
-    codexModel: "gpt56luna"
+    goModel: "qwen37plus",
+    claudeModel: "sonnet55",
+    codexModel: "gpt6luna"
   },
   feature: {
     name: "Feature SaaS",
@@ -1787,8 +1787,8 @@ const presets = {
     cachedTokens: 80000,
     outputTokens: 650,
     goModel: "deepseekPro",
-    claudeModel: "sonnet46",
-    codexModel: "gpt56terra"
+    claudeModel: "sonnet55",
+    codexModel: "gpt61sol"
   },
   design: {
     name: "Diseño / UX",
@@ -1800,9 +1800,9 @@ const presets = {
     inputTokens: 700,
     cachedTokens: 55000,
     outputTokens: 720,
-    goModel: "qwen36",
-    claudeModel: "sonnet46",
-    codexModel: "gpt56terra"
+    goModel: "minimax3",
+    claudeModel: "sonnet55",
+    codexModel: "gpt61sol"
   },
   infra: {
     name: "Infra / DevOps",
@@ -1814,9 +1814,9 @@ const presets = {
     inputTokens: 1200,
     cachedTokens: 100000,
     outputTokens: 780,
-    goModel: "glm51",
-    claudeModel: "fable5",
-    codexModel: "gpt56sol"
+    goModel: "glm52",
+    claudeModel: "fable51",
+    codexModel: "gpt61sol"
   },
   security: {
     name: "Seguridad / auditoría",
@@ -1828,9 +1828,9 @@ const presets = {
     inputTokens: 1500,
     cachedTokens: 120000,
     outputTokens: 920,
-    goModel: "glm51",
-    claudeModel: "opus5",
-    codexModel: "gpt56sol"
+    goModel: "kimiK27",
+    claudeModel: "opus55",
+    codexModel: "gpt6astra"
   }
 };
 
@@ -1861,82 +1861,127 @@ const usageProfiles = {
   }
 };
 
+// Fuente: opencode.ai/docs/go (oct 2026). Cada modelo tiene su propio tope mensual en dólares;
+// la ventana de 5h es el 20% de ese tope y la semana el 50%. req5h/reqWeek/reqMonth son las
+// estimaciones oficiales del plan Go $10; Go Plus ($40) amplía el tope con un multiplicador por modelo.
+const GO_WINDOW_SHARE = 0.2;
+const GO_WEEK_SHARE = 0.5;
+
 const goModels = {
-  deepseekFlash: { name: "DeepSeek V4 Flash", req5h: 31650, reqWeek: 79050, reqMonth: 158150, label: "Volumen bestia", input: 0.14, output: 0.28 },
-  mimo25: { name: "MiMo-V2.5", req5h: 30100, reqWeek: 75200, reqMonth: 150400, label: "Volumen bestia", input: 0.14, output: 0.28 },
-  qwen35: { name: "Qwen 3.5 Plus", req5h: 10200, reqWeek: 25200, reqMonth: 50500, label: "Muy rentable", input: 0.48, output: 2.88, apiPriceNote: "ref. Alibaba ≤256K" },
-  qwen37plus: { name: "Qwen3.7 Plus", req5h: 4300, reqWeek: 10800, reqMonth: 21600, label: "Muy rentable", input: 0.40, output: 1.60, apiPriceNote: "≤256K; >256K: $1.20/$4.80" },
-  hy3: { name: "Hy3", req5h: 4300, reqWeek: 10750, reqMonth: 21500, label: "Muy rentable", input: 0.14, output: 0.58 },
-  deepseekPro: { name: "DeepSeek V4 Pro", req5h: 3450, reqWeek: 8550, reqMonth: 17150, label: "Fuerte y razonable", input: 0.435, output: 0.87 },
-  minimax27: { name: "MiniMax M2.7", req5h: 3400, reqWeek: 8500, reqMonth: 17000, label: "Balance general", input: 0.30, output: 1.20 },
-  qwen36: { name: "Qwen 3.6 Plus", req5h: 3300, reqWeek: 8200, reqMonth: 16300, label: "Más capaz, menos barato", input: 0.50, output: 3.00, apiPriceNote: "≤256K; >256K: $2/$6" },
-  mimo25pro: { name: "MiMo-V2.5-Pro", req5h: 3250, reqWeek: 8150, reqMonth: 16300, label: "Balance general", input: 0.435, output: 0.87 },
-  minimax3: { name: "MiniMax M3", req5h: 3200, reqWeek: 8000, reqMonth: 16000, label: "Balance general", input: 0.30, output: 1.20 },
-  kimiK27: { name: "Kimi K2.7 Code", req5h: 1350, reqWeek: 3380, reqMonth: 6750, label: "Agentic coding, contexto 256K", input: 0.95, output: 4.00 },
-  kimiK26: { name: "Kimi K2.6", req5h: 1150, reqWeek: 2880, reqMonth: 5750, label: "Generación anterior de Kimi", input: 0.95, output: 4.00 },
-  qwen37max: { name: "Qwen3.7 Max", req5h: 950, reqWeek: 2390, reqMonth: 4770, label: "Más caro por request", input: 2.50, output: 7.50 },
-  glm51: { name: "GLM-5.1", req5h: 880, reqWeek: 2150, reqMonth: 4300, label: "Más caro por request", input: 1.40, output: 4.40 },
-  glm52: { name: "GLM-5.2", req5h: 880, reqWeek: 2150, reqMonth: 4300, label: "Más caro por request", input: 1.40, output: 4.40 },
-  grok45: { name: "Grok 4.5", req5h: 120, reqWeek: 300, reqMonth: 600, label: "Cuota mínima, solo puntual", input: 2.00, output: 6.00 },
-  kimiK3: { name: "Kimi K3", req5h: 110, reqWeek: 250, reqMonth: 490, label: "Cuota mínima, solo puntual", input: 3.00, output: 15.00 }
+  deepseekFlash41: { name: "DeepSeek V4.1 Flash", monthlyLimit: 80, plusMonthlyLimit: 160, req5h: 34670, reqWeek: 86670, reqMonth: 173330, label: "Volumen bestia", input: 0.15, output: 0.60, apiPriceNote: "fuera de pico; pico: $0.30/$1.20" },
+  muse13: { name: "Muse Spark 1.3", monthlyLimit: 60, plusMonthlyLimit: 120, req5h: 45300, reqWeek: 113300, reqMonth: 226600, label: "Volumen bestia · Contributor", input: 0.10, output: 0.20 },
+  mimo26flash: { name: "MiMo-V2.6-Flash", monthlyLimit: 60, plusMonthlyLimit: 120, req5h: 30100, reqWeek: 75200, reqMonth: 150400, label: "Volumen bestia", input: 0.14, output: 0.28 },
+  longcat2: { name: "LongCat-2.0", monthlyLimit: 60, plusMonthlyLimit: 240, req5h: 11400, reqWeek: 28600, reqMonth: 57200, label: "Muy rentable", input: 0.30, output: 1.20 },
+  glm53flash: { name: "GLM-5.3-Flash", monthlyLimit: 60, plusMonthlyLimit: 180, req5h: 6320, reqWeek: 15790, reqMonth: 31580, label: "Muy rentable", input: 0.15, output: 0.50 },
+  qwen38flash: { name: "Qwen3.8 Flash", monthlyLimit: 30, plusMonthlyLimit: 90, req5h: 5400, reqWeek: 13500, reqMonth: 27000, label: "Muy rentable · tope $30", input: 0.15, output: 0.47 },
+  qwen37plus: { name: "Qwen3.7 Plus", monthlyLimit: 60, plusMonthlyLimit: 180, req5h: 4300, reqWeek: 10800, reqMonth: 21600, label: "Muy rentable", input: 0.40, output: 1.60, apiPriceNote: "≤256K; >256K: $1.20/$4.80" },
+  hy3: { name: "Hy3", monthlyLimit: 60, plusMonthlyLimit: 240, req5h: 4300, reqWeek: 10750, reqMonth: 21500, label: "Muy rentable", input: 0.14, output: 0.58 },
+  gpt6luna: { name: "GPT-6 Luna", monthlyLimit: 15, plusMonthlyLimit: 60, req5h: 4230, reqWeek: 10560, reqMonth: 21130, label: "OpenAI barato · tope $15", input: 0.10, output: 0.50, apiPriceNote: "≤272K; >272K: $0.20/$0.75" },
+  haiku55: { name: "Claude Haiku 5.5", monthlyLimit: 15, plusMonthlyLimit: 60, req5h: 3850, reqWeek: 9620, reqMonth: 19230, label: "Claude en Go · tope $15", input: 0.10, output: 0.50, apiPriceNote: "≤100K; >100K: $0.50/$2.50" },
+  mimo26pro: { name: "MiMo-V2.6-Pro", monthlyLimit: 15, plusMonthlyLimit: 60, req5h: 3250, reqWeek: 8150, reqMonth: 16300, label: "Balance general · tope $15", input: 0.435, output: 0.87 },
+  minimax3: { name: "MiniMax M3", monthlyLimit: 60, plusMonthlyLimit: 180, req5h: 3200, reqWeek: 8000, reqMonth: 16000, label: "Balance general", input: 0.30, output: 1.20 },
+  gpt56luna: { name: "GPT-5.6 Luna", monthlyLimit: 15, plusMonthlyLimit: 60, req5h: 2050, reqWeek: 5100, reqMonth: 10250, label: "OpenAI · tope $15", input: 0.20, output: 1.20, apiPriceNote: "≤272K; >272K: $0.40/$1.80" },
+  hy4: { name: "Hy4 preview", monthlyLimit: 30, plusMonthlyLimit: 120, req5h: 1350, reqWeek: 3380, reqMonth: 6770, label: "Preview · tope $30", input: 0.834, output: 2.501 },
+  kimiK27: { name: "Kimi K2.7 Code", monthlyLimit: 60, plusMonthlyLimit: 180, req5h: 1350, reqWeek: 3380, reqMonth: 6750, label: "Agentic coding, contexto 256K", input: 0.95, output: 4.00 },
+  deepseekPro: { name: "DeepSeek V4 Pro", monthlyLimit: 15, plusMonthlyLimit: 60, req5h: 1050, reqWeek: 2600, reqMonth: 5200, label: "Fuerte · tope $15", input: 0.66, output: 1.98, apiPriceNote: "fuera de pico; pico: $1.32/$3.96" },
+  glm52: { name: "GLM-5.2", monthlyLimit: 60, plusMonthlyLimit: 180, req5h: 880, reqWeek: 2150, reqMonth: 4300, label: "Más caro por request", input: 1.40, output: 4.40 },
+  gemini4argon: { name: "Gemini 4 Argon", monthlyLimit: 60, plusMonthlyLimit: 240, req5h: 440, reqWeek: 1080, reqMonth: 2120, label: "Contributor · límite 2× promo", input: 4.00, output: 20.00 },
+  glm53: { name: "GLM-5.3", monthlyLimit: 15, plusMonthlyLimit: 120, req5h: 220, reqWeek: 540, reqMonth: 1080, label: "Cuota baja en Go, 8× en Plus", input: 1.40, output: 4.40 },
+  grok47: { name: "Grok 4.7", monthlyLimit: 15, plusMonthlyLimit: 60, req5h: 169, reqWeek: 423, reqMonth: 845, label: "Cuota mínima, solo puntual", input: 2.00, output: 6.00, apiPriceNote: "≤200K; >200K: $4/$12" },
+  qwen38max: { name: "Qwen3.8 Max", monthlyLimit: 15, plusMonthlyLimit: 60, req5h: 160, reqWeek: 400, reqMonth: 810, label: "Cuota mínima, solo puntual", input: 2.00, output: 6.00 },
+  kimiK3: { name: "Kimi K3", monthlyLimit: 15, plusMonthlyLimit: 60, req5h: 110, reqWeek: 250, reqMonth: 490, label: "Cuota mínima, solo puntual", input: 3.00, output: 15.00 }
 };
 
 for (const model of Object.values(goModels)) {
-  model.costPerReq = 12 / model.req5h;
+  model.costPerReq = model.monthlyLimit / model.reqMonth;
 }
 
+// quotaMultiplier de Opus 5.5 / Haiku 5.5 / Fable 5.1 / Sonnet 5.5: Anthropic no publica el consumo de cuota
+// por modelo; se estima proporcional al precio API frente al predecesor.
+// longContext: tarifa que aplica cuando input + caché del request supera el umbral.
 const claudeModels = {
-  sonnet46: { name: "Sonnet 4.6", input: 3, cached: 0.30, output: 15, context: "200K estándar · 1M beta", tier: "Balance",        quotaMultiplier: 1.00 },
-  sonnet5:  { name: "Sonnet 5",   input: 2, cached: 0.20, output: 10, context: "1M · 128K · precio intro hasta 31 ago", tier: "Balance agéntico", quotaMultiplier: 1.00 },
-  fable5:   { name: "Fable 5",    input: 10, cached: 1.00, output: 50, context: "1M · 128K output",        tier: "Mythos-class público", quotaMultiplier: 4.10 },
-  opus5:    { name: "Opus 5",     input: 5, cached: 0.50, output: 25, context: "1M · 128K · effort low→max", tier: "Nuevo default de Max", quotaMultiplier: 2.05 },
-  opus48:   { name: "Opus 4.8",   input: 5, cached: 0.50, output: 25, context: "1M · 128K output",        tier: "Máxima calidad", quotaMultiplier: 2.05 },
-  opus47:   { name: "Opus 4.7",   input: 5, cached: 0.50, output: 25, context: "200K",                    tier: "Máxima calidad", quotaMultiplier: 2.05 },
-  haiku45:  { name: "Haiku 4.5",  input: 1, cached: 0.10, output: 5,  context: "200K",                    tier: "Rápido y barato",quotaMultiplier: 0.30 }
+  haiku55:  { name: "Haiku 5.5",  input: 0.10, cached: 0.01, output: 0.50, context: "1M · tarifa ≤100K", tier: "Ultra barato", quotaMultiplier: 0.03,
+              apiPriceNote: ">100K: $0.50/$2.50", longContext: { threshold: 100_000, input: 0.50, cached: 0.05, output: 2.50 } },
+  haiku45:  { name: "Haiku 4.5",  input: 1, cached: 0.10, output: 5,  context: "200K",                    tier: "Rápido y barato", quotaMultiplier: 0.30 },
+  sonnet55: { name: "Sonnet 5.5", input: 2, cached: 0.20, output: 10, context: "1M · 128K · 30% más rápido", tier: "Balance agéntico", quotaMultiplier: 1.00 },
+  sonnet5:  { name: "Sonnet 5",   input: 2, cached: 0.20, output: 10, context: "1M · 128K output",        tier: "Generación anterior", quotaMultiplier: 1.00 },
+  sonnet46: { name: "Sonnet 4.6", input: 3, cached: 0.30, output: 15, context: "1M",                      tier: "Legacy", quotaMultiplier: 1.00 },
+  opus55:   { name: "Opus 5.5",   input: 4, cached: 0.20, output: 20, context: "1M · 128K · effort default medium", tier: "Opus actual, 20% más barato", quotaMultiplier: 1.64 },
+  opus5:    { name: "Opus 5",     input: 5, cached: 0.50, output: 25, context: "1M · 128K · effort low→max", tier: "Generación anterior", quotaMultiplier: 2.05 },
+  opus48:   { name: "Opus 4.8",   input: 5, cached: 0.50, output: 25, context: "1M · 128K output",        tier: "Legacy", quotaMultiplier: 2.05 },
+  fable51:  { name: "Fable 5.1",  input: 10, cached: 0.25, output: 50, context: "1M · 128K output",       tier: "Mythos-class público", quotaMultiplier: 4.10 }
 };
 
+// Fuente: developers.openai.com/api/docs/pricing (oct 2026). Créditos Codex = 25 × precio USD.
+// quotaMultiplier relativo a GPT-5.6 Sol a precio de lista ($5). longContext: tarifa >272K de input;
+// el precio de caché largo no se publica por separado y se asume 2× el corto, igual que input.
 const codexModels = {
-  gpt53codex: {
-    name: "GPT-5.3-Codex",
-    input: 1.75, cached: 0.175, output: 14, context: "400K",
-    creditsInput: 43.75, creditsCached: 4.375, creditsOutput: 350,
-    tier: "Coding flagship", quotaMultiplier: 0.70
+  gpt6astra: {
+    name: "GPT-6 Astra",
+    input: 10, cached: 1.00, output: 50, context: "tarifa ≤272K",
+    creditsInput: 250, creditsCached: 25, creditsOutput: 1250,
+    tier: "Tope de gama GPT-6", quotaMultiplier: 2.00,
+    apiPriceNote: ">272K: $20/$75", longContext: { threshold: 272_000, input: 20, cached: 2.00, output: 75 }
   },
-  gpt54: {
-    name: "GPT-5.4",
-    input: 2.50, cached: 0.25, output: 15, context: "1.05M",
-    creditsInput: 62.5, creditsCached: 6.25, creditsOutput: 375,
-    tier: "Más contexto", quotaMultiplier: 1.00
+  gpt61sol: {
+    name: "GPT-6.1 Sol",
+    input: 2, cached: 0.10, output: 10, context: "tarifa ≤272K",
+    creditsInput: 50, creditsCached: 2.5, creditsOutput: 250,
+    tier: "Sol actual · caché a mitad de precio", quotaMultiplier: 0.40,
+    apiPriceNote: ">272K: $4/$15", longContext: { threshold: 272_000, input: 4, cached: 0.20, output: 15 }
   },
-  gpt55: {
-    name: "GPT-5.5",
-    input: 5, cached: 0.50, output: 30, context: "1M",
-    creditsInput: 125, creditsCached: 12.5, creditsOutput: 750,
-    tier: "Más caro y más fuerte", quotaMultiplier: 0.85
+  gpt6sol: {
+    name: "GPT-6 Sol",
+    input: 2, cached: 0.20, output: 10, context: "tarifa ≤272K",
+    creditsInput: 50, creditsCached: 5, creditsOutput: 250,
+    tier: "Balance costo/calidad", quotaMultiplier: 0.40,
+    apiPriceNote: ">272K: $4/$15", longContext: { threshold: 272_000, input: 4, cached: 0.40, output: 15 }
   },
-  gpt54mini: {
-    name: "GPT-5.4 mini",
-    input: 0.75, cached: 0.075, output: 4.5, context: "400K",
-    creditsInput: 18.75, creditsCached: 1.875, creditsOutput: 113,
-    tier: "Mejor costo/beneficio", quotaMultiplier: 0.20
+  gpt6luna: {
+    name: "GPT-6 Luna",
+    input: 0.10, cached: 0.01, output: 0.50, context: "tarifa ≤272K",
+    creditsInput: 2.5, creditsCached: 0.25, creditsOutput: 12.5,
+    tier: "Volumen ultra económico", quotaMultiplier: 0.02,
+    apiPriceNote: ">272K: $0.20/$0.75", longContext: { threshold: 272_000, input: 0.20, cached: 0.02, output: 0.75 }
   },
   gpt56sol: {
     name: "GPT-5.6 Sol",
-    input: 5, cached: 0.50, output: 30, context: "1.05M · 128K output",
+    input: 4, cached: 0.40, output: 20, context: "1.05M · 128K output",
     creditsInput: 125, creditsCached: 12.5, creditsOutput: 750,
-    tier: "Máxima capacidad", quotaMultiplier: 1.00
+    tier: "Precio promo hasta 21 nov", quotaMultiplier: 1.00,
+    apiPriceNote: "lista $5/$30", longContext: { threshold: 272_000, input: 8, cached: 0.80, output: 30 }
   },
   gpt56terra: {
     name: "GPT-5.6 Terra",
     input: 2, cached: 0.20, output: 12, context: "1.05M · 128K output",
     creditsInput: 50, creditsCached: 5, creditsOutput: 300,
-    tier: "Balance costo/calidad · recorte 20%", quotaMultiplier: 0.40
+    tier: "Generación anterior", quotaMultiplier: 0.40,
+    apiPriceNote: ">272K: $4/$18", longContext: { threshold: 272_000, input: 4, cached: 0.40, output: 18 }
   },
   gpt56luna: {
     name: "GPT-5.6 Luna",
     input: 0.20, cached: 0.02, output: 1.20, context: "1.05M · 128K output",
     creditsInput: 5, creditsCached: 0.5, creditsOutput: 30,
-    tier: "Volumen económico · recorte 80%", quotaMultiplier: 0.04
+    tier: "Generación anterior", quotaMultiplier: 0.04,
+    apiPriceNote: ">272K: $0.40/$1.80", longContext: { threshold: 272_000, input: 0.40, cached: 0.04, output: 1.80 }
+  },
+  gpt55: {
+    name: "GPT-5.5",
+    input: 5, cached: 0.50, output: 30, context: "1M",
+    creditsInput: 125, creditsCached: 12.5, creditsOutput: 750,
+    tier: "Legacy", quotaMultiplier: 0.85
+  },
+  gpt53codex: {
+    name: "GPT-5.3-Codex",
+    input: 1.75, cached: 0.175, output: 14, context: "400K",
+    creditsInput: 43.75, creditsCached: 4.375, creditsOutput: 350,
+    tier: "Legacy coding", quotaMultiplier: 0.70
+  },
+  gpt54mini: {
+    name: "GPT-5.4 mini",
+    input: 0.75, cached: 0.075, output: 4.5, context: "400K",
+    creditsInput: 18.75, creditsCached: 1.875, creditsOutput: 113,
+    tier: "Legacy barato", quotaMultiplier: 0.20
   }
 };
 
@@ -1953,13 +1998,21 @@ const codexPlanWindowTokens = {
 };
 
 const benchmarkModels = [
-  { model: 'GPT-5.6 Sol', family: 'OpenAI', swebVerified: null, swebPro: 64.6, gpqa: 94.6, terminal: 88.8, inputCost: 5, outputCost: 30, blendedCost: 17.5, source: 'Oficial parcial' },
+  { model: 'GPT-6 Astra', family: 'OpenAI', swebVerified: null, swebPro: null, gpqa: null, terminal: null, inputCost: 10, outputCost: 50, blendedCost: 30, source: 'Solo precio' },
+  { model: 'GPT-6.1 Sol', family: 'OpenAI', swebVerified: null, swebPro: null, gpqa: null, terminal: null, inputCost: 2, outputCost: 10, blendedCost: 6, source: 'Solo precio' },
+  { model: 'GPT-6 Sol', family: 'OpenAI', swebVerified: null, swebPro: null, gpqa: null, terminal: null, inputCost: 2, outputCost: 10, blendedCost: 6, source: 'Solo precio' },
+  { model: 'GPT-6 Luna', family: 'OpenAI', swebVerified: null, swebPro: null, gpqa: null, terminal: null, inputCost: 0.1, outputCost: 0.5, blendedCost: 0.3, source: 'Solo precio' },
+  { model: 'GPT-5.6 Sol', family: 'OpenAI', swebVerified: null, swebPro: 64.6, gpqa: 94.6, terminal: 88.8, inputCost: 4, outputCost: 20, blendedCost: 12, source: 'Oficial parcial' },
   { model: 'GPT-5.6 Terra', family: 'OpenAI', swebVerified: null, swebPro: 63.4, gpqa: 92.9, terminal: 87.4, inputCost: 2, outputCost: 12, blendedCost: 7, source: 'Oficial parcial' },
   { model: 'GPT-5.6 Luna', family: 'OpenAI', swebVerified: null, swebPro: 62.7, gpqa: 92.3, terminal: 84.7, inputCost: 0.2, outputCost: 1.2, blendedCost: 0.7, source: 'Oficial parcial' },
   { model: 'GPT-5.5', family: 'OpenAI', swebVerified: 82, swebPro: 59.4, gpqa: 93.6, terminal: 85.6, inputCost: 5, outputCost: 30, blendedCost: 17.5, source: 'Oficial parcial' },
   { model: 'GPT-5.4', family: 'OpenAI', swebVerified: 80, swebPro: 57.7, gpqa: 92.8, terminal: 75.1, inputCost: 2.5, outputCost: 15, blendedCost: 8.75, source: 'Oficial parcial' },
   { model: 'GPT-5.3-Codex', family: 'OpenAI', swebVerified: 83, swebPro: 56.8, gpqa: 92.6, terminal: 77.3, inputCost: 2, outputCost: 12, blendedCost: 7, source: 'Oficial parcial' },
   { model: 'GPT-5.4 mini', family: 'OpenAI', swebVerified: 70, swebPro: 38, gpqa: 75, terminal: 52, inputCost: 0.4, outputCost: 1.6, blendedCost: 1, source: 'Terceros' },
+  { model: 'Opus 5.5', family: 'Anthropic', swebVerified: null, swebPro: 89.9, gpqa: null, terminal: null, frontier: null, inputCost: 4, outputCost: 20, blendedCost: 12, source: 'Oficial parcial' },
+  { model: 'Fable 5.1', family: 'Anthropic', swebVerified: null, swebPro: 81.2, gpqa: null, terminal: null, frontier: null, inputCost: 10, outputCost: 50, blendedCost: 30, source: 'Oficial parcial' },
+  { model: 'Sonnet 5.5', family: 'Anthropic', swebVerified: null, swebPro: null, gpqa: null, terminal: null, frontier: null, inputCost: 2, outputCost: 10, blendedCost: 6, source: 'Solo precio' },
+  { model: 'Haiku 5.5', family: 'Anthropic', swebVerified: null, swebPro: null, gpqa: null, terminal: null, frontier: null, inputCost: 0.1, outputCost: 0.5, blendedCost: 0.3, source: 'Solo precio' },
   { model: 'Sonnet 4.6', family: 'Anthropic', swebVerified: 79.6, swebPro: 58.1, gpqa: 84, terminal: 67, frontier: null, inputCost: 3, outputCost: 15, blendedCost: 9, source: 'Oficial parcial' },
   { model: 'Sonnet 5', family: 'Anthropic', swebVerified: null, swebPro: 63.2, gpqa: null, terminal: 80.4, frontier: null, inputCost: 2, outputCost: 10, blendedCost: 6, source: 'Oficial parcial' },
   { model: 'Fable 5', family: 'Anthropic', swebVerified: null, swebPro: 80.3, gpqa: null, terminal: 88, frontier: 33.7, inputCost: 10, outputCost: 50, blendedCost: 30, source: 'Oficial parcial' },
@@ -1979,7 +2032,7 @@ const benchmarkModels = [
 const benchmarkScenarios = [
   { key: 'Diseño', desc: 'Diseño y frontend', metric: 'SWE-bench Verified', bestModel: 'GPT-5.3-Codex', bestScore: 83, bestCost: 7, valueModel: 'DeepSeek V4 Flash', valueScore: 78, valueCost: 0.21 },
   { key: 'Debug', desc: 'Debug y solución de bugs', metric: 'Terminal-Bench 2.1', bestModel: 'GPT-5.6 Sol', bestScore: 88.8, bestCost: 17.5, valueModel: 'GPT-5.6 Luna', valueScore: 84.7, valueCost: 0.7 },
-  { key: 'Feature', desc: 'Features y desarrollo general', metric: 'SWE-bench Pro', bestModel: 'Fable 5', bestScore: 80.3, bestCost: 30, valueModel: 'DeepSeek V4 Pro', valueScore: 55.4, valueCost: 0.65 },
+  { key: 'Feature', desc: 'Features y desarrollo general', metric: 'SWE-bench Pro', bestModel: 'Opus 5.5', bestScore: 89.9, bestCost: 12, valueModel: 'DeepSeek V4 Pro', valueScore: 55.4, valueCost: 0.65 },
   { key: 'Infra', desc: 'Infraestructura y DevOps', metric: 'Terminal-Bench 2.1', bestModel: 'GPT-5.6 Sol', bestScore: 88.8, bestCost: 17.5, valueModel: 'GPT-5.6 Luna', valueScore: 84.7, valueCost: 0.7 },
   { key: 'Seguridad', desc: 'Auditoría y razonamiento', metric: 'GPQA Diamond', bestModel: 'GPT-5.6 Sol', bestScore: 94.6, bestCost: 17.5, valueModel: 'DeepSeek V4 Pro', valueScore: 90.1, valueCost: 0.65 }
 ];
@@ -2165,6 +2218,54 @@ const timelineEvents = [
     title: 'OpenAI recorta 80% el precio de GPT-5.6 Luna y 20% el de Terra',
     detail: 'La rebaja es real y posterior al lanzamiento: Luna pasa de $1/$6 a $0.20/$1.20 por millón de tokens y Terra de $2.50/$15 a $2/$12. Los nuevos precios también reducen el consumo de créditos en Codex y ChatGPT Work, sin cambiar las cuotas de los planes. OpenAI además reemplaza Priority Processing por Fast mode para Sol, con hasta 2.5× la velocidad a 2× el precio estándar.',
     source: 'openai.com/index/advancing-the-price-performance-frontier-with-gpt-5-6'
+  },
+  {
+    date: 'ago 2026',
+    title: 'OpenCode Go pasa a topes por modelo y lanza Go Plus',
+    detail: 'Los límites globales de $12/5h, $30/semana y $60/mes se reemplazan por un tope mensual en dólares para cada modelo ($15, $30, $60 u $80); la ventana de 5h es el 20% y la semana el 50% de ese tope. Aparece Go Plus a $40/mes con topes entre 2× y 8× más altos. DeepSeek V4 Pro baja de 3,450 a 1,050 requests/5h y estrena tarifa de horas pico.',
+    source: 'opencode.ai/docs/go'
+  },
+  {
+    date: '1 sep 2026',
+    title: 'Claude Fable 5.1 lanzado',
+    detail: 'Sucesor de Fable 5 al mismo precio ($10/$50 por millón de tokens) con caché a $0.25, 1M de contexto y 128K de output. Reporta 81.2% en SWE-bench Pro.',
+    source: 'platform.claude.com/docs, orcarouter.ai'
+  },
+  {
+    date: '22 sep 2026',
+    title: 'Claude Opus 5.5 lanzado',
+    detail: 'Nuevo Opus (claude-opus-5-5) a $4/$20 por millón de tokens, 20% menos que Opus 5, con 1M de contexto y 128K de output. Anthropic reporta 89.9% en SWE-bench Pro, por encima de Fable 5.1. El effort por defecto baja a medium y el thinking ya no se puede desactivar.',
+    source: 'platform.claude.com/docs, techjacksolutions.com'
+  },
+  {
+    date: '22 sep 2026',
+    title: 'OpenAI presenta GPT-6 Sol, Luna y Astra',
+    detail: 'GPT-6 Sol ($2/$10) y GPT-6 Luna ($0.10/$0.50) llegan a Codex, ChatGPT Work y la API; GPT-6 Astra ($10/$50) queda como tope de gama. Por encima de 272K tokens de input aplica una tarifa de contexto largo (≈2× input).',
+    source: 'developers.openai.com/api/docs/pricing, letsdatascience.com'
+  },
+  {
+    date: '28 sep 2026',
+    title: 'Claude Sonnet 5.5 lanzado',
+    detail: 'Reemplaza a Sonnet 5 al mismo precio ($2/$10), 30% más rápido según Anthropic y con 70.6% en Terminal-Bench 4.0, por encima de Opus 5.5 (66.4%) en ese benchmark.',
+    source: 'platform.claude.com/docs, aiweekly.co'
+  },
+  {
+    date: '29 sep 2026',
+    title: 'GPT-6.1 Sol disponible en Codex y la API',
+    detail: 'Mismo precio que GPT-6 Sol ($2/$10) pero con caché a $0.10, la mitad. GPT-5.6 Sol pasa a precio promocional de $4/$20 hasta al menos el 21 de noviembre.',
+    source: 'developers.openai.com/api/docs/pricing, techenclave.com'
+  },
+  {
+    date: 'oct 2026',
+    title: 'Claude Haiku 5.5 disponible, también en OpenCode Go',
+    detail: 'Haiku 5.5 cuesta $0.10/$0.50 por millón de tokens hasta 100K de input ($0.50/$2.50 por encima), 10× menos que Haiku 4.5. OpenCode Go lo incluye con tope de $15/mes. Fecha exacta de lanzamiento sin confirmar.',
+    source: 'platform.claude.com/docs, opencode.ai/docs/go'
+  },
+  {
+    date: '18 oct 2026',
+    title: 'Catálogo y modelo de cálculo recalibrados',
+    detail: 'Se actualizaron los tres catálogos: OpenCode Go con sus topes por modelo y Go Plus, Claude con la generación 5.5 y Codex con la familia GPT-6. La calculadora ahora aplica la tarifa de contexto largo cuando input + caché supera el umbral de cada modelo. El consumo de cuota de suscripción de los modelos nuevos de Claude y GPT-6 es una estimación proporcional al precio API.',
+    source: 'seguimiento editorial'
   }
 ];
 
@@ -2294,7 +2395,7 @@ const claudeFeatureData = {
     ['PowerPoint (research)',   '✗', '✗', '<span class="tag info">beta</span>', '<span class="tag info">beta</span>'],
     ['Prioridad tráfico',       '✗', '✗', '✓', '✓']
   ],
-  footer: 'Desde el 24 de julio de 2026, Opus 5 es el modelo por defecto en Max y el Opus más fuerte disponible en Pro. Fable 5 sigue incluido de forma permanente en Max y Team Premium hasta el 50% de los límites del plan; Pro y Team Standard solo lo alcanzan vía usage credits (pago por uso a tarifa API, que no descuenta del límite normal) más un crédito único de bienvenida. Los topes semanales están 50% por encima del baseline hasta el 19 de agosto de 2026 — la ventana rodante de 5h no cambió. Mythos 5 sigue sin ser self-serve.'
+  footer: 'Tabla verificada al 24 de julio de 2026 (Opus 5 y Fable 5). Desde entonces salieron Fable 5.1, Opus 5.5, Sonnet 5.5 y Haiku 5.5; su disponibilidad exacta por plan está pendiente de confirmar. Fable 5 quedó incluido de forma permanente en Max y Team Premium hasta el 50% de los límites del plan; Pro y Team Standard solo lo alcanzan vía usage credits (pago por uso a tarifa API). La promoción de +50% en topes semanales terminó el 19 de agosto de 2026. Mythos sigue sin ser self-serve.'
 };
 
 const codexFeatureData = {
@@ -2738,11 +2839,17 @@ function getInputs() {
   };
 }
 
+function pricingFor(model, inputs) {
+  const long = model.longContext;
+  return long && inputs.inputTokens + inputs.cachedTokens > long.threshold ? long : model;
+}
+
 function costPerRequest(model, inputs) {
+  const rates = pricingFor(model, inputs);
   return (
-    (inputs.inputTokens / 1000000) * model.input +
-    (inputs.cachedTokens / 1000000) * model.cached +
-    (inputs.outputTokens / 1000000) * model.output
+    (inputs.inputTokens / 1000000) * rates.input +
+    (inputs.cachedTokens / 1000000) * rates.cached +
+    (inputs.outputTokens / 1000000) * rates.output
   );
 }
 
@@ -2823,7 +2930,7 @@ function calculatePlanCapacity(desiredUsage, planLimits) {
   } = desiredUsage;
 
   const {
-    monthlyBudgetLimitUsd, maxRequestsPerMonth, maxRequestsPerWeek, maxRequestsPerDay,
+    monthlyBudgetLimitUsd, windowBudgetUsd, maxRequestsPerMonth,
     maxInputTokensPerMonth, maxOutputTokensPerMonth, maxTotalTokensPerMonth,
     maxCreditsPerMonth, costPerRequest, creditCostPerRequest
   } = planLimits;
@@ -2840,6 +2947,11 @@ function calculatePlanCapacity(desiredUsage, planLimits) {
   }
   if (maxRequestsPerMonth != null) {
     candidates.push({ key: 'requests', value: maxRequestsPerMonth / requestsPerPrompt });
+  }
+  if (windowBudgetUsd != null && costPerPrompt != null && costPerPrompt > 0) {
+    // Cada día activo abre tantas ventanas de 5h como bloques de 5h trabajes.
+    const windowsPerMonth = Math.ceil(activeHoursPerDay / 5) * workDaysPerMonth;
+    candidates.push({ key: 'window_limit', value: (windowBudgetUsd / costPerPrompt) * windowsPerMonth });
   }
   if (maxInputTokensPerMonth != null) {
     candidates.push({ key: 'input_tokens', value: maxInputTokensPerMonth / inputTokensPerPrompt });
@@ -2946,93 +3058,30 @@ function detectPlanBudget(hint) {
     'Pro $100': 100,
     'Max 20x o API': 200,
     'Pro $200': 200,
-    'Go $10': 60,
-    'Go te sirve justo': 60,
-    'Go se queda corto': 60
+    'Go $10': 10,
+    'Go, pero justo': 10,
+    'Go Plus $40': 40,
+    'Go Plus, pero justo': 40,
+    'Ni Go Plus alcanza': 40
   };
   return map[hint] != null ? map[hint] : null;
 }
 
-function getGoPlanLimits(goModel) {
+function goPlanLimits(monthlyLimit, costPerReq) {
   return {
-    monthlyBudgetLimitUsd: 60,
-    weeklyBudgetUsd: 30,
-    windowBudgetUsd: 12,
-    costPerRequest: goModel.costPerReq,
-    maxRequestsPerMonth: goModel.reqMonth,
-    maxRequestsPerWeek: goModel.reqWeek,
-    maxRequestsPerDay: goModel.req5h
+    monthlyBudgetLimitUsd: monthlyLimit,
+    weeklyBudgetUsd: monthlyLimit * GO_WEEK_SHARE,
+    windowBudgetUsd: monthlyLimit * GO_WINDOW_SHARE,
+    costPerRequest: costPerReq
   };
 }
 
-function generateCapacitySummary(result) {
-  if (result.isEnough) {
-    return `Cubre tu ritmo estimado con ${Math.round(result.remainingMarginPercentage)}% de margen.`;
-  }
-  return `Se queda corto: alcanza para ${Math.round(result.maxPromptsPerMonth).toLocaleString('es-CO')} prompts/mes, ${Math.round(result.maxPromptsPerDay).toLocaleString('es-CO')} prompts/día, ${result.maxPromptsPerHour.toFixed(1)} prompts/h y ${Math.round(result.maxRequestsPerMonth).toLocaleString('es-CO')} req/mes.`;
-}
-
-function generateRecommendation(result, providerId) {
-  if (result.isEnough) {
-    return 'Viable como plan principal.';
-  }
-  switch (providerId) {
-    case 'go':
-      return 'Usa un modelo más barato (DeepSeek Flash, Qwen 3.5 Plus) o combina con API directa.';
-    case 'claude':
-      return result.bottleneck === 'budget'
-        ? 'Sube a Max 5x, Max 20x o usa API pay-as-you-go.'
-        : 'Reduce la carga o usa Haiku 4.5.';
-    case 'codex':
-      return result.bottleneck === 'budget'
-        ? 'Sube a Pro $100, Pro $200 o usa API directa.'
-        : 'Cambia a GPT-5.4 mini para ahorrar créditos.';
-    default:
-      return 'Ajusta la carga de trabajo o considera otro plan.';
-  }
-}
-
-function renderCapacity(containerId, capacity, desiredUsage, providerId) {
-  const container = el(containerId);
-  if (!container) return;
-
-  capacity.summaryText = generateCapacitySummary(capacity);
-  capacity.recommendation = generateRecommendation(capacity, providerId);
-
-  const mainClass = capacity.isEnough ? 'enough' : 'not-enough';
-  const bottleClass = capacity.bottleneck === 'none' ? 'none' : 'active';
-
-  let mainHtml;
-  if (capacity.isEnough && capacity.bottleneck === 'none') {
-    mainHtml = `<div class="capacity-main enough-text">Este plan cubre tu uso estimado</div>`;
-  } else {
-    mainHtml = `<div class="capacity-main">${Math.round(capacity.maxPromptsPerMonth).toLocaleString('es-CO')} <span class="capacity-main-suffix">prompts/mes</span></div>`;
-  }
-
-  const label = capacity.isEnough ? 'Margen' : 'Cobertura';
-  const pct = capacity.isEnough ? capacity.remainingMarginPercentage : capacity.coveragePercentage;
-  const secondaryHtml = `
-    <div class="capacity-secondary">
-      <span><strong>${Math.round(capacity.maxPromptsPerDay).toLocaleString('es-CO')}</strong> prompts/día</span>
-      <span><strong>${capacity.maxPromptsPerHour.toFixed(1)}</strong> prompts/h</span>
-      <span><strong>${Math.round(capacity.maxRequestsPerMonth).toLocaleString('es-CO')}</strong> req/mes</span>
-    </div>
-    <div class="capacity-coverage">
-      ${label}: <strong>${Math.round(pct)}%</strong>
-    </div>`;
-
-  container.className = `capacity-block ${mainClass}`;
-  container.innerHTML = `
-    <div class="capacity-title">Capacidad real</div>
-    ${mainHtml}
-    ${secondaryHtml}
-    <div class="capacity-bottleneck ${bottleClass}">
-      Cuello de botella: ${capacity.bottleneckLabel}
-    </div>
-    <div class="capacity-recommendation">
-      ${capacity.summaryText} ${capacity.recommendation}
-    </div>
-  `;
+function buildGoPlans(goModel, desiredUsage) {
+  const plans = [
+    { name: 'Go $10',      limits: goPlanLimits(goModel.monthlyLimit, goModel.costPerReq) },
+    { name: 'Go Plus $40', limits: goPlanLimits(goModel.plusMonthlyLimit, goModel.costPerReq) }
+  ];
+  return plans.map(p => ({ ...p, capacity: calculatePlanCapacity(desiredUsage, p.limits) }));
 }
 
 function buildClaudePlans(claudeModel, inputs, desiredUsage) {
@@ -3215,7 +3264,7 @@ function calculate() {
 
   const requestsDay = inputs.hoursPerDay * inputs.promptsPerHour * inputs.requestsPerPrompt;
   const requestsMonth = requestsDay * inputs.daysPerMonth;
-  const requests5h = inputs.promptsPerHour * 5 * inputs.requestsPerPrompt;
+  const requests5h = inputs.promptsPerHour * Math.min(5, inputs.hoursPerDay) * inputs.requestsPerPrompt;
   const requestsWeek = requestsDay * Math.min(inputs.daysPerMonth, 5);
 
   const inputMonth = requestsMonth * inputs.inputTokens;
@@ -3231,20 +3280,28 @@ function calculate() {
   const goCost5h = requests5h * goCostReq;
   const goCostWeek = requestsWeek * goCostReq;
   const goCostMonth = requestsMonth * goCostReq;
-  const goPct5h = (goCost5h / 12) * 100;
-  const goPctWeek = (goCostWeek / 30) * 100;
-  const goPctMonth = (goCostMonth / 60) * 100;
+  const goLimitMonth = goModel.monthlyLimit;
+  const goLimitWeek = goLimitMonth * GO_WEEK_SHARE;
+  const goLimit5h = goLimitMonth * GO_WINDOW_SHARE;
+  const goPct5h = (goCost5h / goLimit5h) * 100;
+  const goPctWeek = (goCostWeek / goLimitWeek) * 100;
+  const goPctMonth = (goCostMonth / goLimitMonth) * 100;
+  const plusScale = goModel.plusMonthlyLimit / goLimitMonth;
+  const goPlusPctMax = Math.max(goPct5h, goPctWeek, goPctMonth) / plusScale;
 
   el("goReqCost").textContent = fmtMoney(goCostReq, 4);
   el("goMonthCost").textContent = fmtMoney(goCostMonth, 2);
-  el("goMonthCostCop").textContent = "";
+  el("goMonthCostCop").textContent = `Tope de ${goModel.name}: ${fmtMoney(goLimitMonth, 0)}/mes en Go · ${fmtMoney(goModel.plusMonthlyLimit, 0)} en Go Plus`;
   let goPlanHint = "Go $10";
-  let goPlanSub = `Tu carga proyecta ${fmtMoney(goCostMonth, 2)} frente al techo mensual oficial de $60.`;
-  if (goPctMonth > 100 || goPct5h > 100) {
-    goPlanHint = "Go se queda corto";
-    goPlanSub = "OpenCode Go no tiene 5x/20x. Si esto no cabe, toca bajar de modelo o usar balance/API.";
+  let goPlanSub = `Tu carga proyecta ${fmtMoney(goCostMonth, 2)} frente al tope mensual de ${fmtMoney(goLimitMonth, 0)} de este modelo.`;
+  if (goPlusPctMax > 100) {
+    goPlanHint = "Ni Go Plus alcanza";
+    goPlanSub = `Incluso con el tope de Go Plus (${fmtMoney(goModel.plusMonthlyLimit, 0)}) te frena. Baja a un modelo con más cuota o activa el balance pay-as-you-go.`;
+  } else if (goPctMonth > 100 || goPct5h > 100) {
+    goPlanHint = goPlusPctMax > 80 ? "Go Plus, pero justo" : "Go Plus $40";
+    goPlanSub = `Go $10 se queda corto con ${goModel.name}. Go Plus multiplica su tope ×${plusScale.toFixed(0)}.`;
   } else if (goPctMonth > 80 || goPct5h > 80) {
-    goPlanHint = "Go te sirve justo";
+    goPlanHint = "Go, pero justo";
     goPlanSub = "Sí cabe, pero ya sin mucho colchón. Cualquier subida de contexto o loops puede romper la comodidad.";
   }
   el("goPlanHint").textContent = goPlanHint;
@@ -3252,9 +3309,9 @@ function calculate() {
   el("goBreakeven").textContent = `${Math.ceil(10 / goCostReq).toLocaleString("es-CO")} req/mes`;
 
   const goBars = [
-    ["go5hBar", "go5hPct", "go5hHint", goPct5h, `Equivale a ${fmtMoney(goCost5h, 2)} en 5h. ${goPct5h < 100 ? "Cabe." : "Te frena antes de cerrar la ventana."}`],
-    ["goWeekBar", "goWeekPct", "goWeekHint", goPctWeek, `Equivale a ${fmtMoney(goCostWeek, 2)} por semana corta de referencia.`],
-    ["goMonthBar", "goMonthPct", "goMonthHint", goPctMonth, `Equivale a ${fmtMoney(goCostMonth, 2)} al mes con este ritmo.`]
+    ["go5hBar", "go5hPct", "go5hHint", goPct5h, `Equivale a ${fmtMoney(goCost5h, 2)} de ${fmtMoney(goLimit5h, 2)} en 5h. ${goPct5h < 100 ? "Cabe." : "Te frena antes de cerrar la ventana."}`],
+    ["goWeekBar", "goWeekPct", "goWeekHint", goPctWeek, `Equivale a ${fmtMoney(goCostWeek, 2)} de ${fmtMoney(goLimitWeek, 2)} por semana corta de referencia.`],
+    ["goMonthBar", "goMonthPct", "goMonthHint", goPctMonth, `Equivale a ${fmtMoney(goCostMonth, 2)} de ${fmtMoney(goLimitMonth, 2)} al mes con este ritmo.`]
   ];
 
   goBars.forEach(([barId, pctId, hintId, value, hint]) => {
@@ -3264,11 +3321,15 @@ function calculate() {
   });
 
   const goStatus = el("goStatus");
-  goStatus.className = `status ${statusTone(Math.max(goPct5h, goPctWeek, goPctMonth))}`;
+  const goPctMax = Math.max(goPct5h, goPctWeek, goPctMonth);
+  const goTone = goPctMax < 100 ? statusTone(goPctMax) : (goPlusPctMax <= 100 ? "warn" : "bad");
+  goStatus.className = `status ${goTone}`;
   if (goPctMonth < 70 && goPct5h < 70) {
     goStatus.textContent = `OpenCode Go te queda cómodo con ${goModel.name}. Para mucho volumen de código o soporte diario sigue siendo la opción más eficiente en costo.`;
   } else if (goPctMonth < 100 && goPct5h < 100) {
     goStatus.textContent = `OpenCode Go todavía aguanta, pero ya entras en zona de administración fina. Te sirve mejor si combinas tareas pesadas con modelos más baratos en parte del flujo.`;
+  } else if (goPlusPctMax <= 100) {
+    goStatus.textContent = `Go $10 no alcanza con ${goModel.name}, pero Go Plus ($40) sí: amplía su tope ×${plusScale.toFixed(0)}. Alternativa: un modelo con tope de $60–$80 en el plan base.`;
   } else {
     goStatus.textContent = `A este ritmo OpenCode Go ya no es estable como plan principal con ${goModel.name}. O cambias a un modelo más barato, o te conviene API directa / Claude / Codex.`;
   }
@@ -3297,31 +3358,23 @@ function calculate() {
   el("claudePlanHint").textContent = claudePlanHint;
   el("claudePlanSub").textContent = claudePlanSub;
 
+  const claudeStatusByModel = {
+    haiku55: ["good", "Haiku 5.5 cuesta 10× menos que Haiku 4.5 ($0.10/$0.50 hasta 100K de input). Ideal para subagentes, tareas repetitivas y volumen; por encima de 100K de contexto el precio sube 5×, así que vigila el caché."],
+    haiku45: ["good", "Haiku 4.5 queda como legacy: Haiku 5.5 es más barato en casi cualquier perfil. Solo tiene sentido si ya lo tienes integrado."],
+    sonnet55: [claudeMonthCost <= 100 ? "good" : "warn", claudeMonthCost <= 100
+      ? "Sonnet 5.5 es el punto más sano de Claude Code para trabajo serio diario: mismo precio que Sonnet 5 ($2/$10), 30% más rápido y 70.6% en Terminal-Bench 4.0 según Anthropic."
+      : "Sonnet 5.5 sigue siendo el mejor costo/beneficio de Claude, pero tu carga ya entra en territorio donde Pro se queda incómodo y Max o API se vuelven más lógicos."],
+    sonnet5: [claudeMonthCost <= 100 ? "good" : "warn", "Sonnet 5 sigue a $2/$10, pero desde el 28 de septiembre Sonnet 5.5 lo reemplaza al mismo precio y más rápido. No hay razón de costo para quedarse."],
+    sonnet46: ["warn", "Sonnet 4.6 ya es legacy y sale más caro ($3/$15) que Sonnet 5.5 ($2/$10). Solo vale la pena si dependes de su comportamiento exacto."],
+    opus55: [claudeMonthCost <= 150 ? "warn" : "bad", "Opus 5.5 es el Opus actual: $4/$20 (20% menos que Opus 5) y 89.9% en SWE-bench Pro según Anthropic. Ojo: su effort por defecto es medium y el thinking no se puede apagar. Para seguridad, arquitectura e infra compleja."],
+    opus5: [claudeMonthCost <= 150 ? "warn" : "bad", "Opus 5 quedó como generación anterior: Opus 5.5 rinde más y cuesta 20% menos por token. Solo conviene si ya tienes prompts calibrados para él."],
+    opus48: [claudeMonthCost <= 150 ? "warn" : "bad", "Opus 4.8 es legacy: mismo precio que Opus 5 y por debajo de Opus 5.5 en todos los benchmarks públicos."],
+    fable51: [claudeMonthCost <= 250 ? "warn" : "bad", "Fable 5.1 es el modelo Mythos-class público actual ($10/$50, caché a $0.25) y sucesor directo de Fable 5. Cuesta 2.5× lo que Opus 5.5 en API y, según Anthropic, Opus 5.5 ya lo supera en SWE-bench Pro (89.9% vs 81.2%): resérvalo para razonamiento largo muy difícil."]
+  };
+  const [claudeTone, claudeText] = claudeStatusByModel[state.claudeModel];
   const claudeStatus = el("claudeStatus");
-  if (state.claudeModel === "haiku45") {
-    claudeStatus.className = "status good";
-    claudeStatus.textContent = "Haiku 4.5 sirve cuando quieres velocidad y costo bajo, pero para arquitectura, seguridad o cambios largos normalmente se queda corto frente a Sonnet.";
-  } else if (state.claudeModel === "sonnet46") {
-    claudeStatus.className = claudeMonthCost <= 100 ? "status good" : "status warn";
-    claudeStatus.textContent = claudeMonthCost <= 100
-      ? "Sonnet 4.6 es el punto más sano de Claude Code para trabajo serio diario: bastante criterio, costo todavía defendible y mejor elasticidad que Opus."
-      : "Sonnet 4.6 sigue siendo defendible, pero tu carga ya entra en territorio donde una suscripción Pro puede quedarse incómoda y la Max o API se vuelven más lógicas.";
-  } else if (state.claudeModel === "opus47") {
-    claudeStatus.className = claudeMonthCost <= 150 ? "status warn" : "status bad";
-    claudeStatus.textContent = "Opus 4.7 es para los casos donde el error sale más caro que el token: seguridad, infra compleja y reasoning largo. Financieramente se vuelve premium muy rápido.";
-  } else if (state.claudeModel === "opus48") {
-    claudeStatus.className = claudeMonthCost <= 150 ? "status warn" : "status bad";
-    claudeStatus.textContent = "Opus 4.8 es el techo Opus de Claude Code: 1M de contexto, 69.2% en SWE-bench Pro y dynamic workflows. Para seguridad, arquitectura compleja y agentes autónomos. Financieramente caro — justifica API directa o plan Max 20x. Desde el 24 de julio, Opus 5 lo reemplaza al mismo precio.";
-  } else if (state.claudeModel === "sonnet5") {
-    claudeStatus.className = claudeMonthCost <= 100 ? "status good" : "status warn";
-    claudeStatus.textContent = "Sonnet 5 es hoy el mejor costo/beneficio de Claude Code: 80.4% en Terminal-Bench 2.1 (por encima de Opus 4.8) y 63.2% en SWE-bench Pro, con 1M de contexto. El precio de $2/$10 es introductorio y sube a $3/$15 el 31 de agosto de 2026 — revisa el cálculo después de esa fecha.";
-  } else if (state.claudeModel === "opus5") {
-    claudeStatus.className = claudeMonthCost <= 150 ? "status warn" : "status bad";
-    claudeStatus.textContent = "Opus 5 es el nuevo default de Max y el Opus más fuerte en Pro, al mismo precio que Opus 4.8: 43.3% en Frontier-Bench v0.1 (más del doble que Opus 4.8 y por encima de Fable 5) y a menos de 0.5 puntos del pico de Fable 5 en CursorBench por la mitad del costo por tarea. Con control de esfuerzo low→max puedes bajar el gasto sin cambiar de modelo.";
-  } else {
-    claudeStatus.className = claudeMonthCost <= 250 ? "status warn" : "status bad";
-    claudeStatus.textContent = "Fable 5 es el salto Mythos-class público: 1M de contexto, 128K output y 80.3% en SWE-bench Pro. Cuesta el doble que Opus 4.8 en API; desde el 20 de julio de 2026 está incluido de forma permanente en Max y Team Premium hasta el 50% de los límites del plan, mientras Pro sigue dependiendo de usage credits.";
-  }
+  claudeStatus.className = `status ${claudeTone}`;
+  claudeStatus.textContent = claudeText;
 
   const codexReqCost = costPerRequest(codexModel, inputs);
   const codexMonthCost = codexReqCost * requestsMonth;
@@ -3350,38 +3403,30 @@ function calculate() {
   el("codexPlanHint").textContent = codexPlanHint;
   el("codexPlanSub").textContent = codexPlanSub;
 
+  const codexStatusByModel = {
+    gpt6astra: ["bad", "GPT-6 Astra es el tope de gama de OpenAI a $10/$50 por millón de tokens (el doble si pasas de 272K de input). Para el trabajo donde el error sale más caro que el token, no para volumen."],
+    gpt61sol: ["good", "GPT-6.1 Sol es el mejor equilibrio actual de OpenAI: $2/$10 con caché a $0.10, más barato que GPT-5.6 Terra y la mitad que GPT-5.6 Sol aun con su promo. Con contextos de agente muy cacheados es el que más ahorra."],
+    gpt6sol: ["good", "GPT-6 Sol cuesta lo mismo que GPT-6.1 Sol salvo el caché ($0.20 vs $0.10). Si ya tienes acceso a 6.1, no hay razón de costo para quedarse en 6."],
+    gpt6luna: ["good", "GPT-6 Luna es la opción de volumen de OpenAI: $0.10/$0.50, la mitad de GPT-5.6 Luna. Para debug, tareas repetitivas y subagentes."],
+    gpt56sol: ["warn", "GPT-5.6 Sol tiene precio promocional de $4/$20 hasta el 21 de noviembre (lista $5/$30). Aun con la promo, GPT-6.1 Sol cuesta la mitad."],
+    gpt56terra: ["warn", "GPT-5.6 Terra ($2/$12) quedó por encima de GPT-6.1 Sol ($2/$10) en precio. Conviene migrar."],
+    gpt56luna: ["warn", "GPT-5.6 Luna ($0.20/$1.20) cuesta el doble que GPT-6 Luna. Conviene migrar."],
+    gpt55: ["bad", "GPT-5.5 es legacy y caro ($5/$30). La familia GPT-6 ofrece más por menos."],
+    gpt53codex: [codexMonthCost <= 120 ? "warn" : "bad", "GPT-5.3-Codex es legacy: $1.75/$14 y por debajo de GPT-6.1 Sol en precio de output."],
+    gpt54mini: ["warn", "GPT-5.4 mini es legacy: GPT-6 Luna cuesta mucho menos ($0.10/$0.50 vs $0.75/$4.50)."]
+  };
+  const [codexTone, codexText] = codexStatusByModel[state.codexModel];
   const codexStatus = el("codexStatus");
-  if (state.codexModel === "gpt54mini") {
-    codexStatus.className = "status good";
-    codexStatus.textContent = "GPT-5.4 mini es el mejor punto de entrada para desarrollar features normales con buena calidad y una factura mucho más civilizada que GPT-5.5.";
-  } else if (state.codexModel === "gpt53codex") {
-    codexStatus.className = codexMonthCost <= 120 ? "status good" : "status warn";
-    codexStatus.textContent = "GPT-5.3-Codex sigue siendo la apuesta más directa cuando lo tuyo es coding agent puro. Si haces bastante review y ejecución, suele sentirse más natural que GPT-5.4 mini.";
-  } else if (state.codexModel === "gpt54") {
-    codexStatus.className = codexMonthCost <= 150 ? "status warn" : "status bad";
-    codexStatus.textContent = "GPT-5.4 vale la pena cuando la ventana de contexto y el trabajo profesional transversal importan tanto como el código. No gana por precio, gana por amplitud.";
-  } else if (state.codexModel === "gpt56sol") {
-    codexStatus.className = "status warn";
-    codexStatus.textContent = "GPT-5.6 Sol es la opción de máxima capacidad: 94.6% en GPQA Diamond, 88.8% en Terminal-Bench 2.1 y 64.6% en SWE-bench Pro. Cuesta lo mismo que GPT-5.5, pero ofrece más rendimiento y eficiencia para tareas difíciles.";
-  } else if (state.codexModel === "gpt56terra") {
-    codexStatus.className = "status good";
-    codexStatus.textContent = "GPT-5.6 Terra es el mejor equilibrio de la familia para trabajo diario: tras el recorte del 20% cuesta $2/$12 por millón de tokens, 60% menos que Sol, y conserva 87.4% en Terminal-Bench 2.1 y 63.4% en SWE-bench Pro.";
-  } else if (state.codexModel === "gpt56luna") {
-    codexStatus.className = "status good";
-    codexStatus.textContent = "GPT-5.6 Luna es la opción de volumen: tras el recorte del 80% cuesta $0.20/$1.20 por millón de tokens, 96% menos que Sol, y aun logra 84.7% en Terminal-Bench 2.1 y 62.7% en SWE-bench Pro. Es la mejor relación costo/rendimiento de OpenAI para debug y tareas repetitivas.";
-  } else {
-    codexStatus.className = "status bad";
-    codexStatus.textContent = "GPT-5.5 es una herramienta de alto nivel para los casos donde diseño, estrategia, análisis y código se mezclan. Es la mejor si el costo del error es alto, no si buscas volumen barato.";
-  }
+  codexStatus.className = `status ${codexTone}`;
+  codexStatus.textContent = codexText;
 
   /* ── Capacidad real ──────────────────── */
 
   const desiredUsage = calculateDesiredUsage(inputs);
 
-  /* OpenCode Go — single plan */
-  const goLimits = getGoPlanLimits(goModel);
-  const goCapacity = calculatePlanCapacity(desiredUsage, goLimits);
-  renderCapacity('goCapacity', goCapacity, desiredUsage, 'go');
+  /* OpenCode Go — Go / Go Plus */
+  const goPlans = buildGoPlans(goModel, desiredUsage);
+  renderMultiCapacity('goCapacity', goPlans, goPlanHint);
 
   /* Claude Code — multi-plan table */
   const claudePlans = buildClaudePlans(claudeModel, inputs, desiredUsage);
