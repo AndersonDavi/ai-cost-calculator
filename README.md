@@ -9,6 +9,9 @@ Compare the real cost and capacity of AI coding agents: **OpenCode Go**, **Claud
 - Estimates how many prompts/day you can realistically make on each subscription plan
 - Models token window limits (not just price) for Claude Code and Codex
 - Accounts for per-model quota multipliers (Opus costs more quota than Haiku, etc.)
+- Shows API input/output prices per million tokens directly in every model selector
+- Compares GPT-5.6 Sol, Terra, and Luna using the official API/Codex rate card, including the July 30 price cuts (Luna -80%, Terra -20%), and coding benchmarks
+- Documents the unified ChatGPT desktop app with Chat, Work, and Codex on macOS and Windows
 - Shows costs in USD, COP, EUR, and MXN
 - Exchange rates updated daily via GitHub Actions (zero external API calls for visitors)
 

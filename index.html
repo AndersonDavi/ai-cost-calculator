@@ -304,6 +304,13 @@ button {
   line-height: 1.45;
 }
 
+.model-btn .api-price {
+  margin-top: 5px;
+  color: var(--codex);
+  font-size: 0.78rem;
+  line-height: 1.4;
+}
+
 .field + .field { margin-top: 14px; }
 
 .field-row {
@@ -1031,6 +1038,102 @@ input[type="range"] {
   margin-bottom: 12px;
 }
 
+#benchmarkPriceTable {
+  width: min(700px, 100%);
+  margin-bottom: 24px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  overflow-x: auto;
+  background: var(--panel);
+}
+
+.benchmark-price-table {
+  width: 100%;
+  min-width: 620px;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+}
+
+.benchmark-price-table th,
+.benchmark-price-table td {
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+}
+
+.benchmark-price-table th {
+  padding: 0;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.benchmark-price-table .sort-button {
+  width: 100%;
+  min-height: 32px;
+  padding: 6px 10px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  text-align: left;
+  text-transform: inherit;
+  box-shadow: none;
+  cursor: pointer;
+}
+
+.benchmark-price-table .sort-button:hover,
+.benchmark-price-table .sort-button:focus-visible {
+  background: rgba(112, 183, 255, 0.08);
+  color: var(--text);
+}
+
+.benchmark-price-table .sort-button::after {
+  content: "↕";
+  margin-left: 6px;
+  color: var(--muted-2);
+  font-size: 0.72rem;
+}
+
+.benchmark-price-table th[aria-sort="ascending"] .sort-button::after {
+  content: "↑";
+  color: var(--codex);
+}
+
+.benchmark-price-table th[aria-sort="descending"] .sort-button::after {
+  content: "↓";
+  color: var(--codex);
+}
+
+.benchmark-price-table td:first-child {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.benchmark-price-table td.price {
+  color: var(--codex);
+  font-family: var(--mono);
+  text-align: right;
+  white-space: nowrap;
+}
+
+.benchmark-price-table th.price {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.benchmark-price-table th.price .sort-button {
+  text-align: right;
+}
+
+.benchmark-price-table tr:last-child td {
+  border-bottom: none;
+}
+
 #benchmarkTable {
   margin-bottom: 18px;
   border-radius: var(--radius);
@@ -1041,12 +1144,17 @@ input[type="range"] {
 #benchmarkChart {
   width: 100%;
   max-width: 100%;
-  height: 420px;
+  height: 620px;
   margin-bottom: 18px;
   background: var(--panel);
   border: 1px solid var(--line);
   border-radius: var(--radius);
   overflow: hidden;
+  transition: height 0.2s ease;
+}
+
+@media (max-width: 680px) {
+  #benchmarkChart { height: 540px; }
 }
 
 .scenario-grid {
@@ -1521,7 +1629,7 @@ input[type="range"] {
               <img src="assets/codex_dark.svg" height="32" style="flex-shrink:0">
               <div>
                 <h3>Codex de GPT</h3>
-                <p>El más fuerte cuando quieres mezclar coding, búsqueda, artefactos, herramientas y trabajo profesional amplio. Tiene dos lecturas: el producto incluido en ChatGPT y el costo fino por tokens/credits si lo mides como API/Codex.</p>
+                <p>El más fuerte cuando quieres mezclar coding, búsqueda, artefactos, herramientas y trabajo profesional amplio. Codex ahora vive dentro de la app de escritorio de ChatGPT junto a Chat y Work, y también se puede medir por tokens/créditos en API y uso flexible.</p>
               </div>
             </div>
             <aside class="provider-side">
@@ -1532,7 +1640,7 @@ input[type="range"] {
                 <div class="plan-tr"><span class="ptd name">Pro</span><span class="ptd usd"><strong data-usd="100">$100</strong></span><span class="ptd converted"><strong data-usd="100"></strong></span></div>
                 <div class="plan-tr"><span class="ptd name">Pro</span><span class="ptd usd"><strong data-usd="200">$200</strong></span><span class="ptd converted"><strong data-usd="200"></strong></span></div>
               </div>
-              <div class="plan-footer">Capacidad estimada a partir del límite de tokens por ventana de 5h (Plus 86K · Pro $100 344K · Pro $200 688K). Solo se cuentan output tokens contra el límite; modelos más pesados (GPT-5.5) consumen más cuota que los ligeros (GPT-5.4 mini). <strong>Con API key es pay as you go sin techo de ventana.</strong></div>
+              <div class="plan-footer">Capacidad estimada a partir del límite de tokens por ventana de 5h (Plus 86K · Pro $100 344K · Pro $200 688K). Desde el 30 de julio, Terra bajó 20% y Luna 80%; frente a Sol, sus precios API actuales son 60% y 96% menores, y consumen menos créditos en Codex. <strong>Con API key es pay as you go sin techo de ventana.</strong></div>
             </aside>
           </div>
           <div class="provider-body">
@@ -1579,6 +1687,12 @@ input[type="range"] {
       </section>
 
       <section class="benchmark-section">
+        <div class="panel-title">Precios vía API</div>
+        <p style="color:var(--muted);font-size:0.82rem;line-height:1.55;margin-bottom:12px">
+          Tarifas en USD por cada millón de tokens. Los precios de entrada y salida alimentan los cálculos y el costo blended del gráfico.
+        </p>
+        <div id="benchmarkPriceTable"></div>
+
         <div class="panel-title">Benchmarks</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 18px;margin-bottom:12px;color:var(--muted-2);font-size:0.82rem;line-height:1.55">
           <span><strong style="color:var(--muted)">SWE-bench V</strong> → % issues GitHub resueltos (código real)</span>
@@ -1588,7 +1702,7 @@ input[type="range"] {
           <span><strong style="color:var(--muted)">Costo blended</strong> → Promedio input+output $/1M tokens</span>
         </div>
         <p style="color:var(--muted);font-size:0.82rem;line-height:1.55;margin-bottom:12px">
-          Scores sobre 14 modelos. Celdas vacías = sin dato oficial comparable. "Oficial parcial" indica que el proveedor publicó las métricas comparables disponibles; el resto viene de benchmarks/agregadores externos.
+          Scores sobre 21 modelos. Celdas vacías = sin dato oficial comparable. "Oficial parcial" indica que el proveedor publicó las métricas comparables disponibles; el resto viene de benchmarks/agregadores externos.
         </p>
         <div id="benchmarkTable"></div>
         <div id="benchmarkChart"><div style="text-align:center;padding:80px 0;color:var(--muted-2);font-size:0.92rem" id="chartFallback">Cargando gráfico…</div></div>
@@ -1605,10 +1719,10 @@ input[type="range"] {
       <section class="sources-section">
         <div class="panel-title">Fuentes</div>
         <ul>
-          <li><strong>OpenCode Go</strong> — Límites oficiales de <code>opencode.ai/docs/go</code>, catálogo completo de 17 modelos verificado request por request <span class="tag info">24 jul 2026</span></li>
-          <li><strong>Claude Code</strong> — Precios API/modelos y benchmarks publicados por Anthropic, incluyendo Claude Opus 5 (nuevo default de Max), Sonnet 5, Fable 5 (permanente en Max/Team Premium) y acceso restringido a Mythos 5 <span class="tag info">24 jul 2026</span></li>
+          <li><strong>OpenCode Go</strong> — Límites y precios por 1M tokens de <code>opencode.ai/docs/go</code>; Qwen 3.5 Plus usa como referencia la tarifa internacional vigente de Alibaba Model Studio <span class="tag info">4 ago 2026</span></li>
+          <li><strong>Claude Code</strong> — Precios API, lanzamientos y system cards publicados por Anthropic; Opus 5 entra al gráfico con 96.0% en SWE-bench Verified y 79.2% en SWE-bench Pro <span class="tag info">4 ago 2026</span></li>
           <li><strong>DeepSeek</strong> — Precios oficiales de <code>api-docs.deepseek.com</code>, con el recorte del 75% en V4 Pro y la deprecación de los alias legacy <span class="tag info">24 jul 2026</span></li>
-          <li><strong>Codex / GPT</strong> — Precios API, planes ChatGPT y benchmarks publicados por OpenAI, incluyendo la familia GPT-5.6 (Sol, Terra, Luna) <span class="tag info">20 jul 2026</span></li>
+          <li><strong>Codex / GPT</strong> — Precios API, rate card de créditos, planes ChatGPT y benchmarks publicados por OpenAI; incluye los recortes del 30 de julio para GPT-5.6 Luna (-80%) y Terra (-20%), además de Fast mode para Sol <span class="tag info">4 ago 2026</span></li>
           <li><strong>TRM</strong> — Tasas obtenidas de <code>api.frankfurter.dev</code>. Última consulta: <span id="ratesDate">5 may 2026</span></li>
           <li>Logos de proveedores obtenidos de <a href="https://svgl.app" style="color:var(--codex);text-decoration:none">svgl.app</a></li>
           <li class="full">Los valores pueden desactualizarse. Verifica siempre contra la fuente oficial antes de tomar decisiones financieras.</li>
@@ -1640,7 +1754,7 @@ const state = {
   usageProfile: "normal",
   goModel: "deepseekFlash",
   claudeModel: "sonnet46",
-  codexModel: "gpt53codex",
+  codexModel: "gpt56terra",
   currency: localStorage.getItem('ai-currency') || 'usd',
   trm: initialRates.copUsd,
   eurUsd: initialRates.eurUsd,
@@ -1660,7 +1774,7 @@ const presets = {
     outputTokens: 360,
     goModel: "qwen35",
     claudeModel: "sonnet46",
-    codexModel: "gpt54mini"
+    codexModel: "gpt56luna"
   },
   feature: {
     name: "Feature SaaS",
@@ -1674,7 +1788,7 @@ const presets = {
     outputTokens: 650,
     goModel: "deepseekPro",
     claudeModel: "sonnet46",
-    codexModel: "gpt53codex"
+    codexModel: "gpt56terra"
   },
   design: {
     name: "Diseño / UX",
@@ -1688,7 +1802,7 @@ const presets = {
     outputTokens: 720,
     goModel: "qwen36",
     claudeModel: "sonnet46",
-    codexModel: "gpt54"
+    codexModel: "gpt56terra"
   },
   infra: {
     name: "Infra / DevOps",
@@ -1702,7 +1816,7 @@ const presets = {
     outputTokens: 780,
     goModel: "glm51",
     claudeModel: "fable5",
-    codexModel: "gpt54"
+    codexModel: "gpt56sol"
   },
   security: {
     name: "Seguridad / auditoría",
@@ -1716,7 +1830,7 @@ const presets = {
     outputTokens: 920,
     goModel: "glm51",
     claudeModel: "opus5",
-    codexModel: "gpt55"
+    codexModel: "gpt56sol"
   }
 };
 
@@ -1748,23 +1862,23 @@ const usageProfiles = {
 };
 
 const goModels = {
-  deepseekFlash: { name: "DeepSeek V4 Flash", req5h: 31650, reqWeek: 79050, reqMonth: 158150, label: "Volumen bestia" },
-  mimo25: { name: "MiMo-V2.5", req5h: 30100, reqWeek: 75200, reqMonth: 150400, label: "Volumen bestia" },
-  qwen35: { name: "Qwen 3.5 Plus", req5h: 10200, reqWeek: 25200, reqMonth: 50500, label: "Muy rentable" },
-  qwen37plus: { name: "Qwen3.7 Plus", req5h: 4300, reqWeek: 10800, reqMonth: 21600, label: "Muy rentable" },
-  hy3: { name: "Hy3", req5h: 4300, reqWeek: 10750, reqMonth: 21500, label: "Muy rentable" },
-  deepseekPro: { name: "DeepSeek V4 Pro", req5h: 3450, reqWeek: 8550, reqMonth: 17150, label: "Fuerte y razonable" },
-  minimax27: { name: "MiniMax M2.7", req5h: 3400, reqWeek: 8500, reqMonth: 17000, label: "Balance general" },
-  qwen36: { name: "Qwen 3.6 Plus", req5h: 3300, reqWeek: 8200, reqMonth: 16300, label: "Más capaz, menos barato" },
-  mimo25pro: { name: "MiMo-V2.5-Pro", req5h: 3250, reqWeek: 8150, reqMonth: 16300, label: "Balance general" },
-  minimax3: { name: "MiniMax M3", req5h: 3200, reqWeek: 8000, reqMonth: 16000, label: "Balance general" },
-  kimiK27: { name: "Kimi K2.7 Code", req5h: 1350, reqWeek: 3380, reqMonth: 6750, label: "Agentic coding, contexto 256K" },
-  kimiK26: { name: "Kimi K2.6", req5h: 1150, reqWeek: 2880, reqMonth: 5750, label: "Generación anterior de Kimi" },
-  qwen37max: { name: "Qwen3.7 Max", req5h: 950, reqWeek: 2390, reqMonth: 4770, label: "Más caro por request" },
-  glm51: { name: "GLM-5.1", req5h: 880, reqWeek: 2150, reqMonth: 4300, label: "Más caro por request" },
-  glm52: { name: "GLM-5.2", req5h: 880, reqWeek: 2150, reqMonth: 4300, label: "Más caro por request" },
-  grok45: { name: "Grok 4.5", req5h: 120, reqWeek: 300, reqMonth: 600, label: "Cuota mínima, solo puntual" },
-  kimiK3: { name: "Kimi K3", req5h: 110, reqWeek: 250, reqMonth: 490, label: "Cuota mínima, solo puntual" }
+  deepseekFlash: { name: "DeepSeek V4 Flash", req5h: 31650, reqWeek: 79050, reqMonth: 158150, label: "Volumen bestia", input: 0.14, output: 0.28 },
+  mimo25: { name: "MiMo-V2.5", req5h: 30100, reqWeek: 75200, reqMonth: 150400, label: "Volumen bestia", input: 0.14, output: 0.28 },
+  qwen35: { name: "Qwen 3.5 Plus", req5h: 10200, reqWeek: 25200, reqMonth: 50500, label: "Muy rentable", input: 0.48, output: 2.88, apiPriceNote: "ref. Alibaba ≤256K" },
+  qwen37plus: { name: "Qwen3.7 Plus", req5h: 4300, reqWeek: 10800, reqMonth: 21600, label: "Muy rentable", input: 0.40, output: 1.60, apiPriceNote: "≤256K; >256K: $1.20/$4.80" },
+  hy3: { name: "Hy3", req5h: 4300, reqWeek: 10750, reqMonth: 21500, label: "Muy rentable", input: 0.14, output: 0.58 },
+  deepseekPro: { name: "DeepSeek V4 Pro", req5h: 3450, reqWeek: 8550, reqMonth: 17150, label: "Fuerte y razonable", input: 0.435, output: 0.87 },
+  minimax27: { name: "MiniMax M2.7", req5h: 3400, reqWeek: 8500, reqMonth: 17000, label: "Balance general", input: 0.30, output: 1.20 },
+  qwen36: { name: "Qwen 3.6 Plus", req5h: 3300, reqWeek: 8200, reqMonth: 16300, label: "Más capaz, menos barato", input: 0.50, output: 3.00, apiPriceNote: "≤256K; >256K: $2/$6" },
+  mimo25pro: { name: "MiMo-V2.5-Pro", req5h: 3250, reqWeek: 8150, reqMonth: 16300, label: "Balance general", input: 0.435, output: 0.87 },
+  minimax3: { name: "MiniMax M3", req5h: 3200, reqWeek: 8000, reqMonth: 16000, label: "Balance general", input: 0.30, output: 1.20 },
+  kimiK27: { name: "Kimi K2.7 Code", req5h: 1350, reqWeek: 3380, reqMonth: 6750, label: "Agentic coding, contexto 256K", input: 0.95, output: 4.00 },
+  kimiK26: { name: "Kimi K2.6", req5h: 1150, reqWeek: 2880, reqMonth: 5750, label: "Generación anterior de Kimi", input: 0.95, output: 4.00 },
+  qwen37max: { name: "Qwen3.7 Max", req5h: 950, reqWeek: 2390, reqMonth: 4770, label: "Más caro por request", input: 2.50, output: 7.50 },
+  glm51: { name: "GLM-5.1", req5h: 880, reqWeek: 2150, reqMonth: 4300, label: "Más caro por request", input: 1.40, output: 4.40 },
+  glm52: { name: "GLM-5.2", req5h: 880, reqWeek: 2150, reqMonth: 4300, label: "Más caro por request", input: 1.40, output: 4.40 },
+  grok45: { name: "Grok 4.5", req5h: 120, reqWeek: 300, reqMonth: 600, label: "Cuota mínima, solo puntual", input: 2.00, output: 6.00 },
+  kimiK3: { name: "Kimi K3", req5h: 110, reqWeek: 250, reqMonth: 490, label: "Cuota mínima, solo puntual", input: 3.00, output: 15.00 }
 };
 
 for (const model of Object.values(goModels)) {
@@ -1810,7 +1924,19 @@ const codexModels = {
     name: "GPT-5.6 Sol",
     input: 5, cached: 0.50, output: 30, context: "1.05M · 128K output",
     creditsInput: 125, creditsCached: 12.5, creditsOutput: 750,
-    tier: "Nuevo flagship coding", quotaMultiplier: 0.85
+    tier: "Máxima capacidad", quotaMultiplier: 1.00
+  },
+  gpt56terra: {
+    name: "GPT-5.6 Terra",
+    input: 2, cached: 0.20, output: 12, context: "1.05M · 128K output",
+    creditsInput: 50, creditsCached: 5, creditsOutput: 300,
+    tier: "Balance costo/calidad · recorte 20%", quotaMultiplier: 0.40
+  },
+  gpt56luna: {
+    name: "GPT-5.6 Luna",
+    input: 0.20, cached: 0.02, output: 1.20, context: "1.05M · 128K output",
+    creditsInput: 5, creditsCached: 0.5, creditsOutput: 30,
+    tier: "Volumen económico · recorte 80%", quotaMultiplier: 0.04
   }
 };
 
@@ -1828,14 +1954,16 @@ const codexPlanWindowTokens = {
 
 const benchmarkModels = [
   { model: 'GPT-5.6 Sol', family: 'OpenAI', swebVerified: null, swebPro: 64.6, gpqa: 94.6, terminal: 88.8, inputCost: 5, outputCost: 30, blendedCost: 17.5, source: 'Oficial parcial' },
-  { model: 'GPT-5.5', family: 'OpenAI', swebVerified: 82, swebPro: 58.6, gpqa: 93.6, terminal: 82.7, inputCost: 5, outputCost: 30, blendedCost: 17.5, source: 'Oficial parcial' },
+  { model: 'GPT-5.6 Terra', family: 'OpenAI', swebVerified: null, swebPro: 63.4, gpqa: 92.9, terminal: 87.4, inputCost: 2, outputCost: 12, blendedCost: 7, source: 'Oficial parcial' },
+  { model: 'GPT-5.6 Luna', family: 'OpenAI', swebVerified: null, swebPro: 62.7, gpqa: 92.3, terminal: 84.7, inputCost: 0.2, outputCost: 1.2, blendedCost: 0.7, source: 'Oficial parcial' },
+  { model: 'GPT-5.5', family: 'OpenAI', swebVerified: 82, swebPro: 59.4, gpqa: 93.6, terminal: 85.6, inputCost: 5, outputCost: 30, blendedCost: 17.5, source: 'Oficial parcial' },
   { model: 'GPT-5.4', family: 'OpenAI', swebVerified: 80, swebPro: 57.7, gpqa: 92.8, terminal: 75.1, inputCost: 2.5, outputCost: 15, blendedCost: 8.75, source: 'Oficial parcial' },
   { model: 'GPT-5.3-Codex', family: 'OpenAI', swebVerified: 83, swebPro: 56.8, gpqa: 92.6, terminal: 77.3, inputCost: 2, outputCost: 12, blendedCost: 7, source: 'Oficial parcial' },
   { model: 'GPT-5.4 mini', family: 'OpenAI', swebVerified: 70, swebPro: 38, gpqa: 75, terminal: 52, inputCost: 0.4, outputCost: 1.6, blendedCost: 1, source: 'Terceros' },
   { model: 'Sonnet 4.6', family: 'Anthropic', swebVerified: 79.6, swebPro: 58.1, gpqa: 84, terminal: 67, frontier: null, inputCost: 3, outputCost: 15, blendedCost: 9, source: 'Oficial parcial' },
   { model: 'Sonnet 5', family: 'Anthropic', swebVerified: null, swebPro: 63.2, gpqa: null, terminal: 80.4, frontier: null, inputCost: 2, outputCost: 10, blendedCost: 6, source: 'Oficial parcial' },
   { model: 'Fable 5', family: 'Anthropic', swebVerified: null, swebPro: 80.3, gpqa: null, terminal: 88, frontier: 33.7, inputCost: 10, outputCost: 50, blendedCost: 30, source: 'Oficial parcial' },
-  { model: 'Opus 5', family: 'Anthropic', swebVerified: null, swebPro: null, gpqa: null, terminal: null, frontier: 43.3, inputCost: 5, outputCost: 25, blendedCost: 15, source: 'Oficial parcial' },
+  { model: 'Opus 5', family: 'Anthropic', swebVerified: 96.0, swebPro: 79.2, gpqa: null, terminal: null, frontier: 43.3, inputCost: 5, outputCost: 25, blendedCost: 15, source: 'Oficial parcial' },
   { model: 'Opus 4.7', family: 'Anthropic', swebVerified: 82, swebPro: 64.3, gpqa: 94.2, terminal: 69.4, frontier: null, inputCost: 5, outputCost: 25, blendedCost: 15, source: 'Oficial parcial' },
   { model: 'Opus 4.8', family: 'Anthropic', swebVerified: 88.6, swebPro: 69.2, gpqa: 93.6, terminal: 74.6, frontier: 18.7, inputCost: 5, outputCost: 25, blendedCost: 15, source: 'Oficial parcial' },
   { model: 'Haiku 4.5', family: 'Anthropic', swebVerified: 55, swebPro: 28, gpqa: 68, terminal: 42, frontier: null, inputCost: 1, outputCost: 5, blendedCost: 3, source: 'Terceros' },
@@ -1850,10 +1978,10 @@ const benchmarkModels = [
 
 const benchmarkScenarios = [
   { key: 'Diseño', desc: 'Diseño y frontend', metric: 'SWE-bench Verified', bestModel: 'GPT-5.3-Codex', bestScore: 83, bestCost: 7, valueModel: 'DeepSeek V4 Flash', valueScore: 78, valueCost: 0.21 },
-  { key: 'Debug', desc: 'Debug y solución de bugs', metric: 'Terminal-Bench 2.0', bestModel: 'GPT-5.5', bestScore: 82.7, bestCost: 17.5, valueModel: 'Qwen 3.5 Plus', valueScore: 60, valueCost: 1.4 },
+  { key: 'Debug', desc: 'Debug y solución de bugs', metric: 'Terminal-Bench 2.1', bestModel: 'GPT-5.6 Sol', bestScore: 88.8, bestCost: 17.5, valueModel: 'GPT-5.6 Luna', valueScore: 84.7, valueCost: 0.7 },
   { key: 'Feature', desc: 'Features y desarrollo general', metric: 'SWE-bench Pro', bestModel: 'Fable 5', bestScore: 80.3, bestCost: 30, valueModel: 'DeepSeek V4 Pro', valueScore: 55.4, valueCost: 0.65 },
-  { key: 'Infra', desc: 'Infraestructura y DevOps', metric: 'Terminal-Bench 2.1', bestModel: 'GPT-5.6 Sol', bestScore: 88.8, bestCost: 17.5, valueModel: 'Sonnet 5', valueScore: 80.4, valueCost: 6 },
-  { key: 'Seguridad', desc: 'Auditoría y razonamiento', metric: 'GPQA Diamond', bestModel: 'Opus 4.7', bestScore: 94.2, bestCost: 15, valueModel: 'DeepSeek V4 Pro', valueScore: 90.1, valueCost: 0.65 }
+  { key: 'Infra', desc: 'Infraestructura y DevOps', metric: 'Terminal-Bench 2.1', bestModel: 'GPT-5.6 Sol', bestScore: 88.8, bestCost: 17.5, valueModel: 'GPT-5.6 Luna', valueScore: 84.7, valueCost: 0.7 },
+  { key: 'Seguridad', desc: 'Auditoría y razonamiento', metric: 'GPQA Diamond', bestModel: 'GPT-5.6 Sol', bestScore: 94.6, bestCost: 17.5, valueModel: 'DeepSeek V4 Pro', valueScore: 90.1, valueCost: 0.65 }
 ];
 
 const el = (id) => document.getElementById(id);
@@ -1987,8 +2115,14 @@ const timelineEvents = [
   {
     date: '9 jul 2026',
     title: 'OpenAI lanza la familia GPT-5.6 (Luna, Terra, Sol)',
-    detail: 'Sol es el nuevo flagship de coding y agentic workflows de OpenAI: $5/$30 por millón de tokens (input/output), contexto de 1.05M con 128K de output, 94.6% en GPQA Diamond, 88.8% en Terminal-Bench 2.1 (91.9% en modo Ultra) y 64.6% en SWE-bench Pro. Terra ($2.50/$15) y Luna ($1/$6) completan la familia como escalones intermedio y económico.',
-    source: 'openai.com/index/gpt-5-6'
+    detail: 'La familia queda disponible en ChatGPT, Codex y API. Sol ($5/$30 por millón de tokens) lidera con 94.6% en GPQA Diamond, 88.8% en Terminal-Bench 2.1 y 64.6% en SWE-bench Pro. Terra ($2.50/$15) conserva 87.4% y 63.4% en los dos benchmarks de coding por 50% menos; Luna ($1/$6) logra 84.7% y 62.7% por 80% menos. Los tres ofrecen 1.05M de contexto y 128K de salida.',
+    source: 'openai.com/index/gpt-5-6, developers.openai.com/api/docs/models'
+  },
+  {
+    date: '16 jul 2026',
+    title: 'ChatGPT, Work y Codex se unen en la app de escritorio',
+    detail: 'La nueva app de ChatGPT para macOS y Windows reúne Chat, Work y Codex bajo una sola interfaz. Quien ya usaba la app de Codex puede actualizarla conservando proyectos e historial; Codex mantiene su vista y flujos separados. Work añade archivos y apps locales con permiso, navegador integrado y continuidad de conversaciones cloud entre dispositivos.',
+    source: 'help.openai.com/en/articles/20001276, help.openai.com/en/articles/6825453'
   },
   {
     date: '18 jul 2026',
@@ -2011,7 +2145,7 @@ const timelineEvents = [
   {
     date: '24 jul 2026',
     title: 'Claude Opus 5 lanzado',
-    detail: 'Nuevo Opus (claude-opus-5) al mismo precio que Opus 4.8: $5/$25 por millón de tokens, 1M de contexto y 128K de output, con control de esfuerzo de low a max. Marca 43.3% en Frontier-Bench v0.1 — más del doble que Opus 4.8 (18.7%) y por encima de Fable 5 (33.7%) — y queda a menos de 0.5 puntos del pico de Fable 5 en CursorBench 3.2 por la mitad del costo por tarea. Pasa a ser el modelo por defecto en Max y el Opus más fuerte disponible en Pro. Sigue por detrás de Mythos 5 en desarrollo de exploits. Anthropic ya no publica SWE-bench ni GPQA para este modelo.',
+    detail: 'Nuevo Opus (claude-opus-5) al mismo precio que Opus 4.8: $5/$25 por millón de tokens, 1M de contexto y 128K de output, con control de esfuerzo de low a max. Marca 96.0% en SWE-bench Verified, 79.2% en SWE-bench Pro y 43.3% en Frontier-Bench v0.1 — más del doble que Opus 4.8 (18.7%). Pasa a ser el modelo por defecto en Max y el Opus más fuerte disponible en Pro; sigue por detrás de Mythos 5 en desarrollo de exploits.',
     source: 'anthropic.com/news/claude-opus-5'
   },
   {
@@ -2025,6 +2159,12 @@ const timelineEvents = [
     title: 'Precio de Haiku 4.5 corregido en la tabla de benchmarks',
     detail: 'La fila usaba $0.80/$4 por millón de tokens, que en realidad es el precio de Haiku 3.5 (retirado). El valor oficial de Haiku 4.5 es $1/$5 con cache hit a $0.10, tal como ya figuraba en el selector de modelos de Claude Code. El costo blended pasa de $2.40 a $3.',
     source: 'platform.claude.com/docs/en/about-claude/pricing'
+  },
+  {
+    date: '30 jul 2026',
+    title: 'OpenAI recorta 80% el precio de GPT-5.6 Luna y 20% el de Terra',
+    detail: 'La rebaja es real y posterior al lanzamiento: Luna pasa de $1/$6 a $0.20/$1.20 por millón de tokens y Terra de $2.50/$15 a $2/$12. Los nuevos precios también reducen el consumo de créditos en Codex y ChatGPT Work, sin cambiar las cuotas de los planes. OpenAI además reemplaza Priority Processing por Fast mode para Sol, con hasta 2.5× la velocidad a 2× el precio estándar.',
+    source: 'openai.com/index/advancing-the-price-performance-frontier-with-gpt-5-6'
   }
 ];
 
@@ -2107,12 +2247,26 @@ async function fetchLiveRates() {
   }
 }
 
+function formatApiRate(value) {
+  return Number(value).toLocaleString('en-US', {
+    minimumFractionDigits: value < 1 ? 2 : 0,
+    maximumFractionDigits: 3
+  });
+}
+
+function modelApiPrice(item) {
+  if (item.input == null || item.output == null) return 'Ent./Sal. no publicado';
+  const note = item.apiPriceNote ? ` · ${item.apiPriceNote}` : '';
+  return `Ent. $${formatApiRate(item.input)}/M · Sal. $${formatApiRate(item.output)}/M${note}`;
+}
+
 function mountModelButtons(containerId, collection, stateKey) {
   const grid = el(containerId);
   grid.innerHTML = Object.entries(collection).map(([key, item]) => `
     <button class="model-btn ${state[stateKey] === key ? "active" : ""}" data-state="${stateKey}" data-model="${key}">
       <div class="title">${item.name}</div>
       <div class="meta">${item.tier || item.label} · ${item.context || ""}</div>
+      <div class="api-price">${modelApiPrice(item)}</div>
     </button>
   `).join("");
 }
@@ -2147,9 +2301,11 @@ const codexFeatureData = {
   title: 'Planes en detalle',
   header: ['Feature', 'Free', 'Go', 'Plus', 'Pro 100', 'Pro 200'],
   rows: [
-    ['Chat web / app',          '✓', '✓', '✓', '✓', '✓'],
-    ['GPT-5.5 Thinking',        '✗', '✓', '✓', '✓', '✓'],
-    ['GPT-5.5 Pro',             '✗', '✗', '✗', '✓', '✓'],
+    ['App escritorio unificada','✓', '✓', '✓', '✓', '✓'],
+    ['ChatGPT Work',            '✗', '✗', '✓', '✓', '✓'],
+    ['GPT-5.6 Terra',           '✓', '✓', '✓', '✓', '✓'],
+    ['GPT-5.6 Luna',            '✗', '✗', '✓', '✓', '✓'],
+    ['GPT-5.6 Sol',             '✗', '✗', '✓', '✓', '✓'],
     ['Deep Research',           '<span class="tag warn">limit</span>', '<span class="tag warn">limit</span>', '✓', '✓', '✓'],
     ['Codex CLI / IDE',         '<span class="tag warn">limit</span>', '<span class="tag warn">ligero</span>', '✓', '✓', '✓'],
     ['Cloud tasks (Codex)',     '✗', '✗', '✓', '✓', '✓'],
@@ -2157,7 +2313,7 @@ const codexFeatureData = {
     ['Codex-Spark',             '✗', '✗', '✗', '✓', '✓'],
     ['Credits (extender)',      '✗', '✗', '✓', '✓', '✓']
   ],
-  footer: 'Plus $20 es el punto de entrada serio. Pro $100+ si Codex es parte de tu flujo diario de trabajo.'
+  footer: 'La app de escritorio de ChatGPT reúne Chat, Work y Codex en macOS y Windows; Codex conserva su vista e historial propios. Free y Go reciben Terra, mientras Plus y Pro pueden elegir Sol, Terra y Luna. Plus $20 es el punto de entrada serio; Pro $100+ conviene cuando Codex forma parte del flujo diario.'
 };
 
 function renderFeatureNote(containerId, data) {
@@ -2224,6 +2380,71 @@ function updatePlanTexts() {
 
 function initBenchmark() {
   try {
+  const priceTableEl = el("benchmarkPriceTable");
+  if (priceTableEl) {
+    priceTableEl.innerHTML = `
+      <table class="benchmark-price-table">
+        <thead>
+          <tr>
+            <th aria-sort="none"><button class="sort-button" type="button" data-sort="model">Modelo</button></th>
+            <th aria-sort="none"><button class="sort-button" type="button" data-sort="provider">Proveedor / empresa</button></th>
+            <th class="price" aria-sort="none"><button class="sort-button" type="button" data-sort="inputCost">Entrada $/M</button></th>
+            <th class="price" aria-sort="none"><button class="sort-button" type="button" data-sort="outputCost">Salida $/M</button></th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>`;
+
+    const priceTableBody = priceTableEl.querySelector('tbody');
+    const priceSortButtons = [...priceTableEl.querySelectorAll('.sort-button')];
+    const providerByFamily = { Qwen: 'Alibaba Cloud' };
+    const getProvider = model => providerByFamily[model.family] || model.family;
+    let priceSort = { field: null, direction: 'asc' };
+
+    const renderPriceRows = () => {
+      const rows = [...benchmarkModels];
+      if (priceSort.field) {
+        const multiplier = priceSort.direction === 'asc' ? 1 : -1;
+        rows.sort((a, b) => {
+          const aValue = priceSort.field === 'provider' ? getProvider(a) : a[priceSort.field];
+          const bValue = priceSort.field === 'provider' ? getProvider(b) : b[priceSort.field];
+          if (typeof aValue === 'number' && typeof bValue === 'number') {
+            return (aValue - bValue) * multiplier;
+          }
+          return String(aValue).localeCompare(String(bValue), 'es', { sensitivity: 'base', numeric: true }) * multiplier;
+        });
+      }
+
+      priceTableBody.innerHTML = rows.map(model => `
+            <tr>
+              <td>${model.model}</td>
+              <td>${getProvider(model)}</td>
+              <td class="price">$${formatApiRate(model.inputCost)}</td>
+              <td class="price">$${formatApiRate(model.outputCost)}</td>
+            </tr>
+          `).join('');
+    };
+
+    priceSortButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const field = button.dataset.sort;
+        priceSort = {
+          field,
+          direction: priceSort.field === field && priceSort.direction === 'asc' ? 'desc' : 'asc'
+        };
+        priceSortButtons.forEach(sortButton => {
+          sortButton.closest('th').setAttribute(
+            'aria-sort',
+            sortButton === button ? (priceSort.direction === 'asc' ? 'ascending' : 'descending') : 'none'
+          );
+        });
+        renderPriceRows();
+      });
+    });
+
+    renderPriceRows();
+  }
+
   const tableEl = el("benchmarkTable");
   if (tableEl && typeof Tabulator !== 'undefined') {
     const savedScroll = window.scrollY;
@@ -2276,10 +2497,17 @@ function initBenchmark() {
 
   const colors = { 'OpenAI': '#70b7ff', 'Anthropic': '#ffb36b', 'DeepSeek': '#4fe08b', 'Qwen': '#ffd166', 'MiniMax': '#c084fc', 'Zhipu AI': '#f472b6' };
   // El scatter promedia SWE-V / SWE-Pro / GPQA / Terminal. Frontier-Bench queda fuera
-  // porque está en otra escala. Los modelos sin ninguna de esas 4 métricas publicadas
-  // (p. ej. Opus 5, que Anthropic reporta solo en Frontier-Bench) no entran al gráfico.
+  // porque está en otra escala. Opus 5 entra con sus resultados oficiales de SWE-bench.
   const comparableScores = (m) => [m.swebVerified, m.swebPro, m.gpqa, m.terminal].filter(v => v != null);
   const chartModels = benchmarkModels.filter(m => comparableScores(m).length > 0);
+  const featuredChartModels = new Set(['Opus 5', 'Sonnet 5', 'GPT-5.6 Sol', 'GPT-5.6 Terra', 'GPT-5.6 Luna']);
+  const featuredLabelPositions = {
+    'Opus 5': 'top',
+    'Sonnet 5': 'bottom',
+    'GPT-5.6 Sol': 'top',
+    'GPT-5.6 Terra': 'right',
+    'GPT-5.6 Luna': 'bottom'
+  };
   const families = [...new Set(chartModels.map(m => m.family))];
   const allSelected = new Set(chartModels.map(m => m.model));
   const chipGrid = el("chartChips");
@@ -2304,7 +2532,23 @@ function initBenchmark() {
   }
 
   function commitChips() { mountChips(); mountFamilyChips(); }
-  const tick = () => { if (chart) chart.setOption(makeOption(allSelected)); };
+  const chartHeightFor = (selectedCount) => {
+    const compact = window.innerWidth <= 680;
+    const base = compact ? 480 : 520;
+    const step = compact ? 10 : 14;
+    return Math.min(compact ? 620 : 720, base + Math.max(0, selectedCount - 8) * step);
+  };
+  const syncChartHeight = () => {
+    const chartNode = el('benchmarkChart');
+    if (chartNode) chartNode.style.height = `${chartHeightFor(allSelected.size)}px`;
+  };
+  const tick = () => {
+    syncChartHeight();
+    if (chart) {
+      chart.resize();
+      chart.setOption(makeOption(allSelected), true);
+    }
+  };
 
   chipGrid.addEventListener('click', (e) => {
     const b = e.target.closest('[data-chip]');
@@ -2328,37 +2572,101 @@ function initBenchmark() {
 
   commitChips();
 
-  let chart, makeOption;
+  let chart, makeOption, buildChartSeries;
   try {
     const chartEl = el("benchmarkChart");
     if (chartEl && typeof echarts !== 'undefined') {
+      syncChartHeight();
       chart = echarts.init(chartEl);
-      makeOption = function(selected) {
-        const series = chartModels.map(m => {
+      buildChartSeries = function(selected, hoveredModel = null) {
+        const labelData = [];
+        const pointData = [];
+        chartModels.forEach(m => {
           const scores = comparableScores(m);
           const avg = scores.reduce((sum, v) => sum + v, 0) / scores.length;
           const vis = selected.has(m.model);
-          return {
-            name: m.model, type: 'scatter', symbolSize: 14,
-            data: [{ value: [m.blendedCost, avg, m.model] }],
-            itemStyle: { color: colors[m.family] || '#aaa', opacity: vis ? 1 : 0.08 },
-            label: { show: true, formatter: () => m.model, position: 'right', color: '#edf3ff', fontSize: 10, opacity: vis ? 1 : 0.08 }
-          };
+          const featured = featuredChartModels.has(m.model);
+          const isHovered = hoveredModel === m.model;
+          const hasHover = hoveredModel != null;
+          const pointOpacity = isHovered ? 1 : hasHover ? (vis ? 0.14 : 0.025) : (vis ? 1 : 0.08);
+          const labelOpacity = isHovered ? 1 : hasHover ? (vis ? 0.12 : 0) : 1;
+          labelData.push({
+            name: m.model,
+            model: m.model,
+            value: [m.blendedCost, avg, m.model],
+            label: {
+              show: vis || isHovered,
+              formatter: m.model,
+              position: featuredLabelPositions[m.model] || 'right',
+              distance: featured ? 9 : 7,
+              color: '#edf3ff',
+              fontSize: featured ? 11 : 10,
+              fontWeight: featured ? 700 : 400,
+              opacity: labelOpacity
+            }
+          });
+          pointData.push({
+            name: m.model,
+            model: m.model,
+            value: [m.blendedCost, avg, m.model],
+            symbolSize: featured ? 19 : 14,
+            itemStyle: { color: colors[m.family] || '#aaa', opacity: pointOpacity }
+          });
         });
+        return [
+          {
+            id: 'benchmark-labels',
+            name: 'Etiquetas',
+            type: 'scatter',
+            data: labelData,
+            symbolSize: 1,
+            silent: true,
+            tooltip: { show: false },
+            itemStyle: { color: 'transparent' },
+            z: 2,
+            labelLayout: { moveOverlap: 'shiftY', hideOverlap: false }
+          },
+          {
+            id: 'benchmark-points',
+            name: 'Modelos',
+            type: 'scatter',
+            data: pointData,
+            label: { show: false },
+            z: 20
+          }
+        ];
+      };
+      makeOption = function(selected, hoveredModel = null) {
         return {
           backgroundColor: 'transparent',
-          grid: { left: 60, right: 20, top: 10, bottom: 50 },
+          grid: { left: 64, right: 52, top: 42, bottom: 56 },
           xAxis: { name: 'Costo blended $/M', type: 'log', nameLocation: 'center', nameGap: 35, nameTextStyle: { color: '#8ea0c3' }, axisLabel: { color: '#8ea0c3' }, splitLine: { lineStyle: { color: 'rgba(166,194,255,0.08)' } } },
-          yAxis: { name: 'Rendimiento promedio %', min: 30, max: 90, nameLocation: 'center', nameGap: 45, nameTextStyle: { color: '#8ea0c3' }, axisLabel: { color: '#8ea0c3' }, splitLine: { lineStyle: { color: 'rgba(166,194,255,0.08)' } } },
+          yAxis: { name: 'Rendimiento promedio %', min: 30, max: 95, nameLocation: 'center', nameGap: 45, nameTextStyle: { color: '#8ea0c3' }, axisLabel: { color: '#8ea0c3' }, splitLine: { lineStyle: { color: 'rgba(166,194,255,0.08)' } } },
           tooltip: { trigger: 'item', backgroundColor: 'rgba(8,17,31,0.94)', borderColor: 'rgba(166,194,255,0.15)', textStyle: { color: '#edf3ff', fontSize: 12 }, formatter: (p) => {
-            const model = benchmarkModels.find(m => m.model === p.seriesName);
-            return `<strong>${p.seriesName}</strong><br/>Costo: $${p.value[0].toFixed(2)}/M<br/>Rendimiento: ${p.value[1].toFixed(1)}%<br/>Origen: ${model?.source || '—'}`;
+            const model = benchmarkModels.find(m => m.model === p.data?.model);
+            return `<strong>${model?.model || p.name}</strong><br/>Costo: $${p.value[0].toFixed(2)}/M<br/>Rendimiento: ${p.value[1].toFixed(1)}%<br/>Origen: ${model?.source || '—'}`;
           } },
-          series
+          series: buildChartSeries(selected, hoveredModel)
         };
       }
       chart.setOption(makeOption(allSelected));
-      window.addEventListener('resize', () => chart.resize());
+      let chartHoverModel = null;
+      const setChartHover = (model) => {
+        if (chartHoverModel === model) return;
+        chartHoverModel = model;
+        chart.setOption({ series: buildChartSeries(allSelected, model) }, { lazyUpdate: true });
+      };
+      chart.on('mouseover', (params) => {
+        if (params.seriesId === 'benchmark-points') setChartHover(params.data?.model || null);
+      });
+      chart.on('mouseout', (params) => {
+        if (params.seriesId === 'benchmark-points') setChartHover(null);
+      });
+      chart.getZr().on('globalout', () => setChartHover(null));
+      window.addEventListener('resize', () => {
+        syncChartHeight();
+        chart.resize();
+      });
     }
   } catch(e) { console.warn('Chart error:', e); }
 }
@@ -3053,8 +3361,14 @@ function calculate() {
     codexStatus.className = codexMonthCost <= 150 ? "status warn" : "status bad";
     codexStatus.textContent = "GPT-5.4 vale la pena cuando la ventana de contexto y el trabajo profesional transversal importan tanto como el código. No gana por precio, gana por amplitud.";
   } else if (state.codexModel === "gpt56sol") {
-    codexStatus.className = "status bad";
-    codexStatus.textContent = "GPT-5.6 Sol es el nuevo flagship de coding de OpenAI: 94.6% en GPQA Diamond y 88.8% en Terminal-Bench 2.1 con el mismo precio que GPT-5.5. Mejor relación calidad/costo que GPT-5.5 para agentic coding, pero sigue siendo un modelo premium frente a GPT-5.4/5.4 mini.";
+    codexStatus.className = "status warn";
+    codexStatus.textContent = "GPT-5.6 Sol es la opción de máxima capacidad: 94.6% en GPQA Diamond, 88.8% en Terminal-Bench 2.1 y 64.6% en SWE-bench Pro. Cuesta lo mismo que GPT-5.5, pero ofrece más rendimiento y eficiencia para tareas difíciles.";
+  } else if (state.codexModel === "gpt56terra") {
+    codexStatus.className = "status good";
+    codexStatus.textContent = "GPT-5.6 Terra es el mejor equilibrio de la familia para trabajo diario: tras el recorte del 20% cuesta $2/$12 por millón de tokens, 60% menos que Sol, y conserva 87.4% en Terminal-Bench 2.1 y 63.4% en SWE-bench Pro.";
+  } else if (state.codexModel === "gpt56luna") {
+    codexStatus.className = "status good";
+    codexStatus.textContent = "GPT-5.6 Luna es la opción de volumen: tras el recorte del 80% cuesta $0.20/$1.20 por millón de tokens, 96% menos que Sol, y aun logra 84.7% en Terminal-Bench 2.1 y 62.7% en SWE-bench Pro. Es la mejor relación costo/rendimiento de OpenAI para debug y tareas repetitivas.";
   } else {
     codexStatus.className = "status bad";
     codexStatus.textContent = "GPT-5.5 es una herramienta de alto nivel para los casos donde diseño, estrategia, análisis y código se mezclan. Es la mejor si el costo del error es alto, no si buscas volumen barato.";
